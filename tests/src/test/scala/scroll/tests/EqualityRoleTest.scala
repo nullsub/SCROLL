@@ -32,7 +32,7 @@ class EqualityRoleTest {
   }
 
   @Test
-  def testRoleEqualityDeepRoles(): Unit = {
+  def testRoleEqualityChainedDeepRoles(): Unit = {
     val someCore = new CoreA()
     new SomeCompartment() {
       val someRole = new RoleA()
@@ -49,7 +49,7 @@ class EqualityRoleTest {
       assertEquals(someRole, someRole)
       assertEquals(someOtherRole, someOtherRole)
 
-      assertNotEquals(someRole.hashCode(), someOtherRole.hashCode())
+      assertNotEquals(someRole, someOtherRole)
 
       val a = +someRole
       val b = +someOtherRole
@@ -62,4 +62,38 @@ class EqualityRoleTest {
       assertEquals(+someOtherRole, someCore)
     }
   }
+
+  @Test
+  def testRoleEqualitySeparateDeepRoles(): Unit = {
+    val someCore = new CoreA()
+    new SomeCompartment() {
+      val someRole = new RoleA()
+      val someOtherRole = new RoleB()
+      val player = someCore play someRole
+      someRole play someOtherRole
+
+      assertEquals(player, player)
+      assertEquals(someCore, someCore)
+      assertEquals(player, someCore)
+
+      assertEquals(+player, player)
+      assertEquals(player, +player)
+
+      assertEquals(someRole, someRole)
+      assertEquals(someOtherRole, someOtherRole)
+
+      assertNotEquals(someRole, someOtherRole)
+
+      val a = +someRole
+      val b = +someOtherRole
+      assertEquals(a, player)
+      assertEquals(player, a)
+      assertEquals(b, player)
+      assertEquals(player, b)
+
+      assertEquals(+someRole, someCore)
+      assertEquals(+someOtherRole, someCore)
+    }
+  }
+
 }
