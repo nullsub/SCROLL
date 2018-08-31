@@ -7,17 +7,17 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 
-import mocks.{CoreA, CoreB, SomeCompartment}
+import mocks.{CoreA, CoreB}
 import scroll.internal.support.DispatchQuery
 import DispatchQuery._
 import scroll.internal.errors.SCROLLErrors
 
-class RoleFeaturesTest {
+class RoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
   def testDroppingRoleAndInvokingMethods(): Unit = {
     val someCore = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole = new RoleA()
       someCore play someRole
       someCore play new RoleB()
@@ -35,7 +35,7 @@ class RoleFeaturesTest {
   def testTransferringARole(): Unit = {
     val someCoreA = new CoreA()
     val someCoreB = new CoreB()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole = new RoleA()
       someCoreA play someRole
       someCoreA transfer someRole to someCoreB
@@ -50,7 +50,7 @@ class RoleFeaturesTest {
   def testRolePlayingAndTestingIsPlaying(): Unit = {
     val someCoreA = new CoreA()
     val someCoreB = new CoreB()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRoleA = new RoleA()
       val someRoleB = new RoleB()
       someCoreA play someRoleA
@@ -64,7 +64,7 @@ class RoleFeaturesTest {
   @Test
   def testHandlingApplyDynamic(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole = new RoleA()
       someCoreA play someRole
       val expected = 0
@@ -83,7 +83,7 @@ class RoleFeaturesTest {
   @Test
   def testHandlingApplyDynamicNamed(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole = new RoleA()
       someCoreA play someRole
       val expected: String = someRole.b("some", param = "out")
@@ -96,7 +96,7 @@ class RoleFeaturesTest {
   @Test
   def testHandlingSelectDynamic(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole = new RoleA()
       someCoreA play someRole
 
@@ -119,7 +119,7 @@ class RoleFeaturesTest {
   @Test
   def testHandlingUpdateDynamic(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole = new RoleA()
       someCoreA play someRole
       val expectedA = "newValue"
@@ -137,7 +137,7 @@ class RoleFeaturesTest {
   @Test
   def testPlayingARoleMultipleTimesSameInstance(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole = new RoleA()
       someCoreA play someRole
       someCoreA play someRole
@@ -154,7 +154,7 @@ class RoleFeaturesTest {
   @Test
   def testPlayingARoleMultipleTimesDifferentInstance(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole1 = new RoleA()
       val someRole2 = new RoleA()
       someCoreA play someRole1
@@ -173,7 +173,8 @@ class RoleFeaturesTest {
   @Test
   def testPlayingARoleMultipleTimesDifferentInstanceWithDispatch(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+
+    new CompartmentUnderTest() {
       val someRole1 = new RoleA()
       val someRole2 = new RoleA()
       someRole1.valueB = 1
@@ -201,7 +202,8 @@ class RoleFeaturesTest {
   @Test
   def testCallingMultiArgumentMethodInRoles(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+
+    new CompartmentUnderTest() {
       val someRole = new RoleD()
       someCoreA play someRole
       val expected1 = "updated"
@@ -222,7 +224,8 @@ class RoleFeaturesTest {
   @Test
   def testCallingMethodOnARoleWithDifferentPrimitiveTypes(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+
+    new CompartmentUnderTest() {
       val someRole = new RoleE()
       someCoreA play someRole
       val expectedInt: Int = 0
@@ -285,8 +288,9 @@ class RoleFeaturesTest {
   def testPlayingARoleMultipleTimes(): Unit = {
     val someCoreA = new CoreA()
     val someCoreB = new CoreB()
-    new SomeCompartment() {
-      implicit var dd: DispatchQuery = DispatchQuery.empty
+
+    new CompartmentUnderTest() {
+      implicit var dd = DispatchQuery.empty
       val someRole = new RoleA()
       someCoreA play someRole
       someCoreB play someRole
@@ -324,7 +328,8 @@ class RoleFeaturesTest {
   @Test
   def testCyclicRolePlaying(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+
+    new CompartmentUnderTest() {
       val someRoleA = new RoleA()
       val someRoleB = new RoleB()
       val someRoleC = new RoleC()
@@ -343,11 +348,10 @@ class RoleFeaturesTest {
 
   @Test
   def testCompartmentPlaysARoleThatIsPartOfItself(): Unit = {
-    class ACompartment extends SomeCompartment {
-
+    class ACompartment extends CompartmentUnderTest {
       class ARole
-
     }
+
     new ACompartment {
       this play new ARole
       assertTrue(this.isPlaying[ARole])
@@ -357,7 +361,8 @@ class RoleFeaturesTest {
   @Test
   def testDeepRoles(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+
+    new CompartmentUnderTest() {
       val someRoleA = new RoleA()
       val someRoleB = new RoleB()
       val someRoleC = new RoleC()
@@ -391,7 +396,7 @@ class RoleFeaturesTest {
   @Test
   def testHandlingNullArguments(): Unit = {
     val someCoreA = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRoleA = new RoleA()
       val expected: String = "valueC"
       val p = someCoreA play someRoleA
@@ -403,6 +408,164 @@ class RoleFeaturesTest {
       actual = p.valueC
 
       assertNull(actual)
+    }
+  }
+
+  scenario("Dropping roles when using deep roles") {
+
+    class Core() {
+      def a(): String = "a"
+    }
+
+    class RoleWithB() {
+      def b(): String = "b"
+    }
+
+    class RoleWithC() {
+      def c(): String = "c"
+    }
+
+    Given("a player and some roles in a compartment")
+    val someCore = new Core()
+    val roleWithB = new RoleWithB
+    val roleWithC = new RoleWithC
+
+    new CompartmentUnderTest() {
+      someCore play roleWithB
+      
+      var actual: String = (+someCore).a()
+      assertEquals(actual, "a")
+      actual = (+roleWithB).a()
+      assertEquals(actual, "a")
+      
+      
+      actual = (+someCore).b()
+      assertEquals(actual, "b")
+      actual = (+roleWithB).b()
+      assertEquals(actual, "b")
+      
+      roleWithB play roleWithC
+
+      actual = (+someCore).a()
+      assertEquals(actual, "a")
+      actual = (+roleWithB).a()
+      assertEquals(actual, "a")
+      actual = (+roleWithC).a()      
+      assertEquals(actual, "a")
+
+      actual = (+someCore).b()
+      assertEquals(actual, "b")
+      actual = (+roleWithB).b()
+      assertEquals(actual, "b")
+      actual = (+roleWithC).b()
+      assertEquals(actual, "b")
+
+      actual = (+someCore).c()
+      assertEquals(actual, "c")
+      actual = (+roleWithB).c()
+      assertEquals(actual, "c")
+      actual = (+roleWithC).c()
+      assertEquals(actual, "c")
+
+      someCore.drop(roleWithB)
+
+      actual = (+someCore).a()
+      assertEquals(actual, "a")
+
+      (+roleWithB).a() match {
+        case Right(_) => fail("Player should have no access anymore!")
+        case Left(err) if err.isInstanceOf[RoleNotFound] => // this is fine
+      }
+
+      (+roleWithC).a() match {
+        case Right(_) => fail("Player should have no access anymore!")
+        case Left(err) if err.isInstanceOf[RoleNotFound] => // this is fine
+      }
+
+      (+someCore).b() match {
+        case Right(_) => fail("Player should have no access anymore!")
+        case Left(err) if err.isInstanceOf[RoleNotFound] => // this is fine
+      }
+
+      actual = (+roleWithB).b()
+      assertEquals(actual, "b")
+
+      actual = (+roleWithC).b()
+      assertEquals(actual, "b")
+
+      (+someCore).c() match {
+        case Right(_) => fail("Player should have no access anymore!")
+        case Left(err) if err.isInstanceOf[RoleNotFound] => // this is fine
+      }
+
+      actual = (+roleWithB).c()
+      assertEquals(actual, "c")
+      actual = (+roleWithC).c()
+      assertEquals(actual, "c")
+      
+      someCore.play(roleWithB)
+      
+      actual = (+someCore).a()
+      assertEquals(actual, "a")
+      actual = (+roleWithB).a()
+      assertEquals(actual, "a")
+      actual = (+roleWithC).a()      
+      assertEquals(actual, "a")
+
+      actual = (+someCore).b()
+      assertEquals(actual, "b")
+      actual = (+roleWithB).b()
+      assertEquals(actual, "b")
+      actual = (+roleWithC).b()
+      assertEquals(actual, "b")
+
+      actual = (+someCore).c()
+      assertEquals(actual, "c")
+      actual = (+roleWithB).c()
+      assertEquals(actual, "c")
+      actual = (+roleWithC).c()
+      assertEquals(actual, "c")
+      
+      roleWithB.remove()
+      
+      actual = (+someCore).a()
+	  assertEquals(actual, "a")
+
+      (+roleWithB).a() match {
+        case Right(_) => fail("Player should have no access anymore!")
+        case Left(err) if err.isInstanceOf[RoleNotFound] => // this is fine
+      }
+
+      (+roleWithC).a() match {
+        case Right(_) => fail("Player should have no access anymore!")
+        case Left(err) if err.isInstanceOf[RoleNotFound] => // this is fine
+      }
+
+      (+someCore).b() match {
+        case Right(_) => fail("Player should have no access anymore!")
+        case Left(err) if err.isInstanceOf[RoleNotFound] => // this is fine
+      }
+
+      actual = roleWithB.b()
+      assertEquals(actual, "b")
+
+      (+roleWithC).b() match {
+        case Right(_) => fail("Player should have no access anymore!")
+        case Left(err) if err.isInstanceOf[RoleNotFound] => // this is fine
+      }
+
+      (+someCore).c() match {
+        case Right(_) => fail("Player should have no access anymore!")
+        case Left(err) if err.isInstanceOf[RoleNotFound] => // this is fine
+      }
+
+      (+roleWithB).c() match {
+        case Right(_) => fail("Player should have no access anymore!")
+        case Left(err) if err.isInstanceOf[RoleNotFound] => // this is fine
+      }      
+      
+      actual = (+roleWithC).c()
+      assertEquals(actual, "c")  
     }
   }
 }

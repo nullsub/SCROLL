@@ -2,9 +2,9 @@ package scroll.tests
 
 import org.junit.Assert.fail
 import org.junit.Test
-import scroll.tests.mocks.{CoreA, SomeCompartment}
+import scroll.tests.mocks.CoreA
 
-class RoleGroupsTest {
+class RoleGroupsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   class Source
 

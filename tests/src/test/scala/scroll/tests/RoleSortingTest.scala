@@ -5,17 +5,16 @@ import org.junit.Assert.assertEquals
 
 import scroll.internal.support.DispatchQuery
 import scroll.internal.support.DispatchQuery._
-import scroll.tests.mocks.{CoreA, SomeCompartment}
+import scroll.tests.mocks.CoreA
 
-class RoleSortingTest {
+class RoleSortingTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
   def testRoleSorting(): Unit = {
     implicit var dd: DispatchQuery = DispatchQuery.empty
 
     val someCore = new CoreA()
-    new SomeCompartment() {
-
+    new CompartmentUnderTest() {
       class SomeRoleA() {
         def method(): String = "A"
       }
@@ -56,6 +55,7 @@ class RoleSortingTest {
     }
   }
 
+<<<<<<< HEAD
   @Test
   def testRoleSortingWithCycles(): Unit = {
     implicit var dd: DispatchQuery = DispatchQuery.empty
@@ -65,7 +65,8 @@ class RoleSortingTest {
     }
 
     val someCore = new SomeCore()
-    new SomeCompartment() {
+
+    new CompartmentUnderTest() {
 
       class SomeRoleA() {
         def method(): String = {

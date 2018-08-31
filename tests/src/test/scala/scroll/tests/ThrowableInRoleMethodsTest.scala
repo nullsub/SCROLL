@@ -6,11 +6,11 @@ import org.junit.Assert.fail
 import org.junit.Test
 import scroll.internal.Compartment
 
-class ThrowableInRoleMethodsTest {
+class ThrowableInRoleMethodsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   class CoreType
 
-  class ExceptionShowcase extends Compartment {
+  class ExceptionShowcase extends CompartmentUnderTest {
 
     class Exceptional {
       def roleMethodWithError(): Unit = {

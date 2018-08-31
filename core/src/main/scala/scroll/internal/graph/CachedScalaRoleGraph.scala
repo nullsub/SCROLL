@@ -17,8 +17,9 @@ class CachedScalaRoleGraph(checkForCycles: Boolean = true) extends ScalaRoleGrap
 
   override def addBinding[P <: AnyRef : ClassTag, R <: AnyRef : ClassTag](player: P, role: R): Unit = {
     super.addBinding(player, role)
+    predecessors(player).foreach(reset)
+    roles(role).foreach(reset)
     reset(player)
-    reset(role)
   }
 
   private[this] def resetAll(): Unit = {
@@ -53,19 +54,26 @@ class CachedScalaRoleGraph(checkForCycles: Boolean = true) extends ScalaRoleGrap
   override def facets(player: AnyRef): Seq[Enumeration#Value] =
     facetsCache.getAndPutWithDefault(player, super.facets(player))
 
-  override def merge(other: RoleGraph): Unit = {
+  override def addPart(other: RoleGraph): Boolean = {
     require(other.isInstanceOf[CachedScalaRoleGraph], MERGE_MESSAGE)
-    super.merge(other)
-    resetAll()
+    if (super.addPart(other)) {
+      resetAll()
+      true
+    } else {
+      false
+    }
   }
 
   override def removeBinding[P <: AnyRef : ClassTag, R <: AnyRef : ClassTag](player: P, role: R): Unit = {
     super.removeBinding(player, role)
+    predecessors(player).foreach(reset)
+    roles(role).foreach(reset)
     reset(player)
-    reset(role)
   }
 
   override def removePlayer[P <: AnyRef : ClassTag](player: P): Unit = {
+    roles(player).foreach(reset)
+    predecessors(player).foreach(reset)
     super.removePlayer(player)
     reset(player)
   }

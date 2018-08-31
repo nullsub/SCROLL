@@ -5,7 +5,7 @@ import org.junit.Before
 import org.junit.Test
 import scroll.examples._
 
-class ExamplesTest {
+class ExamplesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Before
   def initialize(): Unit = {

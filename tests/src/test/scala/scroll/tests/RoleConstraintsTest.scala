@@ -3,10 +3,10 @@ package scroll.tests
 import org.junit.Test
 import org.junit.Assert.fail
 
-import mocks.{CoreA, SomeCompartment}
+import mocks.CoreA
 
-class RoleConstraintsTest {
-
+class RoleConstraintsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+  
   @Test
   def testRoleImplication(): Unit = {
     new SomeCompartment() {

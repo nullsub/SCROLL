@@ -1,12 +1,12 @@
 package scroll.tests
 
-import scroll.tests.mocks.{CoreA, SomeCompartment}
+import scroll.tests.mocks.CoreA
 import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 
-class DynamicExtensionsTest {
+class DynamicExtensionsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
   def testAddingDynamicExtensions(): Unit = {

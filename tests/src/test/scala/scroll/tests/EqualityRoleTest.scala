@@ -1,11 +1,11 @@
 package scroll.tests
 
-import mocks.{CoreA, SomeCompartment}
+import mocks.CoreA
 import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 
-class EqualityRoleTest {
+class EqualityRoleTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
   def testRoleEquality(): Unit = {
@@ -17,16 +17,11 @@ class EqualityRoleTest {
       assertEquals(player, player)
       assertEquals(someCore, someCore)
       assertEquals(player, someCore)
-
-
       assertEquals(+player, player)
       assertEquals(player, +player)
-
       assertEquals(someRole, someRole)
-
       assertEquals(+someRole, player)
       assertEquals(player, +someRole)
-
       assertEquals(+someRole, someCore)
     }
   }
@@ -42,13 +37,10 @@ class EqualityRoleTest {
       assertEquals(player, player)
       assertEquals(someCore, someCore)
       assertEquals(player, someCore)
-
       assertEquals(+player, player)
       assertEquals(player, +player)
-
       assertEquals(someRole, someRole)
       assertEquals(someOtherRole, someOtherRole)
-
       assertNotEquals(someRole, someOtherRole)
 
       val a = +someRole
@@ -57,7 +49,6 @@ class EqualityRoleTest {
       assertEquals(player, a)
       assertEquals(b, player)
       assertEquals(player, b)
-
       assertEquals(+someRole, someCore)
       assertEquals(+someOtherRole, someCore)
     }

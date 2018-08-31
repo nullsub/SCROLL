@@ -1,13 +1,14 @@
 package scroll.tests
 
+<<<<<<< HEAD
 import org.junit.Test
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.fail
 
 import scroll.internal.util.Many._
-import mocks.{CoreA, SomeCompartment}
+import mocks.CoreA
 
-class RelationshipTest {
+class RelationshipTest(cached: Boolean) extends AbstractSCROLLTest(cached)
 
   import scala.collection.JavaConverters._
 

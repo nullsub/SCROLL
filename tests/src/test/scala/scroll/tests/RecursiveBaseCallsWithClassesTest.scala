@@ -7,8 +7,7 @@ import scroll.internal.Compartment
 import scroll.internal.support.DispatchQuery
 import scroll.internal.support.DispatchQuery._
 
-class RecursiveBaseCallsWithClassesTest {
-
+class RecursiveBaseCallsWithClassesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
   import scala.collection.JavaConverters._
 
   class CoreType {
@@ -17,7 +16,7 @@ class RecursiveBaseCallsWithClassesTest {
     }
   }
 
-  class MultiRole extends Compartment {
+  class MultiRole extends CompartmentUnderTest {
 
     class RoleTypeA {
       implicit val dd: DispatchQuery = Bypassing((o: AnyRef) => {

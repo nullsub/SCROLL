@@ -3,13 +3,12 @@ package scroll.tests
 import org.junit.Test
 import org.junit.Assert.fail
 import org.junit.Assert.assertArrayEquals
-
 import scroll.internal.MultiCompartment
 import scroll.internal.support.DispatchQuery
 import scroll.internal.support.DispatchQuery._
 import scroll.tests.mocks.CoreA
 
-class MultiRoleFeaturesTest {
+class MultiRoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
   def testRoleMethodInvokation(): Unit = {

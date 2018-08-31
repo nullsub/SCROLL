@@ -1,15 +1,15 @@
 package scroll.tests
 
 import org.junit.Test
-import mocks.{CoreA, SomeCompartment}
+import mocks.CoreA
 import org.junit.Assert.fail
 
-class RoleRestrictionsTest {
+class RoleRestrictionsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
   def testRoleRestrictionValidation(): Unit = {
     val player = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val roleA = new RoleA()
       val roleD = new RoleD()
       AddRoleRestriction[CoreA, RoleA]()
@@ -28,7 +28,7 @@ class RoleRestrictionsTest {
   @Test
   def testRoleRestrictionValidationOnMultipleTypes(): Unit = {
     val player = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val roleA = new RoleA()
       val roleD = new RoleD()
       AddRoleRestriction[CoreA, RoleA]()
@@ -47,7 +47,7 @@ class RoleRestrictionsTest {
   @Test
   def testRoleRestrictionValidationAfterRemoval(): Unit = {
     val player = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val roleA = new RoleA()
       val roleD = new RoleD()
       AddRoleRestriction[CoreA, RoleA]()
