@@ -14,7 +14,7 @@ import org.junit.Assert.assertArrayEquals
 import scroll.tests.mocks.{CoreA, CoreB}
 
 @RunWith(value = classOf[Parameterized])
-class FacetsTests(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class FacetsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   object TestFacet extends Enumeration {
     type Color = Value
@@ -90,7 +90,7 @@ class FacetsTests(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
 }
 
-object FacetsTests {
+object FacetsTest {
     @Parameters
     def parameters: ju.Collection[Array[jl.Boolean]] = {
         val list = new ju.ArrayList[Array[jl.Boolean]]()
