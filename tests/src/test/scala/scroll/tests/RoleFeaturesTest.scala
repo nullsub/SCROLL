@@ -1,6 +1,11 @@
 package scroll.tests
 
+import java.{util => ju, lang => jl}
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertFalse
@@ -11,7 +16,9 @@ import mocks.{CoreA, CoreB}
 import scroll.internal.support.DispatchQuery
 import DispatchQuery._
 import scroll.internal.errors.SCROLLErrors
+import scroll.internal.errors.SCROLLErrors.RoleNotFound
 
+@RunWith(value = classOf[Parameterized])
 class RoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
@@ -290,7 +297,7 @@ class RoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
     val someCoreB = new CoreB()
 
     new CompartmentUnderTest() {
-      implicit var dd = DispatchQuery.empty
+      implicit var dd: DispatchQuery = DispatchQuery.empty
       val someRole = new RoleA()
       someCoreA play someRole
       someCoreB play someRole
@@ -411,7 +418,8 @@ class RoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
     }
   }
 
-  scenario("Dropping roles when using deep roles") {
+  @Test
+  def testDroppingWithDeepRoles(): Unit = {
 
     class Core() {
       def a(): String = "a"
@@ -425,7 +433,6 @@ class RoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
       def c(): String = "c"
     }
 
-    Given("a player and some roles in a compartment")
     val someCore = new Core()
     val roleWithB = new RoleWithB
     val roleWithC = new RoleWithC
@@ -529,7 +536,7 @@ class RoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
       roleWithB.remove()
       
       actual = (+someCore).a()
-	  assertEquals(actual, "a")
+	    assertEquals(actual, "a")
 
       (+roleWithB).a() match {
         case Right(_) => fail("Player should have no access anymore!")
@@ -568,4 +575,14 @@ class RoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
       assertEquals(actual, "c")  
     }
   }
+}
+
+object RoleFeaturesTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }

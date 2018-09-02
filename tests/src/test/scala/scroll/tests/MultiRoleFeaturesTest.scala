@@ -1,13 +1,23 @@
 package scroll.tests
 
+import java.{util => ju, lang => jl}
 import org.junit.Test
 import org.junit.Assert.fail
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Assert.assertArrayEquals
+
+import scroll.tests.mocks.{CoreA, CoreB}
 import scroll.internal.MultiCompartment
 import scroll.internal.support.DispatchQuery
 import scroll.internal.support.DispatchQuery._
-import scroll.tests.mocks.CoreA
 
+@RunWith(value = classOf[Parameterized])
 class MultiRoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
@@ -68,4 +78,14 @@ class MultiRoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) 
       }
     }
   }
+}
+
+object MultiRoleFeaturesTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }

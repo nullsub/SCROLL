@@ -1,9 +1,16 @@
 package scroll.tests
 
+import java.{util => ju, lang => jl}
 import org.junit.Test
-import mocks.CoreA
 import org.junit.Assert.fail
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
 
+import mocks.CoreA
+
+@RunWith(value = classOf[Parameterized])
 class RoleRestrictionsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
@@ -63,4 +70,14 @@ class RoleRestrictionsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
       player play roleA play roleD
     }
   }
+}
+
+object RoleRestrictionsTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }

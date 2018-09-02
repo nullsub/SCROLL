@@ -1,12 +1,19 @@
 package scroll.tests
 
+import java.{util => ju, lang => jl}
 import org.junit.Test
+import org.junit.Assert.fail
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
 import org.junit.Assert.assertEquals
 
 import scroll.internal.support.DispatchQuery
 import scroll.internal.support.DispatchQuery._
 import scroll.tests.mocks.CoreA
 
+@RunWith(value = classOf[Parameterized])
 class RoleSortingTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
@@ -55,7 +62,6 @@ class RoleSortingTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
     }
   }
 
-<<<<<<< HEAD
   @Test
   def testRoleSortingWithCycles(): Unit = {
     implicit var dd: DispatchQuery = DispatchQuery.empty
@@ -91,4 +97,14 @@ class RoleSortingTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
       assertEquals("Core", r1)
     }
   }
+}
+
+object RoleSortingTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }

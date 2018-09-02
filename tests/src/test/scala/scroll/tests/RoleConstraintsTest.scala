@@ -1,15 +1,22 @@
 package scroll.tests
 
+import java.{util => ju, lang => jl}
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
 import org.junit.Assert.fail
 
 import mocks.CoreA
+import scroll.internal.util.Many._
 
+@RunWith(value = classOf[Parameterized])
 class RoleConstraintsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
   
   @Test
   def testRoleImplication(): Unit = {
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val player = new CoreA()
       val roleA = new RoleA()
       val roleB = new RoleB()
@@ -63,7 +70,7 @@ class RoleConstraintsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
   def testRoleProhibition(): Unit = {
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val player = new CoreA()
       val roleA = new RoleA()
       val roleB = new RoleB()
@@ -112,7 +119,7 @@ class RoleConstraintsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
   def testRoleEquivalence(): Unit = {
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val player = new CoreA()
       val roleA = new RoleA()
       val roleB = new RoleB()
@@ -165,7 +172,7 @@ class RoleConstraintsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
   def testMixedRoleConstraints(): Unit = {
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val player = new CoreA()
       val roleA = new RoleA()
       val roleB = new RoleB()
@@ -183,4 +190,14 @@ class RoleConstraintsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
       }
     }
   }
+}
+
+object RoleConstraintsTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }

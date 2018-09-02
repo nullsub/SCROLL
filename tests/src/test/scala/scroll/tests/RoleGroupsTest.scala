@@ -1,9 +1,16 @@
 package scroll.tests
 
 import org.junit.Assert.fail
+import java.{util => ju, lang => jl}
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
+
 import scroll.tests.mocks.CoreA
 
+@RunWith(value = classOf[Parameterized])
 class RoleGroupsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   class Source
@@ -14,7 +21,7 @@ class RoleGroupsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
   def testValidation(): Unit = {
     val acc1 = new CoreA()
     val acc2 = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val source = new Source
       val target = new Target
 
@@ -44,4 +51,14 @@ class RoleGroupsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
       }
     }
   }
+}
+
+object RoleGroupsTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }

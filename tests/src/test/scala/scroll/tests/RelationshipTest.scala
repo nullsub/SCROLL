@@ -1,21 +1,26 @@
 package scroll.tests
 
-<<<<<<< HEAD
+import java.{util => ju, lang => jl}
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.fail
 
 import scroll.internal.util.Many._
 import mocks.CoreA
 
-class RelationshipTest(cached: Boolean) extends AbstractSCROLLTest(cached)
+@RunWith(value = classOf[Parameterized])
+class RelationshipTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   import scala.collection.JavaConverters._
 
   @Test
   def testRelationships(): Unit = {
     val p = new CoreA
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val rA = new RoleA
       val rB = new RoleB
       val rC = new RoleC
@@ -48,4 +53,14 @@ class RelationshipTest(cached: Boolean) extends AbstractSCROLLTest(cached)
       assertArrayEquals(Seq(rB, rB2, rB3).asJava.toArray, rel3.right().asJava.toArray)
     }
   }
+}
+
+object RelationshipTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }

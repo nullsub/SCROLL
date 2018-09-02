@@ -1,10 +1,20 @@
 package scroll.tests
 
+import scroll.examples._
+
+import java.{util => ju, lang => jl}
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import scroll.examples._
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 
+@RunWith(value = classOf[Parameterized])
 class ExamplesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Before
@@ -43,4 +53,14 @@ class ExamplesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
     ExpressionProblemExample.main(null)
   }
 
+}
+
+object ExamplesTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }

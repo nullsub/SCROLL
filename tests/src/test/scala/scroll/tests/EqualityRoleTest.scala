@@ -1,16 +1,24 @@
 package scroll.tests
 
 import mocks.CoreA
+import java.{util => ju, lang => jl}
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Assert.assertNotEquals
 
+@RunWith(value = classOf[Parameterized])
 class EqualityRoleTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   @Test
   def testRoleEquality(): Unit = {
     val someCore = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole = new RoleA()
       val player = someCore play someRole
 
@@ -29,7 +37,7 @@ class EqualityRoleTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
   @Test
   def testRoleEqualityChainedDeepRoles(): Unit = {
     val someCore = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole = new RoleA()
       val someOtherRole = new RoleB()
       val player = (someCore play someRole) play someOtherRole
@@ -57,7 +65,7 @@ class EqualityRoleTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
   @Test
   def testRoleEqualitySeparateDeepRoles(): Unit = {
     val someCore = new CoreA()
-    new SomeCompartment() {
+    new CompartmentUnderTest() {
       val someRole = new RoleA()
       val someOtherRole = new RoleB()
       val player = someCore play someRole
@@ -87,4 +95,14 @@ class EqualityRoleTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
     }
   }
 
+}
+
+object EqualityRoleTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }

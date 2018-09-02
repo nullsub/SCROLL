@@ -1,11 +1,19 @@
 package scroll.tests
 
+
+import java.{util => ju, lang => jl}
+import org.junit.Test
+import org.junit.Assert.fail
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
+
 import java.io.IOException
 
-import org.junit.Assert.fail
-import org.junit.Test
 import scroll.internal.Compartment
 
+@RunWith(value = classOf[Parameterized])
 class ThrowableInRoleMethodsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
 
   class CoreType
@@ -70,4 +78,14 @@ class ThrowableInRoleMethodsTest(cached: Boolean) extends AbstractSCROLLTest(cac
     }
   }
 
+}
+
+object ThrowableInRoleMethodsTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }

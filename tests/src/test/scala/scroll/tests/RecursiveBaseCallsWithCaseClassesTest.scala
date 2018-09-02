@@ -1,12 +1,21 @@
 package scroll.tests
 
+import java.{util => ju, lang => jl}
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
+import org.junit.runners.Parameterized.Parameter
+import org.junit.runners.Parameterized.Parameters
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Assert.assertArrayEquals
 
 import scroll.internal.Compartment
 import scroll.internal.support.DispatchQuery
 import scroll.internal.support.DispatchQuery._
 
+@RunWith(value = classOf[Parameterized])
 class RecursiveBaseCallsWithCaseClassesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
   import scala.collection.JavaConverters._
 
@@ -87,4 +96,14 @@ class RecursiveBaseCallsWithCaseClassesTest(cached: Boolean) extends AbstractSCR
       assertArrayEquals(expected.asJava.toArray, actual.asJava.toArray)
     }
   }
+}
+
+object RecursiveBaseCallsWithCaseClassesTest {
+    @Parameters
+    def parameters: ju.Collection[Array[jl.Boolean]] = {
+        val list = new ju.ArrayList[Array[jl.Boolean]]()
+        list.add(Array(true))
+        list.add(Array(false))
+        list
+    }
 }
