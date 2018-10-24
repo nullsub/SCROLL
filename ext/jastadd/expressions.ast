@@ -1,0 +1,11 @@
+Root ::= Def* Exp ;
+Def ::= <Name:String> <Value:float> ;
+abstract Exp ;
+abstract BinExp:Exp ::= A:Exp B:Exp ;
+AddExp:BinExp ;
+MulExp:BinExp ;
+DivExp:BinExp ;
+MinusExp:BinExp ;
+UnaryMinusExp:Exp ::= A:Exp;
+Number:Exp ::= <Value:float> ;
+Var:Exp ::= <Name:String> ;

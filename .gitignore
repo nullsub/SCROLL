@@ -11,3 +11,12 @@ source_gen*
 .project
 .settings/
 /bin/
+
+ext/gen
+build
+out
+*.project
+*.classpath
+*.idea
+*.iml
+.gradle/

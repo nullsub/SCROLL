@@ -1,0 +1,63 @@
+plugins {
+	id "java"
+	id "org.jastadd" version "1.13.2"
+}
+apply plugin: 'scala'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	mavenLocal()
+	maven {url 'https://jitpack.io' }
+}
+
+dependencies {
+	compile 'org.scala-lang:scala-library:2.12.7'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8.1'
+	compile group: 'net.sf.beaver', name: 'beaver-rt', version: '0.9.11'
+
+	//for SCROLL
+	compile "org.eclipse.emf:org.eclipse.emf.ecore.xmi:2.+"
+	compile group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.17'
+	compile group: 'org.choco-solver', name: 'choco-solver', version: '4.0.8'
+	compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+	compile group: 'com.chuusai', name: 'shapeless_2.11', version: '2.3.3'
+	compile 'com.google.guava:guava:26.0-jre'
+
+	//testCompile files('libs/DrAST-1.2.2.jar')
+	//implementation 'com.github.nullsub:SCROLL:master'
+}
+
+compileJava.dependsOn ':generateJava'
+sourceSets.main.java.srcDir 'ext/gen' // Compiles the generated code.
+
+task generateJava(type: org.jastadd.JastAddTask) {
+	options = [ "--package=de.tud.deussen.jastadd.gen" ]
+	outputDir = file('ext/gen')
+	sources = fileTree('ext/jastadd')
+}
+
+task run(type: JavaExec, dependsOn: classes) {
+	main = 'de.tud.deussen.scala.SCROLLBoot'
+	classpath = sourceSets.main.runtimeClasspath
+	doFirst {
+		classpath.each { println it }
+	}
+}
+
+sourceSets.main.scala.srcDirs = ['core', 'ext']
+compileScala {
+	scalaCompileOptions.additionalParameters = [
+		"-deprecation",
+		"-feature",
+		"-language:dynamics",
+		"-language:reflectiveCalls",
+		"-language:postfixOps",
+		"-language:implicitConversions",
+		"-unchecked",
+		"-target:jvm-1.8"
+	]
+}
+

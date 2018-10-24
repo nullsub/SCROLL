@@ -1,0 +1,22 @@
+aspect Printing {
+
+    syn String ASTNode.print();
+    eq ASTNode.print() = "";
+    eq Root.print() {
+      String result = "";
+      for (Def def : getDefList()) {
+        result += def.print() + "\n";
+      }
+      result += getExp().print();
+      return result;
+    }
+    eq Def.print() = getName() + " = " + Float.toString(getValue());
+    eq AddExp.print() = "(" + getA().print() + " + " + getB().print() + ")";
+    eq MinusExp.print() = "(" + getA().print() + " - " + getB().print() + ")";
+    eq UnaryMinusExp.print() = "( - " + getA().print() + ")";
+    eq MulExp.print() = "(" + getA().print() + " * " + getB().print() + ")";
+    eq DivExp.print() = "(" + getA().print() + " / " + getB().print() + ")";
+    eq Number.print() = Float.toString(getValue());
+    eq Var.print() = getName();
+
+}

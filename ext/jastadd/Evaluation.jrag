@@ -1,0 +1,9 @@
+aspect Evaluation {
+
+  syn float Exp.eval();
+  eq Exp.eval() = 0.0f;
+
+  syn float Exp.testFunction();
+  eq Exp.testFunction() = 0.0f;
+
+}
