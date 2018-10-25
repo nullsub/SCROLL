@@ -3,7 +3,7 @@ package scroll.internal.graph
 import src.main.scala.scroll.internal.graph.{CachedJastAddRoleGraph, JastAddRoleGraph}
 
 object ScalaRoleGraphBuilder {
-  private[this] var _cached: Boolean = true
+  private[this] var _cached: Boolean = false
   private[this] var _jastAdd: Boolean = true
   private[this] var _checkForCycles: Boolean = true
 

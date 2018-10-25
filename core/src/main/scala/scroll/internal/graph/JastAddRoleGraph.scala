@@ -27,7 +27,7 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends ScalaRoleGraph {
     }
 
     target.edges().forEach(p => {
-      val _ = root.putEdge(p.source, p.target)
+      val _ = root.putEdge(p.getSource, p.getTarget)
     })
     checkCycles()
     true
@@ -37,7 +37,7 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends ScalaRoleGraph {
     require(null != other)
     val target = other.asInstanceOf[JastAddRoleGraph].root
     target.edges().forEach(p => {
-      val _ = removeBinding(p.source, p.target)
+      val _ = removeBinding(p.getSource, p.getTarget)
     })
   }
 

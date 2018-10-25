@@ -9,3 +9,8 @@ MinusExp:BinExp ;
 UnaryMinusExp:Exp ::= A:Exp;
 Number:Exp ::= <Value:float> ;
 Var:Exp ::= <Name:String> ;
+
+//directed role graph
+Graph ::= Edge* Node*;
+Edge ::= <Source: Object> <Target: Object>;
+Node ::= <Value: Object>;

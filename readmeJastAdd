@@ -1,0 +1,7 @@
+[scroll] project with [jastadd] integration
+
+run project:
+```gradle run```
+
+[scroll]: https://github.com/max-leuthaeuser/SCROLL
+[jastadd]: http://jastadd.org/web/
