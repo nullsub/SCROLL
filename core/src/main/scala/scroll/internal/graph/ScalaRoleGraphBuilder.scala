@@ -1,7 +1,10 @@
 package scroll.internal.graph
 
+import src.main.scala.scroll.internal.graph.{CachedJastAddRoleGraph, JastAddRoleGraph}
+
 object ScalaRoleGraphBuilder {
   private[this] var _cached: Boolean = true
+  private[this] var _jastAdd: Boolean = true
   private[this] var _checkForCycles: Boolean = true
 
   def cached(cached: Boolean): ScalaRoleGraphBuilder.type = {
@@ -14,9 +17,10 @@ object ScalaRoleGraphBuilder {
     this
   }
 
-  def build: ScalaRoleGraph = if (_cached) {
-    new CachedScalaRoleGraph(checkForCycles = _checkForCycles)
-  } else {
-    new ScalaRoleGraph(checkForCycles = _checkForCycles)
+  def build: ScalaRoleGraph = (_cached, _jastAdd) match {
+    case (true, false) => new CachedScalaRoleGraph(checkForCycles = _checkForCycles)
+    case (false, false) => new ScalaRoleGraph(checkForCycles = _checkForCycles)
+    case (true, true) => new CachedJastAddRoleGraph(checkForCycles = _checkForCycles)
+    case (false, true) => new JastAddRoleGraph(checkForCycles = _checkForCycles)
   }
 }
