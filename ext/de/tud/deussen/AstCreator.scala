@@ -1,4 +1,4 @@
-package de.tud.deussen.scala
+package de.tud.deussen
 
 import de.tud.deussen.jastadd.gen.{AddExp, MulExp, Number, Root, Var}
 
@@ -16,6 +16,6 @@ class AstCreator {
 		mulExp.setB(someVar)
 
 		root.setExp(mulExp)
-		return root
+		root
 	}
 }

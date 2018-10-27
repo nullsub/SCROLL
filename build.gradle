@@ -14,17 +14,17 @@ repositories {
 }
 
 dependencies {
-	compile 'org.scala-lang:scala-library:2.12.7'
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8.1'
-	compile group: 'net.sf.beaver', name: 'beaver-rt', version: '0.9.11'
+	implementation 'org.scala-lang:scala-library:2.12.7'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8.1'
+	implementation group: 'net.sf.beaver', name: 'beaver-rt', version: '0.9.11'
 
 	//for SCROLL
-	compile "org.eclipse.emf:org.eclipse.emf.ecore.xmi:2.+"
-	compile group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.17'
-	compile group: 'org.choco-solver', name: 'choco-solver', version: '4.0.8'
-	compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
-	compile group: 'com.chuusai', name: 'shapeless_2.11', version: '2.3.3'
-	compile 'com.google.guava:guava:26.0-jre'
+	implementation "org.eclipse.emf:org.eclipse.emf.ecore.xmi:2.+"
+	implementation group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.17'
+	implementation group: 'org.choco-solver', name: 'choco-solver', version: '4.0.8'
+	implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+	implementation group: 'com.chuusai', name: 'shapeless_2.11', version: '2.3.3'
+	implementation 'com.google.guava:guava:26.0-jre'
 
 	//testCompile files('libs/DrAST-1.2.2.jar')
 	//implementation 'com.github.nullsub:SCROLL:master'
@@ -40,12 +40,13 @@ task generateJava(type: org.jastadd.JastAddTask) {
 }
 
 task run(type: JavaExec, dependsOn: classes) {
-	main = 'de.tud.deussen.scala.SCROLLBoot'
+	main = 'de.tud.deussen.SCROLLBoot'
 	classpath = sourceSets.main.runtimeClasspath
 	doFirst {
 		classpath.each { println it }
 	}
 }
+
 
 sourceSets.main.scala.srcDirs = ['core', 'ext']
 compileScala {

@@ -3,37 +3,13 @@ package src.main.scala.scroll.ext
 import java.util
 
 import de.tud.deussen.jastadd.gen.{Edge, Graph, Node}
-import scala.collection._
-
-
-import scala.reflect.ClassTag
-
-/*
-class test123 {
-	def createAst: Root = {
-		println("I am creating AST...")
-		val root = new Root()
-		val addExp = new AddExp()
-		addExp.setA(new Number(0.5f))
-		addExp.setB(new Number(1))
-
-		val someVar = new Var("varName")
-		val mulExp = new MulExp()
-		mulExp.setA(addExp)
-		mulExp.setB(someVar)
-
-		root.setExp(mulExp)
-		return root
-	}
-}
-*/
 
 class JastAddGraph[N] { // extends MutableGraph[N] {
 
 	var graph = new Graph()
 
 	def putEdge(source: Object, target: Object): Boolean = {
-		println("putEdge:" + source.toString + " " +target.toString)
+		println("putEdge:" + source.toString + " " + target.toString)
 		if(!this.nodes.contains(source)) {
 			val node = new Node()
 			node.setValue(source)
@@ -60,7 +36,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def removeEdge(source: Object, target: Object): Boolean = {
-		println("removeEdge:" + source.toString + " " +target.toString)
+		println("removeEdge:" + source.toString + " " + target.toString)
 		val it = this.graph.getEdgeList.iterator
 		while(it.hasNext) {
 			val edge = it.next()
@@ -114,53 +90,47 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def edges(): util.Set[Edge] = {
-		println("edges(): ")
 		val someSet = new util.HashSet[Edge]()
 		this.graph.getEdgeList.forEach(edge => {
 			someSet.add(edge)
+			//println("edges(): " + edge.getSource.toString + " " + edge.getTarget.toString)
 		})
 		someSet
 	}
 
 	def nodes(): util.Set[Object] = {
-		println("nodes(): ")
 		val nodes = new util.HashSet[Object]()
 		this.graph.getNodeList.forEach(node => {
 			nodes.add(node.getValue)
+			//println("nodes(): " + node.getValue.toString)
 		})
 		nodes
 	}
 
-	//fixme for cycles
-	def successors(node: Object) : util.Set[Object] = {
-		println("successors: ")
-
+	def successors(node: Object, root: Object = None): util.Set[Object] = {
+		println("successors: " + node.toString)
+		val rootVal = if(root == None) node else root
 		val values = new util.HashSet[Object]()
-
-		val it = this.graph.getEdgeList.iterator
-		while(it.hasNext) {
-			val edge = it.next()
-			if(edge.getSource == node) {
+		edges().forEach(edge => {
+			if(edge.getSource == node && edge.getTarget != rootVal) {
 				values.add(edge.getTarget)
-				values.addAll(successors(edge.getTarget))
+				values.addAll(successors(edge.getTarget, rootVal))
 			}
-		}
+		})
 		values
 	}
 
-	//fixme for cycles
-	def predecessors(node: Object): util.Set[Object] = {
-		println("predecessors: ")
+	def predecessors(node: Object, root: Object = None): util.Set[Object] = {
+		println("predecessors: " + node.toString)
+		val rootVal = if(root == None) node else root
 		val values = new util.HashSet[Object]()
-
-		val it = this.graph.getEdgeList.iterator
-		while(it.hasNext) {
-			val edge = it.next()
-			if(edge.getTarget == node) {
+		edges().forEach(edge => {
+			if(edge.getTarget == node && edge.getSource != rootVal) {
 				values.add(edge.getSource)
-				values.addAll(predecessors(edge.getSource))
+				values.addAll(predecessors(edge.getSource, rootVal))
 			}
-		}
+		})
 		values
 	}
+
 }
