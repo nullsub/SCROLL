@@ -1,64 +1,92 @@
 plugins {
-	id "java"
-	id "org.jastadd" version "1.13.2"
+    id "java"
+    id "org.jastadd" version "1.13.2"
+    id "com.github.maiflai.scalatest" version "0.23"
+
 }
 apply plugin: 'scala'
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-	mavenCentral()
-	mavenLocal()
-	maven {url 'https://jitpack.io' }
+    mavenCentral()
+    mavenLocal()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-	implementation 'org.scala-lang:scala-library:2.12.7'
-	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8.1'
-	implementation group: 'net.sf.beaver', name: 'beaver-rt', version: '0.9.11'
+    implementation 'org.scala-lang:scala-library:2.12.7'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8.1'
+    implementation group: 'net.sf.beaver', name: 'beaver-rt', version: '0.9.11'
 
-	//for SCROLL
-	implementation "org.eclipse.emf:org.eclipse.emf.ecore.xmi:2.+"
-	implementation group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.17'
-	implementation group: 'org.choco-solver', name: 'choco-solver', version: '4.0.8'
-	implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
-	implementation group: 'com.chuusai', name: 'shapeless_2.11', version: '2.3.3'
-	implementation 'com.google.guava:guava:26.0-jre'
+    //for SCROLL
+    implementation "org.eclipse.emf:org.eclipse.emf.ecore.xmi:2.+"
+    implementation group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.17'
+    implementation group: 'org.choco-solver', name: 'choco-solver', version: '4.0.8'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
+    implementation group: 'com.chuusai', name: 'shapeless_2.11', version: '2.3.3'
+    implementation 'com.google.guava:guava:26.0-jre'
+    //for scroll tests
+    //implementation "org.scalactic:scalactic_2.12:3.0.5"
+    testImplementation 'org.scalatest:scalatest_2.12:3.0.5'
+    testImplementation 'junit:junit:4.12'
+    testRuntime 'org.pegdown:pegdown:1.4.2'
 
-	//testCompile files('libs/DrAST-1.2.2.jar')
-	//implementation 'com.github.nullsub:SCROLL:master'
+
+    //testCompile files('libs/DrAST-1.2.2.jar')
+    //implementation 'com.github.nullsub:SCROLL:master'
 }
 
 compileJava.dependsOn ':generateJava'
 sourceSets.main.java.srcDir 'ext/gen' // Compiles the generated code.
 
 task generateJava(type: org.jastadd.JastAddTask) {
-	options = [ "--package=de.tud.deussen.jastadd.gen" ]
-	outputDir = file('ext/gen')
-	sources = fileTree('ext/jastadd')
+    options = ["--package=de.tud.deussen.jastadd.gen"]
+    outputDir = file('ext/gen')
+    sources = fileTree('ext/jastadd')
 }
 
 task run(type: JavaExec, dependsOn: classes) {
-	main = 'de.tud.deussen.SCROLLBoot'
-	classpath = sourceSets.main.runtimeClasspath
-	doFirst {
-		classpath.each { println it }
-	}
+    main = 'de.tud.deussen.SCROLLBoot'
+    classpath = sourceSets.main.runtimeClasspath
+    doFirst {
+        classpath.each { println it }
+    }
+}
+
+//suite 'scroll.tests.SCROLLTestSuite'
+sourceSets.test.scala.srcDirs = ['tests/src']
+sourceSets.test.resources.srcDirs = ['tests/src/test/resources','core/src/main/resources']
+compileTestScala {
+    options.fork = false
+    scalaCompileOptions.force = true
+    scalaCompileOptions.additionalParameters = [
+                "-deprecation",
+                "-feature",
+                "-language:dynamics",
+                "-language:reflectiveCalls",
+                "-language:postfixOps",
+                "-language:implicitConversions",
+                "-unchecked",
+                "-target:jvm-1.8"
+        ]
 }
 
 
-sourceSets.main.scala.srcDirs = ['core', 'ext']
+sourceSets.main.resources.srcDirs = ['tests/src/test/resources','core/src/main/resources']
+sourceSets.main.scala.srcDirs = ['core', 'ext', 'examples']
 compileScala {
-	scalaCompileOptions.additionalParameters = [
-		"-deprecation",
-		"-feature",
-		"-language:dynamics",
-		"-language:reflectiveCalls",
-		"-language:postfixOps",
-		"-language:implicitConversions",
-		"-unchecked",
-		"-target:jvm-1.8"
-	]
+    scalaCompileOptions.additionalParameters = [
+            "-deprecation",
+            "-feature",
+            "-language:dynamics",
+            "-language:reflectiveCalls",
+            "-language:postfixOps",
+            "-language:implicitConversions",
+            "-unchecked",
+            "-target:jvm-1.8"
+    ]
 }
 

@@ -3,9 +3,10 @@ package scroll.tests.mocks
 import scroll.internal.Compartment
 import scroll.internal.graph.ScalaRoleGraphBuilder
 
-class SomeCompartment(cached: Boolean) extends Compartment {
+class SomeCompartment(cached: Boolean, jastAdd: Boolean = true) extends Compartment {
 
   ScalaRoleGraphBuilder.cached(cached)
+  ScalaRoleGraphBuilder.jastAdd(jastAdd)
 
   class RoleA {
     val valueA: String = "valueA"
