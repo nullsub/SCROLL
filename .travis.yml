@@ -14,4 +14,4 @@ branches:
     - master
     
 script:
-    - sbt tests/test
+    - gradle test
