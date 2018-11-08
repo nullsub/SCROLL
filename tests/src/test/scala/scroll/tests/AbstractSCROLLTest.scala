@@ -6,7 +6,7 @@ import org.scalatest.GivenWhenThen
 import org.scalatest.Matchers
 import scroll.tests.mocks.SomeCompartment
 
-abstract class AbstractSCROLLTest(cached: Boolean, jastAdd: Boolean = true) extends FeatureSpec with GivenWhenThen with Matchers with BeforeAndAfter {
+abstract class AbstractSCROLLTest(cached: Boolean, jastAdd: Boolean) extends FeatureSpec with GivenWhenThen with Matchers with BeforeAndAfter {
 
   class CompartmentUnderTest() extends SomeCompartment(cached, jastAdd)
 

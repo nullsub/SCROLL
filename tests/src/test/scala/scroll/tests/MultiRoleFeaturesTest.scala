@@ -5,7 +5,7 @@ import scroll.internal.support.DispatchQuery
 import scroll.internal.support.DispatchQuery._
 import scroll.tests.mocks.CoreA
 
-class MultiRoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class MultiRoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
 
   info("Test spec for an excerpt of the role concept for multi roles.")
   info("Things like role playing and method invocation are tested.")

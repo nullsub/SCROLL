@@ -2,7 +2,7 @@ package scroll.tests
 
 import mocks.CoreA
 
-class EqualityRoleTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class EqualityRoleTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
   info("Test spec for role equality.")
 
   feature("Role playing equality") {

@@ -2,7 +2,7 @@ package scroll.tests
 
 import scroll.tests.mocks.CoreA
 
-class DynamicExtensionsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class DynamicExtensionsTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
 
   info("Test spec for an excerpt of the dynamic extension concept.")
   info("Things like adding dynamic extensions and method invocation are tested.")

@@ -2,7 +2,7 @@ package scroll.tests
 
 import scroll.examples._
 
-class ExamplesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class ExamplesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
   info("Test spec for scroll.examples.")
 
   feature("Running scroll.examples") {

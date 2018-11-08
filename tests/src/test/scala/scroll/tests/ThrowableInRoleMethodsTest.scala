@@ -2,7 +2,7 @@ package scroll.tests
 
 import java.io.IOException
 
-class ThrowableInRoleMethodsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class ThrowableInRoleMethodsTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
 
   info("Test spec for handling a Throwable in role methods.")
 

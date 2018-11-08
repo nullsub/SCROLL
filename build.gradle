@@ -28,15 +28,11 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.25'
     implementation group: 'com.chuusai', name: 'shapeless_2.11', version: '2.3.3'
     implementation 'com.google.guava:guava:26.0-jre'
+    
     //for scroll tests
-    //implementation "org.scalactic:scalactic_2.12:3.0.5"
     testImplementation 'org.scalatest:scalatest_2.12:3.0.5'
     testImplementation 'junit:junit:4.12'
     testRuntime 'org.pegdown:pegdown:1.4.2'
-
-
-    //testCompile files('libs/DrAST-1.2.2.jar')
-    //implementation 'com.github.nullsub:SCROLL:master'
 }
 
 compileJava.dependsOn ':generateJava'
@@ -56,7 +52,6 @@ task run(type: JavaExec, dependsOn: classes) {
     }
 }
 
-//suite 'scroll.tests.SCROLLTestSuite'
 sourceSets.test.scala.srcDirs = ['tests/src']
 sourceSets.test.resources.srcDirs = ['tests/src/test/resources','core/src/main/resources']
 compileTestScala {

@@ -3,7 +3,7 @@ package scroll.tests.mocks
 import scroll.internal.Compartment
 import scroll.internal.graph.ScalaRoleGraphBuilder
 
-class SomeCompartment(cached: Boolean, jastAdd: Boolean = true) extends Compartment {
+class SomeCompartment(cached: Boolean, jastAdd: Boolean) extends Compartment {
 
   ScalaRoleGraphBuilder.cached(cached)
   ScalaRoleGraphBuilder.jastAdd(jastAdd)

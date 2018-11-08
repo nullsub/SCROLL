@@ -2,7 +2,7 @@ package scroll.tests
 
 import mocks.CoreA
 
-class RoleRestrictionsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class RoleRestrictionsTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
   info("Test spec for role restrictions.")
 
   feature("Specifying role restrictions") {

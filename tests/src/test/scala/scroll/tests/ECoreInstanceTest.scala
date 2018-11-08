@@ -2,7 +2,7 @@ package scroll.tests
 
 import scroll.internal.formal.CROM
 
-class ECoreInstanceTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class ECoreInstanceTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
   info("Test spec for loading ECore CROM model instances.")
 
   feature("Loading an ECore CROM model instance") {

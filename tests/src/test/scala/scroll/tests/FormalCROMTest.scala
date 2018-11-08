@@ -2,7 +2,7 @@ package scroll.tests
 
 import scroll.internal.formal.{FormalCROI, FormalCROM, FormalConstraintModel, FormalUtils, FormalRoleGroup}
 
-class FormalCROMTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class FormalCROMTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
   info("Test spec for ScalaFormalCROM.")
 
   feature("Testing util functions") {

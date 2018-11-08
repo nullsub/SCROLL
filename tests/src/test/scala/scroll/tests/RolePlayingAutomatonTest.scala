@@ -6,7 +6,7 @@ import org.scalatest.time.SpanSugar._
 import scroll.internal.rpa.RolePlayingAutomaton
 import scroll.internal.rpa.RolePlayingAutomaton.{BindRole, RPAState, Start, Stop, Terminate, Use}
 
-class RolePlayingAutomatonTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class RolePlayingAutomatonTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
   info("Test spec for role playing automaton.")
 
   feature("Specifying a role playing automaton") {

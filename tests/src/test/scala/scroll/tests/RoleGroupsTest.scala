@@ -2,7 +2,7 @@ package scroll.tests
 
 import scroll.tests.mocks.CoreA
 
-class RoleGroupsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class RoleGroupsTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
   info("Test spec for role groups.")
 
   feature("Role groups") {

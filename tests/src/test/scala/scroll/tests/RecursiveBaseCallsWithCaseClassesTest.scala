@@ -2,7 +2,7 @@ package scroll.tests
 
 import scroll.internal.support.DispatchQuery._
 
-class RecursiveBaseCallsWithCaseClassesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class RecursiveBaseCallsWithCaseClassesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
 
   case class CoreType(id: String) {
     def someMethod(): Unit = {

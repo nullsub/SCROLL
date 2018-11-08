@@ -2,7 +2,7 @@ package scroll.tests
 
 import mocks.CoreA
 
-class RelationshipTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class RelationshipTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
   info("Test spec for the relationship concept.")
 
   feature("Relationship specification and querying") {

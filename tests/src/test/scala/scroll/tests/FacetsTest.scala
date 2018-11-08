@@ -2,7 +2,7 @@ package scroll.tests
 
 import scroll.tests.mocks.{CoreA, CoreB}
 
-class FacetsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class FacetsTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
 
   object TestFacet extends Enumeration {
     type Color = Value

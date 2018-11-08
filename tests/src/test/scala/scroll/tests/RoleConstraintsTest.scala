@@ -2,7 +2,7 @@ package scroll.tests
 
 import mocks.CoreA
 
-class RoleConstraintsTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class RoleConstraintsTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
   info("Test spec for role constraints.")
 
   feature("Role implication") {

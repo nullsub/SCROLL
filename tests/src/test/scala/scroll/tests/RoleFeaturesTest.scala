@@ -5,7 +5,7 @@ import scroll.internal.support.DispatchQuery
 import DispatchQuery._
 import scroll.internal.errors.SCROLLErrors.RoleNotFound
 
-class RoleFeaturesTest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
 
   info("Test spec for an excerpt of the role concept.")
   info("Things like role playing and method invocation are tested.")

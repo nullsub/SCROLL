@@ -4,7 +4,7 @@ import scroll.tests.mocks.CoreA
 import scroll.internal.formal.CROI
 import scroll.internal.util.Log
 
-class CROITest(cached: Boolean) extends AbstractSCROLLTest(cached) {
+class CROITest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
   info("Test spec for CROIs.")
 
   feature("Specifying a CROI manually") {
