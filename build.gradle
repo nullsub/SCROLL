@@ -2,7 +2,6 @@ plugins {
     id "java"
     id "org.jastadd" version "1.13.2"
     id "com.github.maiflai.scalatest" version "0.23"
-
 }
 apply plugin: 'scala'
 
@@ -39,7 +38,7 @@ compileJava.dependsOn ':generateJava'
 sourceSets.main.java.srcDir 'ext/gen' // Compiles the generated code.
 
 task generateJava(type: org.jastadd.JastAddTask) {
-    options = ["--package=de.tud.deussen.jastadd.gen", "--cache=all", "--flush=full", "--rewrite=cnta"]
+    options = ["--package=de.tud.deussen.jastadd.gen", "--cache=all", "--flush=full", "--rewrite=cnta", "--List=JastAddList"]
     outputDir = file('ext/gen')
     sources = fileTree('ext/jastadd')
 }
@@ -68,7 +67,6 @@ compileTestScala {
                 "-target:jvm-1.8"
         ]
 }
-
 
 sourceSets.main.resources.srcDirs = ['tests/src/test/resources','core/src/main/resources']
 sourceSets.main.scala.srcDirs = ['core', 'ext', 'examples']
