@@ -50,7 +50,7 @@ trait Compartment
     with QueryStrategies
     with RoleUnionTypes {
 
-  private[internal] var plays: ScalaRoleGraph = ScalaRoleGraphBuilder.build
+  private[internal] var plays = ScalaRoleGraphBuilder.build
 
   implicit def either2TorException[T](either: Either[_, T]): T = either.fold(
     l => {

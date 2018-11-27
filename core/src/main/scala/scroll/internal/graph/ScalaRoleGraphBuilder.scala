@@ -22,7 +22,7 @@ object ScalaRoleGraphBuilder {
     this
   }
 
-  def build: ScalaRoleGraph = (_cached, _jastAdd) match {
+  def build: RoleGraph = (_cached, _jastAdd) match {
     case (true, false) => new CachedScalaRoleGraph(checkForCycles = _checkForCycles)
     case (false, false) => new ScalaRoleGraph(checkForCycles = _checkForCycles)
     case (true, true) => new CachedJastAddRoleGraph(checkForCycles = _checkForCycles)

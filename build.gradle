@@ -39,7 +39,7 @@ compileJava.dependsOn ':generateJava'
 sourceSets.main.java.srcDir 'ext/gen' // Compiles the generated code.
 
 task generateJava(type: org.jastadd.JastAddTask) {
-    options = ["--package=de.tud.deussen.jastadd.gen"]
+    options = ["--package=de.tud.deussen.jastadd.gen", "--cache=all", "--flush=full", "--rewrite=cnta"]
     outputDir = file('ext/gen')
     sources = fileTree('ext/jastadd')
 }
