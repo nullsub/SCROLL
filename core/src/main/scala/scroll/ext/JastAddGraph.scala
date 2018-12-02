@@ -2,166 +2,110 @@ package src.main.scala.scroll.ext
 
 import java.util
 
-import de.tud.deussen.jastadd.gen.{ASTNode, Edge, Graph, Node}
+import de.tud.deussen.jastadd.gen._
+
+import scala.reflect.ClassTag
 
 class JastAddGraph[N] { // extends MutableGraph[N] {
-//dasdasdasdadas
-	var graph = new Graph()
+	var graph: Tree = new Tree()
 
 	def putEdge(source: Object, target: Object): Boolean = {
-		//println("putEdge:" + source.toString + " " + target.toString)
-		var graphChanged = false
-		if(!this.nodes().contains(source)) {
-			val node = new Node()
-			node.setValue(source)
-			this.graph.addNode(node)
-			graphChanged = true
-		}
-		if(!this.nodes().contains(target)) {
-			val node = new Node()
-			node.setValue(target)
-			this.graph.addNode(node)
-			graphChanged = true
-		}
+		println("putEdge:" + source.toString + " " + target.toString)
 
-		val it = this.graph.getEdgeList.iterator
-		while(it.hasNext) {
-			val edge = it.next()
-			if(edge.getSource == source && edge.getTarget == target)
-				return graphChanged
+		var playable: Playable = this.graph.findPlayableByObject(source)
+		if(playable == null) {
+			playable = new Natural()
+			playable.setObject(source)
+			this.graph.addNatural(playable.asInstanceOf[Natural])
 		}
-
-		val newEdge = new Edge()
-		newEdge.setSource(source)
-		newEdge.setTarget(target)
-		this.graph.addEdge(newEdge)
-
+		val role = new Role()
+		role.setObject(target)
+		playable.addRole(role)
 		true
 	}
 
-	def removeEdge(source: Object, target: Object): Boolean = {
-		//println("removeEdge:" + source.toString + " " + target.toString)
-
-		var graphChanged = false
-		val edges = new util.HashSet[Edge]()
-		this.graph.getEdgeList.forEach(edge => {
-			if(edge.getSource == source && edge.getTarget == target) {
-				edges.add(edge)
-				graphChanged = true
-			}
-		})
-		edges.forEach(edge => {
-			this.graph.getEdgeList.removeChild(this.graph.getEdgeList.getIndexOfChild(edge.asInstanceOf[ASTNode[ASTNode[_ <: AnyRef]]]))
-		})
-
-		graphChanged
+	def removeRole(player: Object, role: Object): Unit = {
+		var playableRole: Playable = this.graph.findPlayableByObject(role)
+		//var playablePlayer: Playable = this.graph.findPlayableByObject(role)
+//todo fixme, only remove role when it is child from playablePlayer
+		this.removePlayer(playableRole.getObject)
 	}
 
-	def removeNode(node: Object): Boolean = {
-		//println("removeNode: " + node.toString)
-		var graphChanged = false
-
-		val edges = new util.HashSet[Edge]()
-		this.graph.getEdgeList.forEach(edge => {
-			if(edge.getSource == node || edge.getTarget == node) {
-				edges.add(edge)
-				graphChanged = true
+	def removePlayer[P <: AnyRef : ClassTag](player: P): Unit = {
+		println("removePlayer:")
+		val playable: Playable = this.graph.findPlayableByObject(player)
+		if(playable == null) {
+			return
+		}
+		val pred = this.graph.getPredecessor(playable)
+		if(pred == null) {
+			var toDelete = -1
+			this.graph.getNaturalList.forEach(n => {
+				if(n == playable)
+					toDelete = this.graph.getNaturalList.getIndexOfChild(n.asInstanceOf)
+			})
+			if(toDelete > -1) {
+				this.graph.getNaturalList.removeChild(toDelete)
 			}
-		})
-		edges.forEach(edge => {
-			this.graph.getEdgeList.removeChild(this.graph.getEdgeList.getIndexOfChild(edge.asInstanceOf[ASTNode[ASTNode[_ <: AnyRef]]]))
-		})
-
-
-		val nodes = new util.HashSet[Node]()
-		this.graph.getNodeList.forEach(n => {
-			if(n.getValue == node) {
-				nodes.add(n)
-				graphChanged = true
-			}
-		})
-		nodes.forEach(n => {
-			this.graph.getNodeList.removeChild(this.graph.getNodeList.getIndexOfChild(n.asInstanceOf[ASTNode[ASTNode[_ <: AnyRef]]]))
-		})
-
-		graphChanged
+			return
+		}
+		pred.removeRole(playable)
 	}
 
-	private def isCyclic(node: Object, visited: Array[Boolean], finished: Array[Boolean]): Boolean = {
+	def containsPlayer(player: AnyRef): Boolean = {
+		//println("containsPlayer:")
 
-		if(finished(nodeIndex(node)))
-			return false
-		if(visited(nodeIndex(node)))
+		val playable = this.graph.findPlayableByObject(player)
+		if(playable != null)
 			return true
-
-		visited(nodeIndex(node)) = true
-
-		val it = this.graph.getEdgeList.iterator
-		while(it.hasNext) {
-			val edge = it.next()
-			if(edge.getSource == node) {
-				if(isCyclic(edge.getTarget, visited, finished))
-					return true
-			}
-		}
-		finished(nodeIndex(node)) = true
 		false
 	}
 
-	private def nodeIndex(node: Object): Integer = {
-		nodes().toArray().indexOf(node)
+
+	def facets(player: AnyRef): Seq[Enumeration#Value] = {
+		println("facets:")
+
+		val p: Playable = this.graph.findPlayableByObject(player)
+		if(p != null)
+			p.getPlayers
+		Seq.empty
 	}
 
-	def hasCycle: Boolean = {
-		//println("hasCycle()")
+	def allPlayers(): Seq[AnyRef] = {
+		println("allPlayers:")
 
-		val visited: Array[Boolean] = (0 to this.graph.getNodeList.getNumChild map (_ => false)).toArray
-		val finished: Array[Boolean] = (0 to this.graph.getNodeList.getNumChild map (_ => false)).toArray
-
-		val it = this.graph.getNodeList.iterator
-		while(it.hasNext) {
-			val node = it.next()
-			if(isCyclic(node.getValue, visited, finished))
-				return true
-		}
-		false
-	}
-
-	def edges(): util.Set[Edge] = {
-		val someSet = new util.LinkedHashSet[Edge]()
-		this.graph.getEdgeList.forEach(edge => {
-			someSet.add(edge)
+		val ret: util.List[Playable] = new util.LinkedList
+		this.graph.getNaturals.forEach(n => {
+			ret.addAll(scala.collection.JavaConverters.seqAsJavaList[Playable](n.getPlayers))
 		})
-		someSet
+		val retSeq: Seq[Playable] = scala.collection.JavaConverters.asScalaIteratorConverter(ret.iterator()).asScala.toSeq
+		for (f <- retSeq) yield f.getObject
 	}
 
-	def nodes(): util.Set[Object] = {
-		val nodes = new util.LinkedHashSet[Object]()
-		this.graph.getNodeList.forEach(node => {
-			nodes.add(node.getValue)
-		})
-		nodes
+
+	def roles(player: AnyRef): Seq[AnyRef] = {
+		println("roles:")
+
+		val p: Playable = this.graph.findPlayableByObject(player)
+		if(p != null)
+			return for (f <- p.getPlayers) yield f.getObject
+		Seq.empty
 	}
 
-	def successors(node: Object): util.Set[Object] = {
-		val values = new util.LinkedHashSet[Object]()
-		edges().forEach(edge => {
-			if(edge.getSource == node) {
-				values.add(edge.getTarget)
+	def predecessors(player: AnyRef): util.Set[Object] = {
+		println("predecessors:")
+
+		var p: Playable = this.graph.findPlayableByObject(player)
+
+		val ret: util.Set[Object] = new util.HashSet[Object]
+		do {
+			p = this.graph.getPredecessor(p)
+			if(p != null) {
+				ret.add(p.getObject)
 			}
-		})
-		//println("successors: " + node.toString + " equals: " + values.toArray.toString)
-		values
-	}
+		} while(p != null)
 
-	def predecessors(node: Object): util.Set[Object] = {
-		val values = new util.LinkedHashSet[Object]()
-		edges().forEach(edge => {
-			if(edge.getTarget == node) {
-				values.add(edge.getSource)
-			}
-		})
 		//println("predecessors: " + node.toString + " equals: " + values.toArray.toString)
-		values
+		ret
 	}
 }

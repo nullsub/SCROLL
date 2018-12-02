@@ -16,8 +16,6 @@ import scala.reflect.ClassTag
   */
 class ScalaRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 
-  protected val MERGE_MESSAGE: String = "You can only merge RoleGraphs of the same type!"
-
   private val root: MutableGraph[Object] = GraphBuilder.directed().build[Object]()
 
   override def addPart(other: RoleGraph): Boolean = {

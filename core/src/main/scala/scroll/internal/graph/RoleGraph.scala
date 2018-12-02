@@ -6,6 +6,8 @@ import scala.reflect.ClassTag
   * Trait defining an generic interface for all kind of role graphs.
   */
 trait RoleGraph {
+  protected val MERGE_MESSAGE: String = "You can only merge RoleGraphs of the same type!"
+
   /**
     * RoleGraph given as other would get part of this.
     *

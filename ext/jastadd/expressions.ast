@@ -1,16 +1,10 @@
-Root ::= Def* Exp ;
-Def ::= <Name:String> <Value:float> ;
-abstract Exp ;
-abstract BinExp:Exp ::= A:Exp B:Exp ;
-AddExp:BinExp ;
-MulExp:BinExp ;
-DivExp:BinExp ;
-MinusExp:BinExp ;
-UnaryMinusExp:Exp ::= A:Exp;
-Number:Exp ::= <Value:float> ;
-Var:Exp ::= <Name:String> ;
-
 //directed role graph
 Graph ::= Edge* Node*;
 Edge ::= <Source: Object> <Target: Object>;
 Node ::= <Value: Object>;
+
+//role tree structure
+Tree ::= Natural* ;
+abstract Playable ::= Role* <Object:Object> ;
+Natural:Playable ;
+Role:Playable ;

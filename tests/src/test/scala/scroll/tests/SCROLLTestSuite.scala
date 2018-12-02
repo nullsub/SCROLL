@@ -3,12 +3,13 @@ package scroll.tests
 import org.scalatest.Suites
 
 object SCROLLTestSuite {
-  val suites: Seq[AbstractSCROLLTest] = Seq(Seq(true, false), Seq(true, true), Seq(false, false), Seq(false, true)).flatMap(args => {
+  val suites: Seq[AbstractSCROLLTest] = Seq(Seq(false, true)).flatMap(args => {
+    //val suites: Seq[AbstractSCROLLTest] = Seq(Seq(true, false), Seq(true, true), Seq(false, false), Seq(false, true)).flatMap(args => {
     val c = args(0)
     val j = args(1)
     Seq(
-      new RoleFeaturesTest(cached = c, jastAdd = j),
-      new RoleSortingTest(cached = c, jastAdd = j),
+      new RoleFeaturesTest(cached = c, jastAdd = j))
+     /* new RoleSortingTest(cached = c, jastAdd = j),
       new DynamicExtensionsTest(cached = c, jastAdd = j),
       new EqualityRoleTest(cached = c, jastAdd = j),
       new ExamplesTest(cached = c, jastAdd = j),
@@ -26,7 +27,7 @@ object SCROLLTestSuite {
       new FacetsTest(cached = c, jastAdd = j),
       new RecursiveBaseCallsWithClassesTest(cached = c, jastAdd = j),
       new RecursiveBaseCallsWithCaseClassesTest(cached = c, jastAdd = j),
-      new ThrowableInRoleMethodsTest(cached = c, jastAdd = j))
+      new ThrowableInRoleMethodsTest(cached = c, jastAdd = j))*/
   })
 }
 

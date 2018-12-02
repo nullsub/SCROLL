@@ -1,9 +1,65 @@
 aspect Evaluation {
 
-  syn float Exp.eval();
-  eq Exp.eval() = 0.0f;
+    public Playable Tree.findPlayableByObject(Object object) {
+            System.out.println("Tree.findPlayableByObject()");
 
-  syn float Exp.testFunction();
-  eq Exp.testFunction() = 0.0f;
+        for(Playable p : this.getNaturals()) {
+            Playable ret = p.findPlayableByObject(object);
+            if(ret != null) {
+                return  ret;
+            }
+        }
+        return null;
+    }
 
+
+    public Playable Playable.findPlayableByObject(Object object) {
+            System.out.println("Playable.findPlayableByObject()");
+
+            if(this.getObject() == object) {
+                return this;
+            }
+
+        for(Playable p : this.getRoles()) {
+            Playable ret = p.findPlayableByObject(object);
+            if(ret != null) {
+                return  ret;
+            }
+        }
+        return null;
+    }
+
+    public Boolean Playable.removeRole(Object object) {
+        System.out.println("removeRole()");
+        return true;
+    }
+
+        public Playable Tree.getPredecessor(Playable player) {
+            System.out.println("getPredecessor()");
+
+            for(Playable n : this.getNaturals()) {
+                java.util.List<Playable> ret = scala.collection.JavaConversions.seqAsJavaList(n.getPlayers());
+                for(Playable p: ret) {
+                    for(Playable role : p.getRoles()){
+                        if(role == player) {
+                            return p;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+    public  scala.collection.Seq<Playable> Playable.getPlayers() {
+        System.out.println("getPlayers()");
+
+        java.util.List<Playable> list = new java.util.ArrayList<Playable>();
+        //if(this.getRoles().getNumChild() > 0) {
+            list.add(this);
+        //}
+        for(Playable p : this.getRoles()){
+            list.addAll(scala.collection.JavaConversions.seqAsJavaList(p.getPlayers()));
+        }
+        return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
+    }
 }
