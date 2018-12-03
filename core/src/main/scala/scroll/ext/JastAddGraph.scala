@@ -4,6 +4,7 @@ import java.util
 
 import de.tud.deussen.jastadd.gen._
 
+import scala.collection.mutable
 import scala.reflect.ClassTag
 
 class JastAddGraph[N] { // extends MutableGraph[N] {
@@ -12,23 +13,43 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	def putEdge(source: Object, target: Object): Boolean = {
 		println("putEdge:" + source.toString + " " + target.toString)
 
+		var targetPlayable = this.graph.findPlayableByObject(target)
+		if(targetPlayable != null) {
+			//throw new Exception("targetPlayable already exists!")
+		}
+		if(targetPlayable == null) {
+			targetPlayable = new Role()
+			targetPlayable.setObject(target)
+		}
+
 		var playable: Playable = this.graph.findPlayableByObject(source)
 		if(playable == null) {
 			playable = new Natural()
 			playable.setObject(source)
 			this.graph.addNatural(playable.asInstanceOf[Natural])
 		}
-		val role = new Role()
-		role.setObject(target)
-		playable.addRole(role)
+		playable.addRole(targetPlayable.asInstanceOf[Role])
 		true
 	}
 
 	def removeRole(player: Object, role: Object): Unit = {
-		var playableRole: Playable = this.graph.findPlayableByObject(role)
+		println("removeRole:")
+
+		val playableRole: Playable = this.graph.findPlayableByObject(role)
 		//var playablePlayer: Playable = this.graph.findPlayableByObject(role)
-//todo fixme, only remove role when it is child from playablePlayer
-		this.removePlayer(playableRole.getObject)
+
+		val pred = this.graph.getPredecessor(playableRole)
+
+		if(pred == null && pred.getObject == player) {
+			var toDelete = -1
+			this.graph.getNaturalList.forEach(n => {
+				if(n == playableRole)
+					toDelete = this.graph.getNaturalList.getIndexOfChild(n.asInstanceOf)
+			})
+			if(toDelete > -1) {
+				this.graph.getNaturalList.removeChild(toDelete)
+			}
+		}
 	}
 
 	def removePlayer[P <: AnyRef : ClassTag](player: P): Unit = {
@@ -66,8 +87,15 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		println("facets:")
 
 		val p: Playable = this.graph.findPlayableByObject(player)
-		if(p != null)
-			p.getPlayers
+		if(p != null) {
+			val returnSeq = new mutable.ListBuffer[Enumeration#Value]
+			val objectSet = for (f <- p.successors()) yield f.getObject
+			scala.collection.JavaConverters.seqAsJavaList[Object](objectSet).forEach {
+				case e: Enumeration#Value => returnSeq += e
+				case _ =>
+			}
+			return returnSeq
+		}
 		Seq.empty
 	}
 
@@ -82,6 +110,21 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		for (f <- retSeq) yield f.getObject
 	}
 
+/*
+	override def facets(player: AnyRef): Seq[Enumeration#Value] = {
+		require(null != player)
+		if (containsPlayer(player)) {
+			val returnSeq = new mutable.ListBuffer[Enumeration#Value]
+			root.successors(player.asInstanceOf[Object]).forEach {
+				case e: Enumeration#Value => returnSeq += e
+				case _ =>
+			}
+			returnSeq
+		} else {
+			Seq.empty
+		}
+	}
+*/
 
 	def roles(player: AnyRef): Seq[AnyRef] = {
 		println("roles:")
