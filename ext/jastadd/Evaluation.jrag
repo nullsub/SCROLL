@@ -1,7 +1,7 @@
 aspect Evaluation {
 
     public Playable Tree.findPlayableByObject(Object object) {
-            System.out.println("Tree.findPlayableByObject()");
+        //System.out.println("Tree.findPlayableByObject()");
 
         for(Playable p : this.getNaturals()) {
             Playable ret = p.findPlayableByObject(object);
@@ -27,11 +27,28 @@ aspect Evaluation {
         return null;
     }
 
-    public Boolean Playable.removeRole(Object object) {
-          System.out.println("removeRole()");
+
+
+    public Boolean Tree.removeNatural(Playable player) {
+           int toDelete = -1;
+           for(Playable p : this.getNaturals()) {
+                if(p.getObject() == player.getObject()) {
+                    toDelete = this.getNaturals().getIndexOfChild(p);
+                    break;
+                }
+           }
+           if(toDelete > -1) {
+                this.getNaturals().removeChild(toDelete);
+                return true;
+           }
+           return false;
+    }
+
+    public Boolean Playable.removeRole(Playable player) {
+          //System.out.println("removeRole()");
           int toDelete = -1;
           for(Playable p : this.getRoles()) {
-            if(p.getObject() == object) {
+            if(p.getObject() == player.getObject()) {
                 toDelete = this.getRoleList().getIndexOfChild(p);
                 break;
             }
@@ -40,11 +57,12 @@ aspect Evaluation {
             this.getRoleList().removeChild(toDelete);
             return true;
           }
+
           return false;
     }
 
         public Playable Tree.getPredecessor(Playable player) {
-            System.out.println("getPredecessor()");
+            //System.out.println("getPredecessor()");
 
             for(Playable n : this.getNaturals()) {
                 java.util.List<Playable> ret = scala.collection.JavaConversions.seqAsJavaList(n.getPlayers());
@@ -58,6 +76,8 @@ aspect Evaluation {
             }
             return null;
         }
+
+
 
     public  scala.collection.Seq<Playable> Playable.getPlayers() {
         //System.out.println("getPlayers()");

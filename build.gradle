@@ -83,3 +83,10 @@ compileScala {
     ]
 }
 
+test {
+    maxParallelForks = 1
+}
+
+tasks.withType(Test) {
+    maxParallelForks = 1
+}

@@ -420,26 +420,27 @@ class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLL
     }
   }
 
-  scenario("Cyclic role-playing relationship") {
-    Given("a player and some roles in a compartment")
-    val someCoreA = new CoreA()
+  if(!jastAdd) {
+    scenario("Cyclic role-playing relationship"){
+      Given("a player and some roles in a compartment")
+      val someCoreA = new CoreA()
 
-    new CompartmentUnderTest() {
-      val someRoleA = new RoleA()
-      val someRoleB = new RoleB()
-      val someRoleC = new RoleC()
-      And("some play relationships")
-      When("creating a cycle")
-      someCoreA play someRoleA
-      someRoleA play someRoleB
-      someRoleB play someRoleC
-      Then("a runtime exception should be thrown")
-      a[RuntimeException] should be thrownBy {
-        someRoleC play someRoleA
+      new CompartmentUnderTest() {
+        val someRoleA = new RoleA()
+        val someRoleB = new RoleB()
+        val someRoleC = new RoleC()
+        And("some play relationships")
+        When("creating a cycle")
+        someCoreA play someRoleA
+        someRoleA play someRoleB
+        someRoleB play someRoleC
+        Then("a runtime exception should be thrown")
+        a[RuntimeException] should be thrownBy {
+          someRoleC play someRoleA
+        }
       }
     }
   }
-
   scenario("Compartment plays a role that is part of themselves") {
     Given("a compartment and a role in it")
 

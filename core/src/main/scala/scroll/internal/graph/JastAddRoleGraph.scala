@@ -19,12 +19,16 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		require(null != other)
 		var ret = false
 		val target = other.asInstanceOf[JastAddRoleGraph].root
+
 		target.allPlayers().foreach(p => {
-			val roles = target.roles(p)
-			roles.foreach(role => {
-				addBinding(p, role)
-				ret  = true
-			})
+			val pred = target.graph.findPlayableByObject(p)
+			if(pred != null) {
+				val source = target.graph.getPredecessor(pred)
+				if(source != null && p != null) {
+					addBinding(source, p)
+					ret = true
+				}
+			}
 		})
 		ret
 	}
@@ -33,10 +37,11 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		require(null != other)
 		val target = other.asInstanceOf[JastAddRoleGraph].root
 		target.allPlayers().foreach(p => {
-			val roles = target.roles(p)
-			roles.foreach(role => {
-				val _ = removeBinding(p, role)
-			})
+			val pred = target.graph.findPlayableByObject(p)
+			if(pred != null) {
+				val source = target.graph.getPredecessor(pred)
+				removeBinding(source, p)
+			}
 		})
 	}
 
@@ -49,7 +54,7 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 	override def removeBinding[P <: AnyRef : ClassTag, R <: AnyRef : ClassTag](player: P, role: R): Unit = {
 		require(null != player)
 		require(null != role)
-		val _ = root.removeRole(player, role)
+		val _ = this.root.removeRole(player, role)
 	}
 
 	override def removePlayer[P <: AnyRef : ClassTag](player: P): Unit = {
@@ -77,20 +82,6 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 
 	override def predecessors(player: AnyRef): Seq[AnyRef] = {
 		require(null != player)
-		if(containsPlayer(player)) {
-			val returnSeq = new mutable.ListBuffer[Object]
-			val processing = new mutable.Queue[Object]
-			root.predecessors(player.asInstanceOf[Object]).forEach(n => if(!n.isInstanceOf[Enumeration#Value]) processing.enqueue(n))
-			while(processing.nonEmpty) {
-				val next = processing.dequeue()
-				if(!returnSeq.contains(next)) {
-					returnSeq += next
-				}
-				root.predecessors(next).forEach(n => if(!n.isInstanceOf[Enumeration#Value]) processing.enqueue(n))
-			}
-			returnSeq
-		} else {
-			Seq.empty
-		}
+		return this.root.predecessors(player)
 	}
 }
