@@ -13,7 +13,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	def putEdge(source: Object, target: Object): Boolean = {
 		println("putEdge:" + source.toString + " " + target.toString)
 
-		val targetPlayer = new Role()
+		var targetPlayer = new Role()
 		targetPlayer.setObject(target)
 
 		var sourcePlayer: Player = this.graph.findPlayerByObject(source)
@@ -23,9 +23,10 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			if(sourcePlayer != null && this.graph.getPredecessor(oldTargetPlayer) == sourcePlayer) {
 				return false
 			}
-			targetPlayer.setRoleList(oldTargetPlayer.getRoleList)
-			oldTargetPlayer.setRoleList(null)
+			//targetPlayer.setRoleList(oldTargetPlayer.getRoleList)
+			//oldTargetPlayer.setRoleList(null)
 			this.removePlayer(target)
+			//targetPlayer = oldTargetPlayer.asInstanceOf[Role]
 		}
 
 		if(sourcePlayer == null) {
@@ -49,9 +50,8 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		}
 
 		player.removeRole(playerRole)
-
 		if(player.getNumRole == 0 && this.graph.getPredecessor(player) == null) {
-			this.removePlayer(player.getObject)
+			//this.removePlayer(player.getObject) // ?? todo or not todo
 		}
 	}
 
@@ -67,7 +67,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		} else {
 			pred.removeRole(player)
 			if(pred.getNumRole == 0 && this.graph.getPredecessor(pred) == null) {
-				this.removePlayer(pred.getObject)
+			//	this.removePlayer(pred.getObject) // ?? todo or not todo
 			}
 		}
 	}
@@ -121,7 +121,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		val ret = new util.HashSet[Object]
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player != null) {
-			player.getRoleList.iterator().forEachRemaining(f => {
+			player.getRoleList.forEach(f => {
 				ret.add(f.getObject)
 			})
 		}

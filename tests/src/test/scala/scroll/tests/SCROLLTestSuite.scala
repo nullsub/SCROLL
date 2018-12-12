@@ -11,7 +11,7 @@ object SCROLLTestSuite {
       //new RoleFeaturesTest(cached = c, jastAdd = j), //contains roles, which are played multiple times
       new RoleSortingTest(cached = c, jastAdd = j),
       new DynamicExtensionsTest(cached = c, jastAdd = j),
-      //new EqualityRoleTest(cached = c, jastAdd = j),
+      new EqualityRoleTest(cached = c, jastAdd = j),
       //new ExamplesTest(cached = c, jastAdd = j),
       new RelationshipTest(cached = c, jastAdd = j),
       new UnionTypesTest(cached = c, jastAdd = j),

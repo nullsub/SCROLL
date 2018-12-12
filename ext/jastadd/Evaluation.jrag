@@ -47,7 +47,7 @@ aspect Evaluation {
           //System.out.println("removeRole()");
           int toDelete = -1;
           for(Player p : this.getRoles()) {
-            if(p.getObject() == player.getObject()) {
+            if(p == player) {
                 toDelete = this.getRoleList().getIndexOfChild(p);
                 break;
             }
@@ -75,8 +75,6 @@ aspect Evaluation {
             }
             return null;
         }
-
-
 
     public  scala.collection.Seq<Player> Player.getPlayers() {
         //System.out.println("getPlayers()");
