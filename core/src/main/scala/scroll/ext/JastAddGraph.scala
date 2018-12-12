@@ -20,10 +20,11 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		val oldTargetPlayable = this.graph.findPlayableByObject(target)
 
 		if(oldTargetPlayable != null) {
-			if(this.graph.getPredecessor(oldTargetPlayable) == sourcePlayable) {
+			if(sourcePlayable != null && this.graph.getPredecessor(oldTargetPlayable) == sourcePlayable) {
 				return false
 			}
 			targetPlayable.setRoleList(oldTargetPlayable.getRoleList)
+			oldTargetPlayable.setRoleList(null)
 			this.removePlayer(target)
 		}
 
@@ -34,13 +35,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			sourcePlayable = newNatural
 		}
 		sourcePlayable.addRole(targetPlayable)
-
-		this.graph.getNaturalList.forEach(n => {
-			println("  natural: " + n.getObject.toString)
-			this.roles(n.getObject).foreach(role => {
-				println("    role: " + role.toString)
-			})
-		})
 
 		true
 	}
@@ -59,13 +53,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		if(playablePlayer.getNumRole == 0 && this.graph.getPredecessor(playablePlayer) == null) {
 			this.removePlayer(playablePlayer.getObject)
 		}
-
-		this.graph.getNaturalList.forEach(n => {
-			println("  natural: " + n.getObject.toString)
-			this.roles(n.getObject).foreach(role => {
-				println("    role: " + role.toString)
-			})
-		})
 	}
 
 	def removePlayer[P <: AnyRef : ClassTag](player: P): Unit = {
@@ -97,8 +84,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 	def facets(player: AnyRef): Seq[Enumeration#Value] = {
 		println("facets:")
-		throw new Exception("facets not supported!")
-/*
+//		throw new Exception("facets not supported!")
 		val p: Playable = this.graph.findPlayableByObject(player)
 		if(p != null) {
 			val returnSeq = new mutable.ListBuffer[Enumeration#Value]
@@ -110,28 +96,41 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			return returnSeq
 		}
 		Seq.empty
-		*/
 	}
 
 	def allPlayers(): Seq[AnyRef] = {
-		//println("allPlayers:")
-
-		val ret: Seq[AnyRef] = Seq.empty
-		this.graph.getNaturals.forEach(n => {
-			ret ++ (for(f: Playable <- n.getPlayers) yield f.getObject)
+		val ret = new util.HashSet[Object]
+		this.graph.getNaturalList.forEach(n => {
+			ret.add(n.getObject)
 		})
-		ret
+		var lastLevel = ret
+		var changed = false
+		do {
+			changed = false
+			val newLevel = new util.HashSet[Object]
+			lastLevel.forEach(e => {
+				val successors = this.successors(e)
+				newLevel.addAll(successors)
+			})
+			if(!newLevel.isEmpty) {
+				changed = true
+				ret.addAll(newLevel)
+				lastLevel = newLevel
+			}
+		} while(changed)
+		scala.collection.JavaConverters.asScalaIteratorConverter(ret.iterator()).asScala.toSeq
 	}
 
-	def roles(player: AnyRef): Seq[AnyRef] = {
-		//println("roles:")
-
+	def successors(player: AnyRef): util.Set[Object] = {
+		val ret = new util.HashSet[Object]
 		val p: Playable = this.graph.findPlayableByObject(player)
 		if(p != null) {
-			return for(f: Playable <- p.getPlayers) yield f.getObject
+			p.getRoleList.iterator().forEachRemaining(f => {
+				ret.add(f.getObject)
+			})
 		}
 
-		Seq.empty
+		return ret
 	}
 
 	def predecessors(player: AnyRef): Seq[AnyRef]  = {

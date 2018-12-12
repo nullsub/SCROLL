@@ -64,7 +64,22 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 
 	override def roles(player: AnyRef): Seq[AnyRef] = {
 		require(null != player)
-		this.root.roles(player)
+		if (containsPlayer(player)) {
+			val returnSeq = new mutable.ListBuffer[Object]
+			val processing = new mutable.Queue[Object]
+			returnSeq += player.asInstanceOf[Object]
+			root.successors(player.asInstanceOf[Object]).forEach(n => if (!n.isInstanceOf[Enumeration#Value]) processing.enqueue(n))
+			while (processing.nonEmpty) {
+				val next = processing.dequeue()
+				if (!returnSeq.contains(next)) {
+					returnSeq += next
+				}
+				root.successors(next).forEach(n => if (!n.isInstanceOf[Enumeration#Value]) processing.enqueue(n))
+			}
+			returnSeq
+		} else {
+			Seq.empty
+		}
 	}
 
 	override def facets(player: AnyRef): Seq[Enumeration#Value] = {
@@ -76,9 +91,9 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		this.root.containsPlayer(player)
 	}
 
-	override def allPlayers(): Seq[AnyRef] = {
-		this.root.allPlayers()
-	}
+	//nodes() Returns all nodes in this graph, in the order specified by nodeOrder().
+	override def allPlayers: Seq[AnyRef] = this.root.allPlayers() //root.nodes().asScala.toSeq
+
 
 	override def predecessors(player: AnyRef): Seq[AnyRef] = {
 		require(null != player)

@@ -28,7 +28,6 @@ aspect Evaluation {
     }
 
 
-
     public Boolean Tree.removeNatural(Playable player) {
            int toDelete = -1;
            for(Playable p : this.getNaturals()) {
@@ -94,9 +93,11 @@ aspect Evaluation {
 
             java.util.List<Playable> list = new java.util.ArrayList<Playable>();
 
-            for(Playable p : this.getRoles()){
-                list.addAll(scala.collection.JavaConversions.seqAsJavaList(p.getPlayers()));
-            }
+           // if(this.getRoles() != null){
+                for(Playable p : this.getRoles()){
+                    list.addAll(scala.collection.JavaConversions.seqAsJavaList(p.getPlayers()));
+                }
+          //  }
             return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
     }
 }

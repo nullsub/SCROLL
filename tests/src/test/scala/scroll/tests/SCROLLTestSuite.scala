@@ -8,13 +8,13 @@ object SCROLLTestSuite {
     val c = args(0)
     val j = args(1)
     Seq(
-      //new RoleFeaturesTest(cached = c, jastAdd = j),
+      //new RoleFeaturesTest(cached = c, jastAdd = j), //contains roles, which are played multiple times
       new RoleSortingTest(cached = c, jastAdd = j),
       new DynamicExtensionsTest(cached = c, jastAdd = j),
-      //new EqualityRoleTest(cached = c, jastAdd = j))
-     // new ExamplesTest(cached = c, jastAdd = j),
-      new RelationshipTest(cached = c, jastAdd = j))
-     /*  new UnionTypesTest(cached = c, jastAdd = j),
+      //new EqualityRoleTest(cached = c, jastAdd = j),
+      //new ExamplesTest(cached = c, jastAdd = j),
+      new RelationshipTest(cached = c, jastAdd = j),
+      new UnionTypesTest(cached = c, jastAdd = j),
        new FormalCROMTest(cached = c, jastAdd = j),
        new FormalCROMExampleTest(cached = c, jastAdd = j),
        new ECoreInstanceTest(cached = c, jastAdd = j),
@@ -26,8 +26,8 @@ object SCROLLTestSuite {
        new MultiRoleFeaturesTest(cached = c, jastAdd = j),
       // new FacetsTest(cached = c, jastAdd = j),
       new RecursiveBaseCallsWithClassesTest(cached = c, jastAdd = j),
-     new RecursiveBaseCallsWithCaseClassesTest(cached = c, jastAdd = j),
-      new ThrowableInRoleMethodsTest(cached = c, jastAdd = j))*/
+      new RecursiveBaseCallsWithCaseClassesTest(cached = c, jastAdd = j),
+      new ThrowableInRoleMethodsTest(cached = c, jastAdd = j))
   })
 }
 
