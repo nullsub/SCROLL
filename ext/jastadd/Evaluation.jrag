@@ -1,10 +1,10 @@
 aspect Evaluation {
 
-    public Playable Tree.findPlayableByObject(Object object) {
-        //System.out.println("Tree.findPlayableByObject()");
+    public Player Tree.findPlayerByObject(Object object) {
+        //System.out.println("Tree.findPlayerByObject()");
 
-        for(Playable p : this.getNaturals()) {
-            Playable ret = p.findPlayableByObject(object);
+        for(Player p : this.getNaturals()) {
+            Player ret = p.findPlayerByObject(object);
             if(ret != null) {
                 return  ret;
             }
@@ -13,13 +13,13 @@ aspect Evaluation {
     }
 
 
-    public Playable Playable.findPlayableByObject(Object object) {
+    public Player Player.findPlayerByObject(Object object) {
        if(this.getObject() == object) {
            return this;
        }
 
-        for(Playable p : this.getRoles()) {
-            Playable ret = p.findPlayableByObject(object);
+        for(Player p : this.getRoles()) {
+            Player ret = p.findPlayerByObject(object);
             if(ret != null) {
                 return  ret;
             }
@@ -28,9 +28,9 @@ aspect Evaluation {
     }
 
 
-    public Boolean Tree.removeNatural(Playable player) {
+    public Boolean Tree.removeNatural(Player player) {
            int toDelete = -1;
-           for(Playable p : this.getNaturals()) {
+           for(Player p : this.getNaturals()) {
                 if(p.getObject() == player.getObject()) {
                     toDelete = this.getNaturals().getIndexOfChild(p);
                     break;
@@ -43,10 +43,10 @@ aspect Evaluation {
            return false;
     }
 
-    public Boolean Playable.removeRole(Playable player) {
+    public Boolean Player.removeRole(Player player) {
           //System.out.println("removeRole()");
           int toDelete = -1;
-          for(Playable p : this.getRoles()) {
+          for(Player p : this.getRoles()) {
             if(p.getObject() == player.getObject()) {
                 toDelete = this.getRoleList().getIndexOfChild(p);
                 break;
@@ -60,13 +60,13 @@ aspect Evaluation {
           return false;
     }
 
-        public Playable Tree.getPredecessor(Playable player) {
+        public Player Tree.getPredecessor(Player player) {
             //System.out.println("getPredecessor()");
 
-            for(Playable n : this.getNaturals()) {
-                java.util.List<Playable> ret = scala.collection.JavaConversions.seqAsJavaList(n.getPlayers());
-                for(Playable p: ret) {
-                    for(Playable role : p.getRoles()){
+            for(Player n : this.getNaturals()) {
+                java.util.List<Player> ret = scala.collection.JavaConversions.seqAsJavaList(n.getPlayers());
+                for(Player p: ret) {
+                    for(Player role : p.getRoles()){
                         if(role == player) {
                             return p;
                         }
@@ -78,23 +78,23 @@ aspect Evaluation {
 
 
 
-    public  scala.collection.Seq<Playable> Playable.getPlayers() {
+    public  scala.collection.Seq<Player> Player.getPlayers() {
         //System.out.println("getPlayers()");
 
-        java.util.List<Playable> list = new java.util.ArrayList<Playable>();
+        java.util.List<Player> list = new java.util.ArrayList<Player>();
         list.add(this);
         list.addAll(scala.collection.JavaConversions.seqAsJavaList(this.successors()));
 
         return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
     }
 
-    public  scala.collection.Seq<Playable> Playable.successors() {
+    public  scala.collection.Seq<Player> Player.successors() {
             //System.out.println("successors()");
 
-            java.util.List<Playable> list = new java.util.ArrayList<Playable>();
+            java.util.List<Player> list = new java.util.ArrayList<Player>();
 
            // if(this.getRoles() != null){
-                for(Playable p : this.getRoles()){
+                for(Player p : this.getRoles()){
                     list.addAll(scala.collection.JavaConversions.seqAsJavaList(p.getPlayers()));
                 }
           //  }

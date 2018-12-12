@@ -5,6 +5,6 @@ Node ::= <Value: Object>;
 
 //role tree structure
 Tree ::= Natural* ;
-abstract Playable ::= Role* <Object:Object> ;
-Natural:Playable ;
-Role:Playable ;
+abstract Player ::= Role* <Object:Object> ;
+Natural:Player ;
+Role:Player ;

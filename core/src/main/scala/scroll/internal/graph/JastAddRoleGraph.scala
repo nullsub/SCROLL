@@ -21,7 +21,7 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		val target = other.asInstanceOf[JastAddRoleGraph].root
 
 		target.allPlayers().foreach(p => {
-			val pred = target.graph.findPlayableByObject(p)
+			val pred = target.graph.findPlayerByObject(p)
 			if(pred != null) {
 				val source = target.graph.getPredecessor(pred)
 				if(source != null && p != null) {
@@ -37,7 +37,7 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		require(null != other)
 		val target = other.asInstanceOf[JastAddRoleGraph].root
 		target.allPlayers().foreach(p => {
-			val pred = target.graph.findPlayableByObject(p)
+			val pred = target.graph.findPlayerByObject(p)
 			if(pred != null) {
 				val source = target.graph.getPredecessor(pred)
 				removeBinding(source, p)
@@ -93,7 +93,6 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 
 	//nodes() Returns all nodes in this graph, in the order specified by nodeOrder().
 	override def allPlayers: Seq[AnyRef] = this.root.allPlayers() //root.nodes().asScala.toSeq
-
 
 	override def predecessors(player: AnyRef): Seq[AnyRef] = {
 		require(null != player)
