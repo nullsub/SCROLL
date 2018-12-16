@@ -83,8 +83,19 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 	}
 
 	override def facets(player: AnyRef): Seq[Enumeration#Value] = {
+		throw new Exception("facets not supported!")
+
 		require(null != player)
-		this.root.facets(player)
+		if (containsPlayer(player)) {
+			val returnSeq = new mutable.ListBuffer[Enumeration#Value]
+			root.successors(player.asInstanceOf[Object]).forEach {
+				case e: Enumeration#Value => returnSeq += e
+				case _ =>
+			}
+			returnSeq
+		} else {
+			Seq.empty
+		}
 	}
 
 	override def containsPlayer(player: AnyRef): Boolean = {

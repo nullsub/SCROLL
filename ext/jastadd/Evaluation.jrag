@@ -31,7 +31,7 @@ aspect Evaluation {
     public Boolean Tree.removeNatural(Player player) {
            int toDelete = -1;
            for(Player p : this.getNaturals()) {
-                if(p.getObject() == player.getObject()) {
+                if(p == player) {
                     toDelete = this.getNaturals().getIndexOfChild(p);
                     break;
                 }
@@ -91,11 +91,9 @@ aspect Evaluation {
 
             java.util.List<Player> list = new java.util.ArrayList<Player>();
 
-           // if(this.getRoles() != null){
-                for(Player p : this.getRoles()){
-                    list.addAll(scala.collection.JavaConversions.seqAsJavaList(p.getPlayers()));
-                }
-          //  }
+            for(Player p : this.getRoles()){
+                list.addAll(scala.collection.JavaConversions.seqAsJavaList(p.getPlayers()));
+            }
             return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
     }
 }

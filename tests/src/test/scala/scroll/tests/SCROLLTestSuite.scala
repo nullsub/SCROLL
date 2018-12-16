@@ -8,7 +8,7 @@ object SCROLLTestSuite {
     val c = args(0)
     val j = args(1)
     Seq(
-      //new RoleFeaturesTest(cached = c, jastAdd = j), //contains roles, which are played multiple times
+      new RoleFeaturesTest(cached = c, jastAdd = j), //contains roles which are played multiple times --> some tests disabled for jastadd
       new RoleSortingTest(cached = c, jastAdd = j),
       new DynamicExtensionsTest(cached = c, jastAdd = j),
       new EqualityRoleTest(cached = c, jastAdd = j),
@@ -24,7 +24,7 @@ object SCROLLTestSuite {
        new RoleRestrictionsTest(cached = c, jastAdd = j),
         new RoleGroupsTest(cached = c, jastAdd = j),
        new MultiRoleFeaturesTest(cached = c, jastAdd = j),
-      // new FacetsTest(cached = c, jastAdd = j),
+       //new FacetsTest(cached = c, jastAdd = j),
       new RecursiveBaseCallsWithClassesTest(cached = c, jastAdd = j),
       new RecursiveBaseCallsWithCaseClassesTest(cached = c, jastAdd = j),
       new ThrowableInRoleMethodsTest(cached = c, jastAdd = j))
