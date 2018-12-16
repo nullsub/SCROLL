@@ -101,13 +101,13 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def allPlayers(): Seq[AnyRef] = {
-		val ret = new util.HashSet[Object]
+		val ret = new util.LinkedHashSet[Object]
 		this.graph.getNaturalList.forEach(n => {
 			ret.add(n.getObject)
 		})
 		var lastLevel = ret
 		do {
-			val newLevel = new util.HashSet[Object]
+			val newLevel = new util.LinkedHashSet[Object]
 			lastLevel.forEach(e => {
 				newLevel.addAll(this.successors(e))
 			})
@@ -118,7 +118,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def successors(playerObject: AnyRef): util.Set[Object] = {
-		val ret = new util.HashSet[Object]
+		val ret = new util.LinkedHashSet[Object]
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player != null) {
 			player.getRoleList.forEach(f => {
@@ -134,7 +134,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 		var player: Player = this.graph.findPlayerByObject(playerObject)
 
-		val ret: util.Set[Object] = new util.HashSet[Object]
+		val ret: util.Set[Object] = new util.LinkedHashSet[Object]
 		while(player != null) {
 			player = this.graph.getPredecessor(player)
 			if(player != null) {
