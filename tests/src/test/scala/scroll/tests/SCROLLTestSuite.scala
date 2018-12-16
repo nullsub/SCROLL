@@ -12,7 +12,7 @@ object SCROLLTestSuite {
       new RoleSortingTest(cached = c, jastAdd = j),
       new DynamicExtensionsTest(cached = c, jastAdd = j),
       new EqualityRoleTest(cached = c, jastAdd = j),
-      //new ExamplesTest(cached = c, jastAdd = j),
+      new ExamplesTest(cached = c, jastAdd = j),
       new RelationshipTest(cached = c, jastAdd = j),
       new UnionTypesTest(cached = c, jastAdd = j),
        new FormalCROMTest(cached = c, jastAdd = j),
