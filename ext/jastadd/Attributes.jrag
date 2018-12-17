@@ -27,7 +27,6 @@ aspect Evaluation {
         return null;
     }
 
-
     public Boolean Tree.removeNatural(Player player) {
            int toDelete = -1;
            for(Player p : this.getNaturals()) {
@@ -42,6 +41,51 @@ aspect Evaluation {
            }
            return false;
     }
+
+    public Object Player.dispatch(String name, Object... arguments) throws Exception {
+          System.out.println("doing Dispatch for: " + this.getObject().toString() + " method: " + name);
+
+            java.util.List<Player> players = new java.util.ArrayList<Player>();
+            players.addAll(scala.collection.JavaConversions.seqAsJavaList(this.getPlayers()));
+
+            for(Player p: players) {
+                java.lang.reflect.Method methodToFind = null;
+                try {
+                    methodToFind = p.getObject().getClass().getMethod(name, Object[].class);
+                } catch (Exception e) {}
+                if(methodToFind != null) {
+                   return methodToFind.invoke(p.getObject(), arguments);
+                }
+          }
+          throw new Exception("method not found!");
+    }
+
+        public Object Player.dispatchSelect(String name) throws Exception {
+              System.out.println("doing DispatchSelect for: " + this.getObject().toString() + " method: " + name);
+
+                java.util.List<Player> players = new java.util.ArrayList<Player>();
+                players.addAll(scala.collection.JavaConversions.seqAsJavaList(this.getPlayers()));
+
+                java.util.List<Player> lastLevel = new java.util.ArrayList<Player>();
+                lastLevel.add(this);
+
+                do {
+		             java.util.List<Player> newLevel = new java.util.ArrayList<Player>();
+		             for(Player p : lastLevel) {
+		                    try {
+                                java.lang.reflect.Field field = p.getObject().getClass().getDeclaredField(name);
+                                field.setAccessible(true);
+                                return field.get(p.getObject());
+                            } catch (Exception e) {}
+		                    for(Player r : p.getRoles()) {
+                                newLevel.add(r);
+                            }
+                        }
+                        lastLevel = newLevel;
+                } while(!lastLevel.isEmpty());
+
+              throw new Exception("method not found!");
+        }
 
     public Boolean Player.removeRole(Player player) {
           //System.out.println("removeRole()");

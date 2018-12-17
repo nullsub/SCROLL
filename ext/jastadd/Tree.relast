@@ -5,12 +5,12 @@ Node ::= <Value: Object>;
 
 //role tree structure
 Tree ::= Natural* DispatchQuery;
-DispatchQuery ::= <Name>;
+DispatchQuery ;
 abstract Player ::= Role* <Object:Object> ;
 Natural:Player ;
 Role:Player ;
 
-rel DispatchQuery.From*  -> Player;
-rel DispatchQuery.To*  -> Player;
-rel DispatchQuery.Bypassing*  -> Player;
+rel DispatchQuery.From*     -> Player;
+rel DispatchQuery.To*       -> Player;
 rel DispatchQuery.Through*  -> Player;
+rel DispatchQuery.Bypassing* -> Player;

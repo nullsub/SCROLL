@@ -4,6 +4,8 @@ import java.util
 
 import scala.reflect.ClassTag
 import de.tud.deussen.jastadd.gen._
+import scroll.internal.errors.SCROLLErrors
+import scroll.internal.errors.SCROLLErrors.{IllegalRoleInvocationDispatch, InvocationError, RoleNotFound, SCROLLError}
 
 class JastAddGraph[N] { // extends MutableGraph[N] {
 	var graph: Tree = new Tree()
@@ -23,6 +25,33 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			println("    " * level + "node: " + r.getObject.toString)
 			this.printNode(r, level +1)
 		})
+	}
+
+	def doDispatch[E](playerObject: Object, name: String, args: Any*): Either[SCROLLError, E]= {
+		val player: Player = this.graph.findPlayerByObject(playerObject)
+		if(player == null) {
+			return Left(RoleNotFound(playerObject.toString, name, args))
+		}
+
+		try {
+			Right(player.dispatch(name, args).asInstanceOf[E])
+		} catch {
+			case _: Throwable => Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))
+		}
+	}
+
+
+	def dispatchSelect[E](playerObject: Object, name: String): Either[SCROLLError, E]= {
+		val player: Player = this.graph.findPlayerByObject(playerObject)
+		if(player == null) {
+			return Left(RoleNotFound(playerObject.toString, name, null))
+		}
+
+		try {
+			Right(player.dispatchSelect(name).asInstanceOf[E])
+		} catch {
+			case _: Throwable => Left(SCROLLErrors.IllegalRoleInvocationDispatch(playerObject.toString, name, null))
+		}
 	}
 
 	def putEdge(source: Object, target: Object): Boolean = {

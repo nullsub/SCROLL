@@ -1,5 +1,7 @@
 package scroll.internal.graph
 
+import scroll.internal.errors.SCROLLErrors.{InvocationError, RoleNotFound, SCROLLError}
+
 import scala.reflect.ClassTag
 
 /**
@@ -87,4 +89,10 @@ trait RoleGraph {
     * @return a list of all predecessors of the given player
     */
   def predecessors(player: AnyRef): Seq[AnyRef]
+
+  def doDispatch[E](core: AnyRef, name: String, args: Any*): Either[SCROLLError, E]
+
+  def dispatchSelect[E](core: AnyRef, name: String): Either[SCROLLError, E]
+
+  def setDispatchQuery(from: AnyRef => Boolean, to: AnyRef => Boolean, through: AnyRef => Boolean, bypassing: AnyRef => Boolean)
 }

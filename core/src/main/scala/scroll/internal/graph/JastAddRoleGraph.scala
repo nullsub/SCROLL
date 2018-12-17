@@ -1,5 +1,8 @@
 package src.main.scala.scroll.internal.graph
 
+import de.tud.deussen.jastadd.gen.DispatchQuery
+import scroll.internal.errors.SCROLLErrors.{InvocationError, RoleNotFound, SCROLLError}
+
 import scala.collection.mutable
 import scala.reflect.ClassTag
 import src.main.scala.scroll.ext.JastAddGraph
@@ -109,4 +112,19 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		require(null != player)
 		return this.root.predecessors(player)
 	}
+
+	def setDispatchQuery(from: AnyRef => Boolean, to: AnyRef => Boolean, through: AnyRef => Boolean, bypassing: AnyRef => Boolean) = {
+		//this.root.graph.setDispatchQuery(new DispatchQuery())
+	}
+
+
+	def doDispatch[E](core: AnyRef, name: String, args: Any*): Either[SCROLLError, E] = {
+		this.root.doDispatch(core, name, args)
+	}
+
+
+	def dispatchSelect[E](core: AnyRef, name: String): Either[SCROLLError, E] = {
+		this.root.dispatchSelect(core, name)
+	}
+
 }

@@ -18,6 +18,7 @@ import scroll.internal.util.ReflectiveHelper
 import scala.annotation.tailrec
 import scala.reflect.ClassTag
 import scala.reflect.classTag
+import scala.util.{Success, Try}
 
 /**
   * This Trait allows for implementing an objectified collaboration with a limited number of participating roles and a fixed scope.
@@ -364,7 +365,10 @@ trait Compartment
 
     override def applyDynamic[E](name: String)(args: Any*)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Either[SCROLLError, E] = {
       val core = coreFor(wrapped).last
-      dispatchQuery.filter(plays.roles(core)).collectFirst {
+      //plays.setDispatchQuery(null, null,null,null)
+      //plays.doDispatch(core, name, args: _*)
+
+    dispatchQuery.filter(plays.roles(core)).collectFirst {
         case r if ReflectiveHelper.findMethod(r, name, args).isDefined => (r, ReflectiveHelper.findMethod(r, name, args).get)
       } match {
         case Some((r, fm)) => dispatch(r, fm, args: _*)
@@ -374,6 +378,9 @@ trait Compartment
 
     override def selectDynamic[E](name: String)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Either[SCROLLError, E] = {
       val core = coreFor(wrapped).last
+      //plays.setDispatchQuery(null, null,null,null)
+      //plays.dispatchSelect(core, name)
+
       dispatchQuery.filter(plays.roles(core)).find(ReflectiveHelper.hasMember(_, name)) match {
         case Some(r) => Right(ReflectiveHelper.propertyOf(r, name))
         case None => Left(RoleNotFound(core.toString, name, Seq.empty))

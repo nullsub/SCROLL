@@ -3,6 +3,7 @@ package scroll.internal.graph
 import com.google.common.graph.GraphBuilder
 import com.google.common.graph.Graphs
 import com.google.common.graph.MutableGraph
+import scroll.internal.errors.SCROLLErrors.{InvocationError, SCROLLError}
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable
@@ -127,4 +128,18 @@ class ScalaRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
       Seq.empty
     }
   }
+
+	def doDispatch[E](core: AnyRef, name: String, args: Any*): Either[SCROLLError, E] = {
+		throw new Exception("doing dispatch on ScalaRoleGraph not yet supported!")
+	}
+
+	def dispatchSelect[E](core: AnyRef, name: String): Either[SCROLLError, E] = {
+		throw new Exception("doing dispatchSelect on ScalaRoleGraph not yet supported!")
+	}
+
+  def setDispatchQuery(from: AnyRef => Boolean, to: AnyRef => Boolean, through: AnyRef => Boolean, bypassing: AnyRef => Boolean) = {
+    throw new Exception("setDispatchQuery on ScalaRoleGraph not yet supported!")
+  }
+
+
 }
