@@ -5,8 +5,6 @@ import java.util
 import scala.reflect.ClassTag
 import de.tud.deussen.jastadd.gen._
 
-import scala.collection.mutable
-
 class JastAddGraph[N] { // extends MutableGraph[N] {
 	var graph: Tree = new Tree()
 
@@ -151,7 +149,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 				ret.add(player.getObject)
 			}
 		}
-
 		scala.collection.JavaConverters.asScalaIteratorConverter(ret.iterator()).asScala.toSeq
 	}
 }

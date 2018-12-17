@@ -5,7 +5,6 @@ plugins {
 }
 apply plugin: 'scala'
 
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -34,13 +33,25 @@ dependencies {
     testRuntime 'org.pegdown:pegdown:1.4.2'
 }
 
-compileJava.dependsOn ':generateJava'
 sourceSets.main.java.srcDir 'ext/gen' // Compiles the generated code.
+
+task runRelast {
+  javaexec { 
+    main="-jar";
+    args = [
+            "relast-compiler.jar",
+            "ext/jastadd/Tree.relast",
+            "--file"
+           ]
+  } 
+}
 
 task generateJava(type: org.jastadd.JastAddTask) {
     options = ["--package=de.tud.deussen.jastadd.gen", "--cache=none", "--flush=full", "--rewrite=cnta", "--List=JastAddList"]
     outputDir = file('ext/gen')
-    sources = fileTree('ext/jastadd')
+    sources = fileTree("ext/jastadd").matching {
+        exclude "Tree.relast"
+    }
 }
 
 task run(type: JavaExec, dependsOn: classes) {
@@ -90,3 +101,6 @@ test {
 tasks.withType(Test) {
     maxParallelForks = 1
 }
+
+compileJava.dependsOn ':generateJava'
+generateJava.dependsOn ':runRelast'
