@@ -14,3 +14,13 @@ rel DispatchQuery.From*     -> Player;
 rel DispatchQuery.To*       -> Player;
 rel DispatchQuery.Through*  -> Player;
 rel DispatchQuery.Bypassing* -> Player;
+
+/*
+Filtermöglichkeiten der DispatchQuery
+- traversierungsfolge auswählbar (Bindungsreihenfolge(sodass selbst deeproles gewwählt werden, wenn sie später gebunden wurden, inOrder, postOrder)/sortierung
+        enum für traversalOrder hinzufügen -> terminalSymbol
+- nach typ filtern (bestimmte Rollen filtern/auswählen)
+- include/exclude
+
+- einmal pro baum eine DispatchQuery speichern
+*/

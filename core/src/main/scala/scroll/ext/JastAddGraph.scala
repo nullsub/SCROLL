@@ -16,7 +16,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			println("  natural: " + r.getObject.toString)
 			this.printNode(r,1)
 		})
-
 	}
 
 	def printNode(node: Player, level: Int): Unit = {

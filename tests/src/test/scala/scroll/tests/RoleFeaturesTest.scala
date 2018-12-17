@@ -223,7 +223,7 @@ class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLL
       (expected == actual1a || expected == actual1b) shouldBe true
       expected shouldBe actual2
     }
-  }/*
+  }
 
   scenario("Playing a role multiple times (different instances, but using dispatch to select one)") {
     Given("some players and 2 role instance of the same type in a compartment")
@@ -260,7 +260,7 @@ class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLL
       "updated" shouldBe actual3
     }
   }
-*/
+
   scenario("Calling multi-argument method in roles") {
     Given("a player and a role instance in a compartment")
     val someCoreA = new CoreA()
@@ -373,7 +373,6 @@ class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLL
   }
 
   /*
-
   scenario("Playing a role multiple times (same instance) from different players") {
     Given("some players and role in a compartment")
     val someCoreA = new CoreA()
