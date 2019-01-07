@@ -128,13 +128,12 @@ class ScalaRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
       Seq.empty
     }
   }
-
-	def doDispatch[E](core: AnyRef, name: String, args: Any*): Either[SCROLLError, E] = {
+	def dispatchObjectForApply(core: AnyRef, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
 		throw new Exception("doing dispatch on ScalaRoleGraph not yet supported!")
 	}
 
-	def dispatchSelect[E](core: AnyRef, name: String): Either[SCROLLError, E] = {
-		throw new Exception("doing dispatchSelect on ScalaRoleGraph not yet supported!")
+	def dispatchObjectForSelect(core: AnyRef, name: String): Either[SCROLLError, AnyRef] = {
+		throw new Exception("dispatchObjectForSelect on ScalaRoleGraph not yet supported!")
 	}
 
   def setDispatchQuery(from: AnyRef => Boolean, to: AnyRef => Boolean, through: AnyRef => Boolean, bypassing: AnyRef => Boolean) = {

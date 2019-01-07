@@ -10,174 +10,79 @@ class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLL
   info("Test spec for an excerpt of the role concept.")
   info("Things like role playing and method invocation are tested.")
 
-  feature("Role playing") {
-    scenario("Dropping role and invoking methods") {
-      Given("some player and role in a compartment")
-      val someCore = new CoreA()
-      new CompartmentUnderTest() {
-        val someRole = new RoleA()
-        And("a play relationship")
-        someCore play someRole
-        someCore play new RoleB()
+feature("Role playing") {
+  scenario("Dropping role and invoking methods") {
+    Given("some player and role in a compartment")
+    val someCore = new CoreA()
+    new CompartmentUnderTest() {
+      val someRole = new RoleA()
+      And("a play relationship")
+      someCore play someRole
+      someCore play new RoleB()
 
-        When("dropping the role")
-        someCore drop someRole
+      When("dropping the role")
+      someCore drop someRole
 
-        Then("the call must be invoked on the core object")
-        someCore a()
-        +someCore a()
+      Then("the call must be invoked on the core object")
+      someCore a()
+      +someCore a()
 
-        And("a role should be dropped correctly")
-        (+someCore).isPlaying[RoleA] shouldBe false
-        And("binding to RoleB is left untouched of course")
-        (+someCore).isPlaying[RoleB] shouldBe true
+      And("a role should be dropped correctly")
+      (+someCore).isPlaying[RoleA] shouldBe false
+      And("binding to RoleB is left untouched of course")
+      (+someCore).isPlaying[RoleB] shouldBe true
 
-        And("role method invocation should work.")
-        val resB: String = +someCore b()
-        resB shouldBe "b"
-      }
-    }
-
-    scenario("Transferring a role") {
-      Given("some players and role in a compartment")
-      val someCoreA = new CoreA()
-      val someCoreB = new CoreB()
-
-      new CompartmentUnderTest() {
-        val someRole = new RoleA()
-        And("a play relationship")
-        someCoreA play someRole
-
-        When("transferring the role")
-        someCoreA transfer someRole to someCoreB
-
-        Then("the result of the call to the role of player someCoreB should be correct")
-        val res: Int = +someCoreB a()
-        res shouldBe 0
-        And("the role should be transferred correctly.")
-        (+someCoreA).isPlaying[RoleA] shouldBe false
-        (+someCoreB).isPlaying[RoleA] shouldBe true
-      }
-    }
-
-    scenario("Role playing and testing isPlaying") {
-      Given("some players and roles in a compartment")
-      val someCoreA = new CoreA()
-      val someCoreB = new CoreB()
-
-      new CompartmentUnderTest() {
-        val someRoleA = new RoleA()
-        val someRoleB = new RoleB()
-        And("a play relationship")
-        someCoreA play someRoleA
-
-        When("calling is Playing")
-        Then("it should return false if the role is not played")
-        someCoreA.isPlaying[RoleB] shouldBe false
-        And("it should return false is the player is not in the role playing graph yet")
-        someCoreB.isPlaying[RoleA] shouldBe false
-        someCoreB.isPlaying[RoleB] shouldBe false
-        And("it should return true if the role is actually played")
-        someCoreA.isPlaying[RoleA] shouldBe true
-      }
-    }
-
-    scenario("Handling applyDynamic") {
-      Given("some players and role in a compartment")
-      val someCoreA = new CoreA()
-
-      new CompartmentUnderTest() {
-        val someRole = new RoleA()
-        And("a play relationship")
-        someCoreA play someRole
-
-        When("calling a dynamic method")
-        val expected = 0
-        val actual: Int = +someCoreA a()
-
-        Then("the result of the call to the role of player someCoreA should be correct")
-        expected shouldBe actual
-        And("a call to the role with a method that does not exist should fail")
-        val r = +someCoreA c()
-        r match {
-          case Left(_) => // correct
-          case Right(_) => fail("A call to the role with a method that does not exist should fail")
-        }
-      }
-    }
-
-    scenario("Handling applyDynamicNamed") {
-      Given("some players and role in a compartment")
-      val someCoreA = new CoreA()
-
-      new CompartmentUnderTest() {
-        val someRole = new RoleA()
-        And("a play relationship")
-        someCoreA play someRole
-
-        When("calling a dynamic method with named params")
-        val expected = someRole.b("some", param = "out")
-        val actual: String = +someCoreA b("some", param = "out")
-
-        Then("the result of the call to the role of player someCoreA should be correct")
-        expected shouldBe actual
-      }
-    }
-
-    scenario("Handling selectDynamic") {
-      Given("some players and role in a compartment")
-      val someCoreA = new CoreA()
-
-      new CompartmentUnderTest() {
-        val someRole = new RoleA()
-        And("a play relationship")
-        someCoreA play someRole
-
-        When("using selectDynamic to get the value of a role attribute")
-        val expectedA = someRole.valueA
-        val actualA: String = (+someCoreA).valueA
-        val expectedB = someRole.valueB
-        val actualB: Int = (+someCoreA).valueB
-
-        Then("the result of the call to the role of player someCoreA should be correct")
-        expectedA shouldBe actualA
-        expectedB shouldBe actualB
-        And("a call to the role with a value that does not exist should fail")
-        val r = (+someCoreA).valueD
-        r match {
-          case Left(_) => // correct
-          case Right(_) => fail("A call to the role with a method that does not exist should fail")
-        }
-      }
-    }
-
-    scenario("Handling updateDynamic") {
-      Given("some players and role in a compartment")
-      val someCoreA = new CoreA()
-
-      new CompartmentUnderTest() {
-        val someRole = new RoleA()
-        And("a play relationship")
-        someCoreA play someRole
-
-        When("using updateDynamic to get the value of a role attribute")
-        val expectedA = "newValue"
-        (+someCoreA).valueA = expectedA
-        val actualA: String = (+someCoreA).valueA
-
-        val expectedB = -1
-        (+someCoreA).valueB = expectedB
-        val actualB: Int = (+someCoreA).valueB
-
-        Then("the result of the call to the role of player someCoreA should be correct")
-        expectedA shouldBe actualA
-        expectedB shouldBe actualB
-      }
+      And("role method invocation should work.")
+      val resB: String = +someCore b()
+      resB shouldBe "b"
     }
   }
 
+  scenario("Transferring a role") {
+    Given("some players and role in a compartment")
+    val someCoreA = new CoreA()
+    val someCoreB = new CoreB()
 
-  scenario("Playing a role multiple times (same instance)") {
+    new CompartmentUnderTest() {
+      val someRole = new RoleA()
+      And("a play relationship")
+      someCoreA play someRole
+
+      When("transferring the role")
+      someCoreA transfer someRole to someCoreB
+
+      Then("the result of the call to the role of player someCoreB should be correct")
+      val res: Int = +someCoreB a()
+      res shouldBe 0
+      And("the role should be transferred correctly.")
+      (+someCoreA).isPlaying[RoleA] shouldBe false
+      (+someCoreB).isPlaying[RoleA] shouldBe true
+    }
+  }
+
+  scenario("Role playing and testing isPlaying") {
+    Given("some players and roles in a compartment")
+    val someCoreA = new CoreA()
+    val someCoreB = new CoreB()
+
+    new CompartmentUnderTest() {
+      val someRoleA = new RoleA()
+      val someRoleB = new RoleB()
+      And("a play relationship")
+      someCoreA play someRoleA
+
+      When("calling is Playing")
+      Then("it should return false if the role is not played")
+      someCoreA.isPlaying[RoleB] shouldBe false
+      And("it should return false is the player is not in the role playing graph yet")
+      someCoreB.isPlaying[RoleA] shouldBe false
+      someCoreB.isPlaying[RoleB] shouldBe false
+      And("it should return true if the role is actually played")
+      someCoreA.isPlaying[RoleA] shouldBe true
+    }
+  }
+
+  scenario("Handling applyDynamic") {
     Given("some players and role in a compartment")
     val someCoreA = new CoreA()
 
@@ -185,20 +90,115 @@ class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLL
       val someRole = new RoleA()
       And("a play relationship")
       someCoreA play someRole
-      someCoreA play someRole
 
-      When("updating role attributes")
-      val expected = "updated"
-      (+someCoreA).update(expected)
+      When("calling a dynamic method")
+      val expected = 0
+      val actual: Int = +someCoreA a()
 
-      val actual1: String = someRole.valueC
-      val actual2: String = (+someCoreA).valueC
-
-      Then("the role and player instance should be updated correctly.")
-      expected shouldBe actual1
-      expected shouldBe actual2
+      Then("the result of the call to the role of player someCoreA should be correct")
+      expected shouldBe actual
+      And("a call to the role with a method that does not exist should fail")
+      val r = +someCoreA c()
+      r match {
+	case Left(_) => // correct
+	case Right(_) => fail("A call to the role with a method that does not exist should fail")
+      }
     }
   }
+
+  scenario("Handling applyDynamicNamed") {
+    Given("some players and role in a compartment")
+    val someCoreA = new CoreA()
+
+    new CompartmentUnderTest() {
+      val someRole = new RoleA()
+      And("a play relationship")
+      someCoreA play someRole
+
+      When("calling a dynamic method with named params")
+      val expected = someRole.b("some", param = "out")
+      val actual: String = +someCoreA b("some", param = "out")
+
+      Then("the result of the call to the role of player someCoreA should be correct")
+      expected shouldBe actual
+    }
+  }
+
+  scenario("Handling selectDynamic") {
+    Given("some players and role in a compartment")
+    val someCoreA = new CoreA()
+
+    new CompartmentUnderTest() {
+      val someRole = new RoleA()
+      And("a play relationship")
+      someCoreA play someRole
+
+      When("using selectDynamic to get the value of a role attribute")
+      val expectedA = someRole.valueA
+      val actualA: String = (+someCoreA).valueA
+      val expectedB = someRole.valueB
+      val actualB: Int = (+someCoreA).valueB
+
+      Then("the result of the call to the role of player someCoreA should be correct")
+      expectedA shouldBe actualA
+      expectedB shouldBe actualB
+      And("a call to the role with a value that does not exist should fail")
+      val r = (+someCoreA).valueD
+      r match {
+	case Left(_) => // correct
+	case Right(_) => fail("A call to the role with a method that does not exist should fail")
+      }
+    }
+  }
+
+  scenario("Handling updateDynamic") {
+    Given("some players and role in a compartment")
+    val someCoreA = new CoreA()
+
+    new CompartmentUnderTest() {
+      val someRole = new RoleA()
+      And("a play relationship")
+      someCoreA play someRole
+
+      When("using updateDynamic to get the value of a role attribute")
+      val expectedA = "newValue"
+      (+someCoreA).valueA = expectedA
+      val actualA: String = (+someCoreA).valueA
+
+      val expectedB = -1
+      (+someCoreA).valueB = expectedB
+      val actualB: Int = (+someCoreA).valueB
+
+      Then("the result of the call to the role of player someCoreA should be correct")
+      expectedA shouldBe actualA
+      expectedB shouldBe actualB
+    }
+  }
+}
+
+scenario("Playing a role multiple times (same instance)") {
+  Given("some players and role in a compartment")
+  val someCoreA = new CoreA()
+
+  new CompartmentUnderTest() {
+    val someRole = new RoleA()
+    And("a play relationship")
+    someCoreA play someRole
+    someCoreA play someRole
+
+    When("updating role attributes")
+    val expected = "updated"
+    (+someCoreA).update(expected)
+
+    val actual1: String = someRole.valueC
+    val actual2: String = (+someCoreA).valueC
+
+    Then("the role and player instance should be updated correctly.")
+    expected shouldBe actual1
+    expected shouldBe actual2
+  }
+}
+
 
   scenario("Playing a role multiple times (different instances) from one player") {
     Given("some players and 2 role instance of the same type in a compartment")
@@ -225,6 +225,7 @@ class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLL
     }
   }
 
+  /*
   scenario("Playing a role multiple times (different instances, but using dispatch to select one)") {
     Given("some players and 2 role instance of the same type in a compartment")
     val someCoreA = new CoreA()
@@ -260,6 +261,7 @@ class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLL
       "updated" shouldBe actual3
     }
   }
+  */
 
   scenario("Calling multi-argument method in roles") {
     Given("a player and a role instance in a compartment")
@@ -372,8 +374,7 @@ class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLL
     }
   }
 
-  /*
-  scenario("Playing a role multiple times (same instance) from different players") {
+  /*  scenario("Playing a role multiple times (same instance) from different players") {
     Given("some players and role in a compartment")
     val someCoreA = new CoreA()
     val someCoreB = new CoreB()
@@ -420,9 +421,8 @@ class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLL
       Then("it should be the correct player.")
       player2 shouldBe someCoreA
     }
-  }
-*/
-  /*
+  }*/
+/*
   scenario("Cyclic role-playing relationship"){
       Given("a player and some roles in a compartment")
       val someCoreA = new CoreA()

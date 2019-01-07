@@ -90,9 +90,9 @@ trait RoleGraph {
     */
   def predecessors(player: AnyRef): Seq[AnyRef]
 
-  def doDispatch[E](core: AnyRef, name: String, args: Any*): Either[SCROLLError, E]
+  def dispatchObjectForSelect(core: AnyRef, name: String): Either[SCROLLError, Object]
 
-  def dispatchSelect[E](core: AnyRef, name: String): Either[SCROLLError, E]
+  def dispatchObjectForApply(core: AnyRef, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)]
 
   def setDispatchQuery(from: AnyRef => Boolean, to: AnyRef => Boolean, through: AnyRef => Boolean, bypassing: AnyRef => Boolean)
 }

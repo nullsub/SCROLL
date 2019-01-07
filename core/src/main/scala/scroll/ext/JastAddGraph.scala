@@ -5,7 +5,7 @@ import java.util
 import scala.reflect.ClassTag
 import de.tud.deussen.jastadd.gen._
 import scroll.internal.errors.SCROLLErrors
-import scroll.internal.errors.SCROLLErrors.{IllegalRoleInvocationDispatch, InvocationError, RoleNotFound, SCROLLError}
+import scroll.internal.errors.SCROLLErrors.{IllegalRoleInvocationDispatch, RoleNotFound, SCROLLError}
 
 class JastAddGraph[N] { // extends MutableGraph[N] {
 	var graph: Tree = new Tree()
@@ -19,35 +19,36 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def printNode(node: Player, level: Int): Unit = {
-
 		node.getRoleList.forEach(r => {
 			println("    " * level + "node: " + r.getObject.toString)
 			this.printNode(r, level +1)
 		})
 	}
 
-	def doDispatch[E](playerObject: Object, name: String, args: Any*): Either[SCROLLError, E]= {
+	def dispatchObjectForApply[E](playerObject: Object, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, args))
 		}
-
 		try {
-			Right(player.dispatch(name, args).asInstanceOf[E])
+			val ret = player.dispatchObjectForApply(name, args.asInstanceOf[Array[Object]])
+			Right(ret)
 		} catch {
-			case _: Throwable => Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))
+			case r: Throwable => {
+				println("apply got throwable: " + r.getMessage)
+				Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))
+			}
 		}
 	}
 
-
-	def dispatchSelect[E](playerObject: Object, name: String): Either[SCROLLError, E]= {
+	def dispatchObjectForSelect(playerObject: Object, name: String): Either[SCROLLError, AnyRef]= {
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, null))
 		}
-
 		try {
-			Right(player.dispatchSelect(name).asInstanceOf[E])
+			val ret = player.dispatchObjectForSelect(name)
+			Right(ret)
 		} catch {
 			case _: Throwable => Left(SCROLLErrors.IllegalRoleInvocationDispatch(playerObject.toString, name, null))
 		}
@@ -78,8 +79,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			sourcePlayer = newNatural
 		}
 		sourcePlayer.addRole(targetPlayer)
-
-		this.printTree()
 		true
 	}
 

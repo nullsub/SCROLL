@@ -5,7 +5,6 @@ import java.util
 import de.tud.deussen.jastadd.gen.{ASTNode, Edge, Graph, Node}
 
 class JastAddGraphOld[N] { // extends MutableGraph[N] {
-//dasdasdasdadas
 	var graph = new Graph()
 
 	def putEdge(source: Object, target: Object): Boolean = {

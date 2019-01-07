@@ -1,143 +1,162 @@
 aspect Evaluation {
 
-    public Player Tree.findPlayerByObject(Object object) {
-        //System.out.println("Tree.findPlayerByObject()");
+	public Player Tree.findPlayerByObject(Object object) {
+		//System.out.println("Tree.findPlayerByObject()");
 
-        for(Player p : this.getNaturals()) {
-            Player ret = p.findPlayerByObject(object);
-            if(ret != null) {
-                return  ret;
-            }
-        }
-        return null;
+		for(Player p : this.getNaturals()) {
+			Player ret = p.findPlayerByObject(object);
+			if(ret != null) {
+				return  ret;
+			}
+		}
+		return null;
+	}
+
+
+	public Player Player.findPlayerByObject(Object object) {
+		if(this.getObject() == object) {
+			return this;
+		}
+
+		for(Player p : this.getRoles()) {
+			Player ret = p.findPlayerByObject(object);
+			if(ret != null) {
+				return  ret;
+			}
+		}
+		return null;
+	}
+
+	public Boolean Tree.removeNatural(Player player) {
+		int toDelete = -1;
+		for(Player p : this.getNaturals()) {
+			if(p == player) {
+				toDelete = this.getNaturals().getIndexOfChild(p);
+				break;
+			}
+		}
+		if(toDelete > -1) {
+			this.getNaturals().removeChild(toDelete);
+			return true;
+		}
+		return false;
+	}
+
+    private static Class<?> Player.getPrimitiveType(Class<?> retType)
+    {
+        if( retType == Boolean.class) return Boolean.TYPE;
+        if( retType == Integer.class) return Integer.TYPE;
+        if( retType == Byte.class) return Byte.TYPE;
+        if( retType == Short.class) return Short.TYPE;
+        if( retType == Character.class) return Character.TYPE;
+        if( retType == Double.class) return Double.TYPE;
+        if( retType == Long.class) return Long.TYPE;
+        if( retType == Float.class) return Float.TYPE;
+        return retType;
     }
 
+	public scala.Tuple2<Object, java.lang.reflect.Method> Player.dispatchObjectForApply(String name, Object[] arguments) throws Exception {
+        //System.out.println("dispatchObjectForApply() object: " + this.getObject().toString() + " method: " + name);
+		java.util.List<Player> players = new java.util.ArrayList<Player>();
+		players.addAll(scala.collection.JavaConversions.seqAsJavaList(this.getPlayers()));
 
-    public Player Player.findPlayerByObject(Object object) {
-       if(this.getObject() == object) {
-           return this;
-       }
+		for(Player p: players) {
+				for (java.lang.reflect.Method method : p.getObject().getClass().getDeclaredMethods()) {
+					if(method.getName() == name && arguments.length == method.getParameterCount())  {
+						int j = 0;
+						boolean parametersCorrect = true;
+						for(Object className : method.getParameterTypes()) {
+							if(arguments[j] != null && Player.getPrimitiveType(arguments[j].getClass()) != className) {
+								parametersCorrect = false;
+							}
+							j++;
+						}
+						if(parametersCorrect) {
+							return new scala.Tuple2<>(p.getObject(), method);
+						}
+					}
+			}
+		}
+		throw new Exception("dispatchObjectForApply: method not found!");
+	}
 
-        for(Player p : this.getRoles()) {
-            Player ret = p.findPlayerByObject(object);
-            if(ret != null) {
-                return  ret;
-            }
-        }
-        return null;
-    }
+	public Object Player.dispatchObjectForSelect(String name) throws Exception {
+		java.util.List<Player> players = new java.util.ArrayList<Player>();
+		players.addAll(scala.collection.JavaConversions.seqAsJavaList(this.getPlayers()));
 
-    public Boolean Tree.removeNatural(Player player) {
-           int toDelete = -1;
-           for(Player p : this.getNaturals()) {
-                if(p == player) {
-                    toDelete = this.getNaturals().getIndexOfChild(p);
-                    break;
-                }
-           }
-           if(toDelete > -1) {
-                this.getNaturals().removeChild(toDelete);
-                return true;
-           }
-           return false;
-    }
+		java.util.List<Player> lastLevel = new java.util.ArrayList<Player>();
+		lastLevel.add(this);
 
-    public Object Player.dispatch(String name, Object... arguments) throws Exception {
-          System.out.println("doing Dispatch for: " + this.getObject().toString() + " method: " + name);
+		do {
+			java.util.List<Player> newLevel = new java.util.ArrayList<Player>();
+			for(Player p : lastLevel) {
+				try {
+					java.lang.reflect.Field field = p.getObject().getClass().getDeclaredField(name);
+					return p.getObject();
+				} catch (Exception e) {
 
-            java.util.List<Player> players = new java.util.ArrayList<Player>();
-            players.addAll(scala.collection.JavaConversions.seqAsJavaList(this.getPlayers()));
+				}
+				for(Player r : p.getRoles()) {
+					newLevel.add(r);
+				}
+			}
+			lastLevel = newLevel;
+		} while(!lastLevel.isEmpty());
 
-            for(Player p: players) {
-                java.lang.reflect.Method methodToFind = null;
-                try {
-                    methodToFind = p.getObject().getClass().getMethod(name, Object[].class);
-                } catch (Exception e) {}
-                if(methodToFind != null) {
-                   return methodToFind.invoke(p.getObject(), arguments);
-                }
-          }
-          throw new Exception("method not found!");
-    }
+		throw new Exception("dispatchObjectForSelect: attribute not found!");
+	}
 
-        public Object Player.dispatchSelect(String name) throws Exception {
-              System.out.println("doing DispatchSelect for: " + this.getObject().toString() + " method: " + name);
+	public Boolean Player.removeRole(Player player) {
+		//System.out.println("removeRole()");
+		int toDelete = -1;
+		for(Player p : this.getRoles()) {
+			if(p == player) {
+				toDelete = this.getRoleList().getIndexOfChild(p);
+				break;
+			}
+		}
+		if(toDelete > -1) {
+			this.getRoleList().removeChild(toDelete);
+			return true;
+		}
 
-                java.util.List<Player> players = new java.util.ArrayList<Player>();
-                players.addAll(scala.collection.JavaConversions.seqAsJavaList(this.getPlayers()));
+		return false;
+	}
 
-                java.util.List<Player> lastLevel = new java.util.ArrayList<Player>();
-                lastLevel.add(this);
+	public Player Tree.getPredecessor(Player player) {
+		//System.out.println("getPredecessor()");
 
-                do {
-		             java.util.List<Player> newLevel = new java.util.ArrayList<Player>();
-		             for(Player p : lastLevel) {
-		                    try {
-                                java.lang.reflect.Field field = p.getObject().getClass().getDeclaredField(name);
-                                field.setAccessible(true);
-                                return field.get(p.getObject());
-                            } catch (Exception e) {}
-		                    for(Player r : p.getRoles()) {
-                                newLevel.add(r);
-                            }
-                        }
-                        lastLevel = newLevel;
-                } while(!lastLevel.isEmpty());
+		for(Player n : this.getNaturals()) {
+			java.util.List<Player> ret = scala.collection.JavaConversions.seqAsJavaList(n.getPlayers());
+			for(Player p: ret) {
+				for(Player role : p.getRoles()){
+					if(role == player) {
+						return p;
+					}
+				}
+			}
+		}
+		return null;
+	}
 
-              throw new Exception("method not found!");
-        }
+	public  scala.collection.Seq<Player> Player.getPlayers() {
+		//System.out.println("getPlayers()");
 
-    public Boolean Player.removeRole(Player player) {
-          //System.out.println("removeRole()");
-          int toDelete = -1;
-          for(Player p : this.getRoles()) {
-            if(p == player) {
-                toDelete = this.getRoleList().getIndexOfChild(p);
-                break;
-            }
-          }
-          if(toDelete > -1) {
-            this.getRoleList().removeChild(toDelete);
-            return true;
-          }
+		java.util.List<Player> list = new java.util.ArrayList<Player>();
+		list.add(this);
+		list.addAll(scala.collection.JavaConversions.seqAsJavaList(this.successors()));
 
-          return false;
-    }
+		return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
+	}
 
-        public Player Tree.getPredecessor(Player player) {
-            //System.out.println("getPredecessor()");
+	public  scala.collection.Seq<Player> Player.successors() {
+		//System.out.println("successors()");
 
-            for(Player n : this.getNaturals()) {
-                java.util.List<Player> ret = scala.collection.JavaConversions.seqAsJavaList(n.getPlayers());
-                for(Player p: ret) {
-                    for(Player role : p.getRoles()){
-                        if(role == player) {
-                            return p;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
+		java.util.List<Player> list = new java.util.ArrayList<Player>();
 
-    public  scala.collection.Seq<Player> Player.getPlayers() {
-        //System.out.println("getPlayers()");
-
-        java.util.List<Player> list = new java.util.ArrayList<Player>();
-        list.add(this);
-        list.addAll(scala.collection.JavaConversions.seqAsJavaList(this.successors()));
-
-        return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
-    }
-
-    public  scala.collection.Seq<Player> Player.successors() {
-            //System.out.println("successors()");
-
-            java.util.List<Player> list = new java.util.ArrayList<Player>();
-
-            for(Player p : this.getRoles()){
-                list.addAll(scala.collection.JavaConversions.seqAsJavaList(p.getPlayers()));
-            }
-            return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
-    }
+		for(Player p : this.getRoles()){
+			list.addAll(scala.collection.JavaConversions.seqAsJavaList(p.getPlayers()));
+		}
+		return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
+	}
 }
