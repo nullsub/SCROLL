@@ -366,6 +366,7 @@ trait Compartment
 
     override def applyDynamic[E](name: String)(args: Any*)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Either[SCROLLError, E] = {
       val core = coreFor(wrapped).last
+      println("applyDynamic: dispatch is: " + dispatchQuery.excludePlayers)
       plays.setDispatchQuery(null, null,null,null)
 
       plays.dispatchObjectForApply(core, name, args.toArray) match {

@@ -58,7 +58,14 @@ object DispatchQuery {
 
   def empty: DispatchQuery = new DispatchQuery(new From(anything), new To(anything), new Through(anything), new Bypassing(nothing), empty = true)
 
-  /**
+  def IncludeExclude(excludePlayers: Seq[AnyRef], excludeClasses: Seq[Object]): DispatchQuery = {
+    val emptyQuery = empty
+    emptyQuery.excludePlayers = excludePlayers
+    emptyQuery.excludeClasses = excludeClasses
+    emptyQuery
+   }
+
+   /**
     * Dispatch filter selecting the sub-path from the starting edge until the end
     * of the path given as Seq, w.r.t. the evaluation of the selection function.
     *
@@ -120,7 +127,6 @@ object DispatchQuery {
       edges.filterNot(sel)
     }
   }
-
 }
 
 /**
@@ -141,6 +147,10 @@ class DispatchQuery(
                      private[this] var _sortedWith: Option[(AnyRef, AnyRef) => Boolean] = Option.empty
                    ) {
   def isEmpty: Boolean = empty
+
+  var excludePlayers: Seq[AnyRef] = Seq.empty
+  var excludeClasses: Seq[Object] = Seq.empty
+
 
   /**
     * Set the function to later sort all dynamic extensions during [[DispatchQuery.filter]].
