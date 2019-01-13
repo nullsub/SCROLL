@@ -136,9 +136,8 @@ class ScalaRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		throw new Exception("dispatchObjectForSelect on ScalaRoleGraph not yet supported!")
 	}
 
-  def setDispatchQuery(from: AnyRef => Boolean, to: AnyRef => Boolean, through: AnyRef => Boolean, bypassing: AnyRef => Boolean) = {
+  def setDispatchQuery(playerObject: AnyRef, excludeClasses: Seq[Any], excludePlayers: Seq[Object], includeClasses: Seq[Any], includePlayers: Seq[Object]) = {
     throw new Exception("setDispatchQuery on ScalaRoleGraph not yet supported!")
   }
-
 
 }

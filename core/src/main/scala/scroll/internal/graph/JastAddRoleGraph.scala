@@ -113,8 +113,8 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		return this.root.predecessors(player)
 	}
 
-	def setDispatchQuery(from: AnyRef => Boolean, to: AnyRef => Boolean, through: AnyRef => Boolean, bypassing: AnyRef => Boolean) = {
-		//this.root.graph.setDispatchQuery(new DispatchQuery())
+	def setDispatchQuery(playerObject: AnyRef, excludeClasses: Seq[Any], excludePlayers: Seq[Object], includeClasses: Seq[Any], includePlayers: Seq[Object]) = {
+		this.root.setDispatchQuery(playerObject, excludeClasses, excludePlayers, includeClasses, includePlayers)
 	}
 
 	def dispatchObjectForApply(core: AnyRef, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {

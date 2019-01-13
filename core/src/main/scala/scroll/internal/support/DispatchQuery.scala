@@ -58,10 +58,12 @@ object DispatchQuery {
 
   def empty: DispatchQuery = new DispatchQuery(new From(anything), new To(anything), new Through(anything), new Bypassing(nothing), empty = true)
 
-  def IncludeExclude(excludePlayers: Seq[AnyRef], excludeClasses: Seq[Object]): DispatchQuery = {
-    val emptyQuery = empty
+  def FilterDispatchQuery(excludePlayers: Seq[AnyRef], excludeClasses: Seq[Object], includePlayers: Seq[AnyRef], includeClasses: Seq[Object]): DispatchQuery = {
+    val emptyQuery = Bypassing(nothing)
     emptyQuery.excludePlayers = excludePlayers
     emptyQuery.excludeClasses = excludeClasses
+    emptyQuery.includePlayers = includePlayers
+    emptyQuery.includeClasses = includeClasses
     emptyQuery
    }
 
@@ -150,7 +152,8 @@ class DispatchQuery(
 
   var excludePlayers: Seq[AnyRef] = Seq.empty
   var excludeClasses: Seq[Object] = Seq.empty
-
+  var includePlayers: Seq[AnyRef] = Seq.empty
+  var includeClasses: Seq[Object] = Seq.empty
 
   /**
     * Set the function to later sort all dynamic extensions during [[DispatchQuery.filter]].

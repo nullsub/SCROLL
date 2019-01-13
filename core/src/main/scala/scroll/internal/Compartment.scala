@@ -52,6 +52,7 @@ trait Compartment
     with QueryStrategies
     with RoleUnionTypes {
 
+
   private[internal] var plays = ScalaRoleGraphBuilder.build
 
   implicit def either2TorException[T](either: Either[_, T]): T = either.fold(
@@ -257,6 +258,7 @@ trait Compartment
 
   implicit class Player[T <: AnyRef : ClassTag](override val wrapped: T) extends IPlayer[T](wrapped) with SCROLLDynamic with SCROLLDispatchable {
 
+
     override def unary_+ : Player[T] = this
 
     /**
@@ -272,7 +274,7 @@ trait Compartment
 
     override def <+>[R <: AnyRef : ClassTag](role: R): Player[T] = play(role)
 
-    override def play[R <: AnyRef : ClassTag](role: R): Player[T] = {
+    override def play[R <: AnyRef : ClassTag](role: R)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Player[T] = {
       require(null != role)
       wrapped match {
         case p: Player[_] => addPlaysRelation[T, R](p.wrapped.asInstanceOf[T], role)
@@ -366,8 +368,7 @@ trait Compartment
 
     override def applyDynamic[E](name: String)(args: Any*)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Either[SCROLLError, E] = {
       val core = coreFor(wrapped).last
-      println("applyDynamic: dispatch is: " + dispatchQuery.excludePlayers)
-      plays.setDispatchQuery(null, null,null,null)
+      plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers, dispatchQuery.includeClasses, dispatchQuery.includePlayers)
 
       plays.dispatchObjectForApply(core, name, args.toArray) match {
         case Right((r, fm)) => dispatch(r, fm, args: _*)
@@ -386,7 +387,7 @@ trait Compartment
 
     override def selectDynamic[E](name: String)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Either[SCROLLError, E] = {
       val core = coreFor(wrapped).last
-      plays.setDispatchQuery(null, null,null,null)
+      //plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers)
 
       plays.dispatchObjectForSelect(core, name) match {
         case Right(r) => Right(ReflectiveHelper.propertyOf(r, name))
@@ -403,7 +404,7 @@ trait Compartment
 
     override def updateDynamic(name: String)(value: Any)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Unit = {
       val core = coreFor(wrapped).last
-      plays.setDispatchQuery(null, null,null,null)
+      //plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers)
 
       plays.dispatchObjectForSelect(core, name) match {
         case Right(player) => ReflectiveHelper.setPropertyOf(player, name, value)

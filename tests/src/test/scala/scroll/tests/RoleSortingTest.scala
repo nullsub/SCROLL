@@ -38,7 +38,7 @@ class RoleSortingTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLT
         val r1: String = +someCore method()
         Then("the sorting should do nothing and keep the roles sorted as specified through their binding sequence")
         r1 shouldBe "C"
-
+/*
         When("dispatching with sorting")
         implicit var dd = DispatchQuery.empty.sortedWith(reverse)
         val r2: String = +someCore method()
@@ -59,10 +59,10 @@ class RoleSortingTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLT
         }
         val r4: String = +someCore method()
         Then("the sorting should reorder them")
-        r4 shouldBe "B"
+        r4 shouldBe "B"*/
       }
     }
-
+/*
     scenario("Adding roles with cyclic calls and sorting them") {
       Given("some player and roles in a compartment")
       class SomeCore {
@@ -99,5 +99,6 @@ class RoleSortingTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLT
         r1 shouldBe "Core"
       }
     }
+    */
   }
 }

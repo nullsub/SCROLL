@@ -13,9 +13,11 @@ class RecursiveBaseCallsWithCaseClassesTest(cached: Boolean, jastAdd: Boolean) e
   class MultiRole extends CompartmentUnderTest {
 
     case class RoleTypeA(id: String) {
-      implicit val dd = Bypassing((o: AnyRef) => {
+    /*  implicit val dd = Bypassing((o: AnyRef) => {
         o == this || !o.isInstanceOf[CoreType]
-      })
+      })*/
+      implicit val dd = FilterDispatchQuery(Seq(this), Seq(classOf[RoleTypeA], classOf[RoleTypeB]), Seq(), Seq())
+
 
       def someMethod(): Unit = {
         println(s"RoleTypeA($this)::someMethod()")
@@ -24,7 +26,8 @@ class RecursiveBaseCallsWithCaseClassesTest(cached: Boolean, jastAdd: Boolean) e
     }
 
     case class RoleTypeB(id: String) {
-      implicit val dd = Bypassing(_ == this)
+      //implicit val dd = Bypassing(_ == this)
+      implicit val dd = FilterDispatchQuery(Seq(this), Seq(), Seq(), Seq())
 
       def someMethod(): Unit = {
         println(s"RoleTypeB($this)::someMethod()")

@@ -17,7 +17,7 @@ trait MultiCompartment extends Compartment {
 
     override def unary_+ : MultiPlayer[T] = this
 
-    override def play[R <: AnyRef : ClassTag](role: R): MultiPlayer[T] = {
+    override def play[R <: AnyRef : ClassTag](role: R)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): MultiPlayer[T] = {
       require(null != role)
       wrapped match {
         case p: MultiPlayer[_] => addPlaysRelation[T, R](p.wrapped.asInstanceOf[T], role)

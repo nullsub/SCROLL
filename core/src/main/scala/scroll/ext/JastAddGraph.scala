@@ -25,17 +25,52 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		})
 	}
 
+	def setDispatchQuery(playerObject: AnyRef, excludeClasses: Seq[Any], excludePlayers: Seq[Object], includeClasses: Seq[Any], includePlayers: Seq[Object]): Unit = {
+		//println("setting DispatchQuery: " + excludeClasses + ", " + excludePlayers)
+		val player: Player = this.graph.findPlayerByObject(playerObject)
+		if(player == null) {
+			println("player not found: " + playerObject)
+			return
+		}
+		val dispatchQuery = new FilterDispatchQuery()
+		val excludes = new Filter()
+		excludeClasses.foreach(x => {
+			val wrapper = new ObjectWrapper()
+			wrapper.setObject(x)
+			excludes.addClasses(wrapper.clone())
+		})
+		excludePlayers.foreach(x => {
+			val wrapper = new ObjectWrapper()
+			wrapper.setObject(x)
+			excludes.addPlayers(wrapper.clone())
+		})
+		dispatchQuery.setExcludes(excludes)
+		val includes = new Filter()
+		includeClasses.foreach(x => {
+			val wrapper = new ObjectWrapper()
+			wrapper.setObject(x)
+			includes.addClasses(wrapper.clone())
+		})
+		includePlayers.foreach(x => {
+			val wrapper = new ObjectWrapper()
+			wrapper.setObject(x)
+			includes.addPlayers(wrapper.clone())
+		})
+		dispatchQuery.setIncludes(includes)
+		player.setDispatchQuery(dispatchQuery)
+	}
+
 	def dispatchObjectForApply[E](playerObject: Object, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, args))
 		}
 		try {
-			val ret = player.dispatchObjectForApply(name, args.asInstanceOf[Array[Object]])
+			val ret = player.dispatchObjectForApply(this.graph, name, args.asInstanceOf[Array[Object]])
 			Right(ret)
 		} catch {
 			case r: Throwable => {
-				println("apply got throwable: " + r.getMessage)
+				println("apply got throwable: " + r.getMessage + r.getCause + r.getStackTrace)
 				Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))
 			}
 		}
@@ -57,12 +92,21 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	def putEdge(source: Object, target: Object): Boolean = {
 		println("putEdge:" + source.toString + " " + target.toString)
 
+		var sourcePlayer: Player = this.graph.findPlayerByObject(source)
+
+		if(sourcePlayer == null) {
+			val newNatural = new Natural()
+			newNatural.setObject(source)
+			newNatural.setDispatchQuery(new DispatchQuery())
+			this.graph.addNatural(newNatural)
+			sourcePlayer = newNatural
+		}
+
 		val targetPlayer = new Role()
 		targetPlayer.setObject(target)
+		targetPlayer.setDispatchQuery(new DispatchQuery())
 
-		var sourcePlayer: Player = this.graph.findPlayerByObject(source)
 		val oldTargetPlayer = this.graph.findPlayerByObject(target)
-
 		if(oldTargetPlayer != null) {
 			if(sourcePlayer != null && this.graph.getPredecessor(oldTargetPlayer) == sourcePlayer) {
 				println("already exists!")
@@ -72,12 +116,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			this.deletePlayer(target)
 		}
 
-		if(sourcePlayer == null) {
-			val newNatural = new Natural()
-			newNatural.setObject(source)
-			this.graph.addNatural(newNatural)
-			sourcePlayer = newNatural
-		}
 		sourcePlayer.addRole(targetPlayer)
 		true
 	}

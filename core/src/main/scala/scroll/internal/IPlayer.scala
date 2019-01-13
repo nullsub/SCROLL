@@ -1,5 +1,7 @@
 package scroll.internal
 
+import scroll.internal.support.DispatchQuery
+
 import scala.reflect.ClassTag
 
 /**
@@ -23,7 +25,7 @@ abstract class IPlayer[T <: AnyRef : ClassTag](val wrapped: T) {
     * @param role the role that should be played
     * @return this
     */
-  def play[R <: AnyRef : ClassTag](role: R): IPlayer[T]
+  def play[R <: AnyRef : ClassTag](role: R)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): IPlayer[T]
 
   /**
     * Alias for [[IPlayer.play]].

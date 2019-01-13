@@ -16,7 +16,7 @@ class RecursiveBaseCallsWithClassesTest(cached: Boolean, jastAdd: Boolean) exten
       /*implicit val dd = Bypassing((o: AnyRef) => {
         o == this || !o.isInstanceOf[CoreType]
       })*/
-      //implicit val dd = DispatchQuery(Seq(this), Seq(CoreType))
+      implicit val dd = FilterDispatchQuery(Seq(this), Seq(classOf[RoleTypeA], classOf[RoleTypeB]), Seq(), Seq())
 
       def someMethod(): Unit = {
         println(s"RoleTypeA($this)::someMethod()")
@@ -26,7 +26,7 @@ class RecursiveBaseCallsWithClassesTest(cached: Boolean, jastAdd: Boolean) exten
 
     class RoleTypeB {
       //implicit val dd = Bypassing(_ == this)
-      implicit val dd = IncludeExclude(Seq(this), Seq.empty)
+      implicit val dd = FilterDispatchQuery(Seq(this), Seq(), Seq(), Seq())
 
       def someMethod(): Unit = {
         println(s"RoleTypeB($this)::someMethod()")
@@ -63,7 +63,7 @@ class RecursiveBaseCallsWithClassesTest(cached: Boolean, jastAdd: Boolean) exten
       }
     }
   }
-/*
+
   feature("Dispatching of recursive base calls") {
     scenario("Adding roles and chaining base calls recursively") {
       Given("a player and two roles in a compartment")
@@ -92,5 +92,4 @@ class RecursiveBaseCallsWithClassesTest(cached: Boolean, jastAdd: Boolean) exten
       }
     }
   }
-  */
 }

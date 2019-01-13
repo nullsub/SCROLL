@@ -198,8 +198,7 @@ scenario("Playing a role multiple times (same instance)") {
     expected shouldBe actual2
   }
 }
-
-
+/*
   scenario("Playing a role multiple times (different instances) from one player") {
     Given("some players and 2 role instance of the same type in a compartment")
     val someCoreA = new CoreA()
@@ -224,7 +223,7 @@ scenario("Playing a role multiple times (same instance)") {
       expected shouldBe actual2
     }
   }
-
+*/
   /*
   scenario("Playing a role multiple times (different instances, but using dispatch to select one)") {
     Given("some players and 2 role instance of the same type in a compartment")

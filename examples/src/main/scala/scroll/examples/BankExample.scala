@@ -2,6 +2,7 @@ package scroll.examples
 
 import scroll.examples.currency.{Currency => Money}
 import scroll.internal.support.DispatchQuery.Bypassing
+import scroll.internal.support.DispatchQuery.FilterDispatchQuery
 import scroll.internal.util.Log.info
 import scroll.internal.Compartment
 import scroll.internal.support.DispatchQuery
@@ -44,7 +45,8 @@ object BankExample extends App {
 
     class CheckingsAccount() {
       def decrease(amount: Money): Unit = {
-        dd = Bypassing(_.isInstanceOf[CheckingsAccount])
+        //dd = Bypassing(_.isInstanceOf[CheckingsAccount])
+        dd = FilterDispatchQuery(Seq(), Seq(classOf[CheckingsAccount]), Seq(), Seq())
         val _ = +this decrease amount
       }
     }
@@ -57,7 +59,8 @@ object BankExample extends App {
 
       def increase(amount: Money): Unit = {
         info("Increasing with fee.")
-        dd = Bypassing(_.isInstanceOf[SavingsAccount])
+//        dd = Bypassing(_.isInstanceOf[SavingsAccount])
+        dd = FilterDispatchQuery(Seq(), Seq(classOf[SavingsAccount]), Seq(), Seq())
         val _ = +this increase (amount - calcTransactionFee(amount))
       }
     }
@@ -65,7 +68,8 @@ object BankExample extends App {
     class TransactionRole() {
       def execute(): Unit = {
         info("Executing from Role.")
-        dd = Bypassing(_.isInstanceOf[TransactionRole])
+        //dd = Bypassing(_.isInstanceOf[TransactionRole])
+        dd = FilterDispatchQuery(Seq(), Seq(classOf[TransactionRole]), Seq(), Seq())
         val _ = +this execute()
       }
     }

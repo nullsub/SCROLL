@@ -1,17 +1,21 @@
 
 Tree ::= Natural* DispatchQuery TraversalOrder;
-abstract Player ::= Role* <Object:Object> ;
+abstract Player ::= Role* <Object:Object> [DispatchQuery];
 Natural:Player ;
 Role:Player ;
 
-DispatchQuery ::= <Include: PlayerSelector> <Exclude: PlayerSelector ;
-PlayerSelector ::= <InstanceOf*:Class> <Equals*: Object> ;
+DispatchQuery ;
+FilterDispatchQuery:DispatchQuery ::= Includes:Filter Excludes:Filter;
+
+Filter ::= Classes:ObjectWrapper* Players:ObjectWrapper* ;
+ObjectWrapper ::= <Object:Object> ;
+
 abstract TraversalOrder;
 PostOrder:TraversalOrder;
 InOrder:TraversalOrder;
 
-rel DispatchQuery.Included* -> Player;
 rel DispatchQuery.Excluded* -> Player;
+//rel DispatchQuery.Included* -> Player;
 
 /*
 Filtermöglichkeiten der DispatchQuery
@@ -21,4 +25,16 @@ Filtermöglichkeiten der DispatchQuery
 - include/exclude --> support instanceOf and .equals
 
 - einmal pro baum eine DispatchQuery speichern
+*/
+
+
+//suche der dispatchQuery mit vererbten Attributen: dispatchQuery()
+/*
+Beispiel Diagramme bauen (vektorgraphiken):
+    Für dispatch
+        distpachQuery
+        Ablauf, reihenfolge
+
+        player --> dispatchQuery().findMethod() aufgerufen
+        Player --> findProperty
 */
