@@ -32,7 +32,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			println("player not found: " + playerObject)
 			return
 		}
-		val dispatchQuery = new FilterDispatchQuery()
+		val dispatchQuery = new DispatchQuery()
 		val excludes = new Filter()
 		excludeClasses.foreach(x => {
 			val wrapper = new ObjectWrapper()
@@ -60,13 +60,13 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		player.setDispatchQuery(dispatchQuery)
 	}
 
-	def dispatchObjectForApply[E](playerObject: Object, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
+	def findMethod[E](playerObject: Object, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, args))
 		}
 		try {
-			val ret = player.dispatchObjectForApply(this.graph, name, args.asInstanceOf[Array[Object]])
+			val ret = player.findMethod(this.graph, name, args.asInstanceOf[Array[Object]])
 			Right(ret)
 		} catch {
 			case r: Throwable => {
@@ -76,13 +76,13 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		}
 	}
 
-	def dispatchObjectForSelect(playerObject: Object, name: String): Either[SCROLLError, AnyRef]= {
+	def findProperty(playerObject: Object, name: String): Either[SCROLLError, AnyRef]= {
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, null))
 		}
 		try {
-			val ret = player.dispatchObjectForSelect(name)
+			val ret = player.findProperty(name)
 			Right(ret)
 		} catch {
 			case _: Throwable => Left(SCROLLErrors.IllegalRoleInvocationDispatch(playerObject.toString, name, null))
@@ -97,14 +97,12 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		if(sourcePlayer == null) {
 			val newNatural = new Natural()
 			newNatural.setObject(source)
-			newNatural.setDispatchQuery(new DispatchQuery())
 			this.graph.addNatural(newNatural)
 			sourcePlayer = newNatural
 		}
 
 		val targetPlayer = new Role()
 		targetPlayer.setObject(target)
-		targetPlayer.setDispatchQuery(new DispatchQuery())
 
 		val oldTargetPlayer = this.graph.findPlayerByObject(target)
 		if(oldTargetPlayer != null) {

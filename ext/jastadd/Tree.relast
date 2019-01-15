@@ -4,8 +4,7 @@ abstract Player ::= Role* <Object:Object> [DispatchQuery];
 Natural:Player ;
 Role:Player ;
 
-DispatchQuery ;
-FilterDispatchQuery:DispatchQuery ::= Includes:Filter Excludes:Filter;
+DispatchQuery ::= Includes:Filter Excludes:Filter;
 
 Filter ::= Classes:ObjectWrapper* Players:ObjectWrapper* ;
 ObjectWrapper ::= <Object:Object> ;

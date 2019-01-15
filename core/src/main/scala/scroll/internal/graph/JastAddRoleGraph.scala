@@ -117,12 +117,12 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		this.root.setDispatchQuery(playerObject, excludeClasses, excludePlayers, includeClasses, includePlayers)
 	}
 
-	def dispatchObjectForApply(core: AnyRef, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
-		this.root.dispatchObjectForApply(core, name, args)
+	def findMethod(core: AnyRef, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
+		this.root.findMethod(core, name, args)
 	}
 
-	def dispatchObjectForSelect(core: AnyRef, name: String): Either[SCROLLError, AnyRef] = {
-		this.root.dispatchObjectForSelect(core, name)
+	def findProperty(core: AnyRef, name: String): Either[SCROLLError, AnyRef] = {
+		this.root.findProperty(core, name)
 	}
 
 }

@@ -366,11 +366,12 @@ trait Compartment
     override def applyDynamicNamed[E](name: String)(args: (String, Any)*)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Either[SCROLLError, E] =
       applyDynamic(name)(args.map(_._2): _*)(dispatchQuery)
 
-    override def applyDynamic[E](name: String)(args: Any*)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Either[SCROLLError, E] = {
+    override def applyDynamic[E](name: String)(args: Any*)(implicit dispatchQuery: DispatchQuery = null): Either[SCROLLError, E] = {
       val core = coreFor(wrapped).last
-      plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers, dispatchQuery.includeClasses, dispatchQuery.includePlayers)
+      if(dispatchQuery != null)
+        plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers, dispatchQuery.includeClasses, dispatchQuery.includePlayers)
 
-      plays.dispatchObjectForApply(core, name, args.toArray) match {
+      plays.findMethod(core, name, args.toArray) match {
         case Right((r, fm)) => dispatch(r, fm, args: _*)
         case Left(_) => Left(RoleNotFound(core.toString, name, args))
       }
@@ -389,7 +390,7 @@ trait Compartment
       val core = coreFor(wrapped).last
       //plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers)
 
-      plays.dispatchObjectForSelect(core, name) match {
+      plays.findProperty(core, name) match {
         case Right(r) => Right(ReflectiveHelper.propertyOf(r, name))
         case Left(_) => Left(RoleNotFound(core.toString, name, Seq.empty))
       }
@@ -402,11 +403,11 @@ trait Compartment
       */
     }
 
-    override def updateDynamic(name: String)(value: Any)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Unit = {
+    override def updateDynamic(name: String)(value: Any)(implicit dispatchQuery: DispatchQuery = null): Unit = {
       val core = coreFor(wrapped).last
       //plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers)
 
-      plays.dispatchObjectForSelect(core, name) match {
+      plays.findProperty(core, name) match {
         case Right(player) => ReflectiveHelper.setPropertyOf(player, name, value)
 	case Left(_) => Unit
       }

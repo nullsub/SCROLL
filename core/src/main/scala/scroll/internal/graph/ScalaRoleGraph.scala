@@ -128,11 +128,11 @@ class ScalaRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
       Seq.empty
     }
   }
-	def dispatchObjectForApply(core: AnyRef, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
+	def findMethod(core: AnyRef, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
 		throw new Exception("doing dispatch on ScalaRoleGraph not yet supported!")
 	}
 
-	def dispatchObjectForSelect(core: AnyRef, name: String): Either[SCROLLError, AnyRef] = {
+	def findProperty(core: AnyRef, name: String): Either[SCROLLError, AnyRef] = {
 		throw new Exception("dispatchObjectForSelect on ScalaRoleGraph not yet supported!")
 	}
 
