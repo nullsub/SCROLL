@@ -33,30 +33,17 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			return
 		}
 		val dispatchQuery = new DispatchQuery()
+
 		val excludes = new Filter()
-		excludeClasses.foreach(x => {
-			val wrapper = new ObjectWrapper()
-			wrapper.setObject(x)
-			excludes.addClasses(wrapper.clone())
-		})
-		excludePlayers.foreach(x => {
-			val wrapper = new ObjectWrapper()
-			wrapper.setObject(x)
-			excludes.addPlayers(wrapper.clone())
-		})
+		excludes.setClasses(scala.collection.JavaConverters.seqAsJavaList(excludeClasses))
+		excludes.setPlayers(scala.collection.JavaConverters.seqAsJavaList(excludePlayers))
 		dispatchQuery.setExcludes(excludes)
+
 		val includes = new Filter()
-		includeClasses.foreach(x => {
-			val wrapper = new ObjectWrapper()
-			wrapper.setObject(x)
-			includes.addClasses(wrapper.clone())
-		})
-		includePlayers.foreach(x => {
-			val wrapper = new ObjectWrapper()
-			wrapper.setObject(x)
-			includes.addPlayers(wrapper.clone())
-		})
+		includes.setClasses(scala.collection.JavaConverters.seqAsJavaList(includeClasses))
+		includes.setPlayers(scala.collection.JavaConverters.seqAsJavaList(includePlayers))
 		dispatchQuery.setIncludes(includes)
+
 		player.setDispatchQuery(dispatchQuery)
 	}
 
@@ -133,6 +120,8 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		this.graph.addNatural(oldPlayer)
 
 		player.removeRole(playerRole)
+		printTree()
+
 	}
 
 	def deletePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit =

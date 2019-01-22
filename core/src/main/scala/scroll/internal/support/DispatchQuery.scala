@@ -59,12 +59,12 @@ object DispatchQuery {
   def empty: DispatchQuery = new DispatchQuery(new From(anything), new To(anything), new Through(anything), new Bypassing(nothing), empty = true)
 
   def FilterDispatchQuery(excludePlayers: Seq[AnyRef], excludeClasses: Seq[Object], includePlayers: Seq[AnyRef], includeClasses: Seq[Object]): DispatchQuery = {
-    val emptyQuery = Bypassing(nothing)
-    emptyQuery.excludePlayers = excludePlayers
-    emptyQuery.excludeClasses = excludeClasses
-    emptyQuery.includePlayers = includePlayers
-    emptyQuery.includeClasses = includeClasses
-    emptyQuery
+    val query = new DispatchQuery(new From(anything), new To(anything), new Through(anything), new Bypassing(p => excludeClasses.contains(p) || excludePlayers.contains(p)), empty = false)
+    query.excludePlayers = excludePlayers
+    query.excludeClasses = excludeClasses
+    query.includePlayers = includePlayers
+    query.includeClasses = includeClasses
+    query
    }
 
    /**

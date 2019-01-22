@@ -1,20 +1,18 @@
 
-Tree ::= Natural* DispatchQuery TraversalOrder;
-abstract Player ::= Role* <Object:Object> [DispatchQuery];
+Tree ::= Natural* DispatchQuery TraversalOrder ;
+abstract Player ::= Role* <Object:Object> [DispatchQuery] ;
 Natural:Player ;
 Role:Player ;
 
-DispatchQuery ::= Includes:Filter Excludes:Filter;
+DispatchQuery ::= Includes:Filter Excludes:Filter ;
+Filter ::= <Classes:List> <Players:List> ;
 
-Filter ::= Classes:ObjectWrapper* Players:ObjectWrapper* ;
-ObjectWrapper ::= <Object:Object> ;
+abstract TraversalOrder ;
+PostOrder:TraversalOrder ;
+InOrder:TraversalOrder ;
 
-abstract TraversalOrder;
-PostOrder:TraversalOrder;
-InOrder:TraversalOrder;
-
-rel DispatchQuery.Excluded* -> Player;
-//rel DispatchQuery.Included* -> Player;
+//rel DispatchQuery.Excluded* -> Player ;
+//rel DispatchQuery.Included* -> Player ;
 
 /*
 Filtermöglichkeiten der DispatchQuery
