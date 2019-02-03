@@ -14,14 +14,14 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		println("Tree: ")
 		this.graph.getNaturalList.forEach(r => {
 			println("  natural: " + r.getObject.toString)
-			this.printNode(r,1)
+			this.printNode(r, 1)
 		})
 	}
 
 	def printNode(node: Player, level: Int): Unit = {
 		node.getRoleList.forEach(r => {
 			println("    " * level + "node: " + r.getObject.toString)
-			this.printNode(r, level +1)
+			this.printNode(r, level + 1)
 		})
 	}
 
@@ -62,7 +62,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		}
 	}
 
-	def findProperty(playerObject: Object, name: String): Either[SCROLLError, AnyRef]= {
+	def findProperty(playerObject: Object, name: String): Either[SCROLLError, AnyRef] = {
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, null))
@@ -92,7 +92,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 		val oldTargetPlayer = this.graph.findPlayerByObject(target)
 		if(oldTargetPlayer != null) {
-			if(sourcePlayer != null && this.graph.getPredecessor(oldTargetPlayer) == sourcePlayer) {
+			if(sourcePlayer != null && oldTargetPlayer.predecessor == sourcePlayer) {
 				println("already exists!")
 				return false
 			}
@@ -113,7 +113,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			throw new Exception("playerPlayer == null || playerRole == null")
 		}
 
-		val  oldPlayer: Natural = new Natural
+		val oldPlayer: Natural = new Natural
 		oldPlayer.setObject(playerRole.getObject)
 		oldPlayer.setRoleList(playerRole.getRoleList.clone())
 		this.graph.addNatural(oldPlayer)
@@ -121,14 +121,13 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		player.removeRole(playerRole)
 	}
 
-	def deletePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit =
-	{
+	def deletePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit = {
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player == null) {
 			return
 		}
 
-		val pred = this.graph.getPredecessor(player)
+		val pred = player.predecessor
 		if(pred == null) {
 			this.graph.removeNatural(player)
 		} else {
@@ -144,7 +143,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		}
 
 		player.getRoleList.forEach(r => {
-			val  oldPlayer: Natural = new Natural
+			val oldPlayer: Natural = new Natural
 			oldPlayer.setObject(r.getObject)
 			oldPlayer.setRoleList(r.getRoleList.clone())
 			this.graph.addNatural(oldPlayer)
@@ -193,7 +192,11 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 		val ret: util.Set[Object] = new util.LinkedHashSet[Object]
 		while(player != null) {
-			player = this.graph.getPredecessor(player)
+			if(player.getParent == null) {
+				player = null
+			} else {
+				player = player.predecessor
+			}
 			if(player != null) {
 				ret.add(player.getObject)
 			}

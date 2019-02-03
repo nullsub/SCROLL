@@ -26,8 +26,8 @@ object SCROLLTestSuite {
        new MultiRoleFeaturesTest(cached = c, jastAdd = j),
        //new FacetsTest(cached = c, jastAdd = j),
       new RecursiveBaseCallsWithClassesTest(cached = c, jastAdd = j),
-      new RecursiveBaseCallsWithCaseClassesTest(cached = c, jastAdd = j))
-      //new ThrowableInRoleMethodsTest(cached = c, jastAdd = j))
+      new RecursiveBaseCallsWithCaseClassesTest(cached = c, jastAdd = j),
+      new ThrowableInRoleMethodsTest(cached = c, jastAdd = j))
   })
 }
 

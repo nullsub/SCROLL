@@ -26,7 +26,7 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		target.allPlayers().foreach(p => {
 			val pred = target.graph.findPlayerByObject(p)
 			if(pred != null) {
-				val source = target.graph.getPredecessor(pred)
+				val source = pred.predecessor()
 				if(source != null) {
 					addBinding(source.getObject, p)
 					ret = true
@@ -42,7 +42,7 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		target.allPlayers().foreach(p => {
 			val pred = target.graph.findPlayerByObject(p)
 			if(pred != null) {
-				val source = target.graph.getPredecessor(pred)
+				val source = pred.predecessor()
 				removeBinding(source.getObject, p)
 			}
 		})
@@ -67,17 +67,17 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 
 	override def roles(player: AnyRef): Seq[AnyRef] = {
 		require(null != player)
-		if (containsPlayer(player)) {
+		if(containsPlayer(player)) {
 			val returnSeq = new mutable.ListBuffer[Object]
 			val processing = new mutable.Queue[Object]
 			returnSeq += player.asInstanceOf[Object]
-			root.successors(player.asInstanceOf[Object]).forEach(n => if (!n.isInstanceOf[Enumeration#Value]) processing.enqueue(n))
-			while (processing.nonEmpty) {
+			root.successors(player.asInstanceOf[Object]).forEach(n => if(!n.isInstanceOf[Enumeration#Value]) processing.enqueue(n))
+			while(processing.nonEmpty) {
 				val next = processing.dequeue()
-				if (!returnSeq.contains(next)) {
+				if(!returnSeq.contains(next)) {
 					returnSeq += next
 				}
-				root.successors(next).forEach(n => if (!n.isInstanceOf[Enumeration#Value]) processing.enqueue(n))
+				root.successors(next).forEach(n => if(!n.isInstanceOf[Enumeration#Value]) processing.enqueue(n))
 			}
 			returnSeq
 		} else {
@@ -87,11 +87,11 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 
 	override def facets(player: AnyRef): Seq[Enumeration#Value] = {
 		throw new Exception("facets not supported!")
-
+		/*
 		require(null != player)
-		if (containsPlayer(player)) {
+		if(containsPlayer(player)) {
 			val returnSeq = new mutable.ListBuffer[Enumeration#Value]
-			root.successors(player.asInstanceOf[Object]).forEach {
+			root.successors(player.asInstanceOf[Object]).forEach{
 				case e: Enumeration#Value => returnSeq += e
 				case _ =>
 			}
@@ -99,6 +99,7 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		} else {
 			Seq.empty
 		}
+		*/
 	}
 
 	override def containsPlayer(player: AnyRef): Boolean = {
