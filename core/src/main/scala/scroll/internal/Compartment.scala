@@ -363,7 +363,7 @@ trait Compartment
 
     override def predecessors(): Seq[AnyRef] = plays.predecessors(this.wrapped)
 
-    override def applyDynamicNamed[E](name: String)(args: (String, Any)*)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Either[SCROLLError, E] =
+    override def applyDynamicNamed[E](name: String)(args: (String, Any)*)(implicit dispatchQuery: DispatchQuery = null): Either[SCROLLError, E] =
       applyDynamic(name)(args.map(_._2): _*)(dispatchQuery)
 
     override def applyDynamic[E](name: String)(args: Any*)(implicit dispatchQuery: DispatchQuery = null): Either[SCROLLError, E] = {
@@ -386,9 +386,10 @@ trait Compartment
       */
     }
 
-    override def selectDynamic[E](name: String)(implicit dispatchQuery: DispatchQuery = DispatchQuery.empty): Either[SCROLLError, E] = {
+    override def selectDynamic[E](name: String)(implicit dispatchQuery: DispatchQuery = null): Either[SCROLLError, E] = {
       val core = coreFor(wrapped).last
-      //plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers)
+      if(dispatchQuery != null)
+        plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers, dispatchQuery.includeClasses, dispatchQuery.includePlayers)
 
       plays.findProperty(core, name) match {
         case Right(r) => Right(ReflectiveHelper.propertyOf(r, name))
@@ -405,7 +406,8 @@ trait Compartment
 
     override def updateDynamic(name: String)(value: Any)(implicit dispatchQuery: DispatchQuery = null): Unit = {
       val core = coreFor(wrapped).last
-      //plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers)
+      if(dispatchQuery != null)
+        plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers, dispatchQuery.includeClasses, dispatchQuery.includePlayers)
 
       plays.findProperty(core, name) match {
         case Right(player) => ReflectiveHelper.setPropertyOf(player, name, value)

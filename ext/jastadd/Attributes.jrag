@@ -1,27 +1,26 @@
 import java.util.List;
 import java.util.ArrayList;
+
 aspect Evaluation {
-//import hinzufügen
 
 	eq Player.getRole(int index).dispatchQuery() {
 		//System.out.println("classPlayer: ()" + this.getClass() + "   " + this + " index " + index);
-		if(this.getRole(index).hasDispatchQuery())
-			return this.getRole(index).getDispatchQuery();
-		if(this.hasDispatchQuery())
-            return this.getDispatchQuery();
-    //    return null;
+		if(this.getRole(index).hasDispatchQuery()) {
+            return this.getRole(index).getDispatchQuery();
+        }
 		return this.dispatchQuery();
 	}
 
 	eq Tree.getNatural(int index).dispatchQuery() {
 		//System.out.println("classTree: ()" + this.getClass() + "   " + this + " index " + index);
-		 if(this.getNatural(index).hasDispatchQuery())
-    	    return this.getNatural(index).getDispatchQuery();
-        return null;
+      	if(this.getNatural(index).hasDispatchQuery()) {
+      		  return this.getNatural(index).getDispatchQuery();
+        }
+		return this.getDispatchQuery();
 	}
 
 	inh DispatchQuery Player.dispatchQuery();
-	inh DispatchQuery Natural.dispatchQuery();
+
 
 	public Player Tree.findPlayerByObject(Object object) {
 		//System.out.println("Tree.findPlayerByObject()");
@@ -77,45 +76,34 @@ aspect Evaluation {
 		return retType;
 	}
 
-	public DispatchQuery Tree.findDispatchQuery(Player p) {
-
-        return p.dispatchQuery();
-
-		   /*
-		if(p.hasDispatchQuery()) {
-			return p.getDispatchQuery();
-		}
-		Player pred = this.getPredecessor(p);
-		if(pred != null) {
-			return this.findDispatchQuery(pred);
-		}
-		return null;*/
-	}
-
-	public List<String> Tree.getExcludedClasses(Player p){
-		if(this.findDispatchQuery(p) != null && this.findDispatchQuery(p).getExcludes() != null) {
-		    return this.findDispatchQuery(p).getExcludes().getClasses();
+	public List<String> Player.getExcludedClasses(){
+		DispatchQuery dq = this.dispatchQuery();
+		if(dq != null && dq.getExcludes() != null) {
+		    return dq.getExcludes().getClasses();
 		}
 		return new ArrayList<>();
 	}
 
-	public List<String> Tree.getExcludedPlayers(Player p){
-		if(this.findDispatchQuery(p) != null && this.findDispatchQuery(p).getExcludes() != null) {
-		    return this.findDispatchQuery(p).getExcludes().getPlayers();
+	public List<String> Player.getExcludedPlayers(){
+	    DispatchQuery dq = this.dispatchQuery();
+		if(dq != null && dq.getExcludes() != null) {
+		    return dq.getExcludes().getPlayers();
 		}
 		return new ArrayList<>();
 	}
 
-	public List<String> Tree.getIncludedClasses(Player p){
-		if(this.findDispatchQuery(p) != null && this.findDispatchQuery(p).getIncludes() != null) {
-		    return this.findDispatchQuery(p).getIncludes().getClasses();
+	public List<String> Player.getIncludedClasses(){
+		DispatchQuery dq = this.dispatchQuery();
+		if(dq != null && dq.getIncludes() != null) {
+		    return dq.getIncludes().getClasses();
 		}
 		return new ArrayList<>();
 	}
 
-	public List<String> Tree.getIncludedPlayers(Player p){
-    	if(this.findDispatchQuery(p) != null && this.findDispatchQuery(p).getIncludes() != null) {
-    	    return this.findDispatchQuery(p).getIncludes().getPlayers();
+	public List<String> Player.getIncludedPlayers(){
+		DispatchQuery dq = this.dispatchQuery();
+		if(dq != null && dq.getIncludes() != null) {
+    	    return dq.getIncludes().getPlayers();
    		}
     	return new ArrayList<>();
     }
@@ -123,15 +111,14 @@ aspect Evaluation {
 	public scala.Tuple2<Object, java.lang.reflect.Method> Player.findMethod(Tree tree, String name, Object[] arguments) throws Exception {
 		//System.out.println("dispatchObjectForApply() object: " + this.getObject().toString() + " method: " + name);
 		List<Player> players = new ArrayList<Player>();
-		List<String> includedClasses = tree.getIncludedClasses(this);
-        List<String> includedPlayers = tree.getIncludedPlayers(this);
+		List<String> includedClasses = this.getIncludedClasses();
+        List<String> includedPlayers = this.getIncludedPlayers();
+		List<String> excludedClasses = this.getExcludedClasses();
+        List<String> excludedPlayers = this.getExcludedPlayers();
 		players.addAll(scala.collection.JavaConversions.seqAsJavaList(this.getPlayers()));
 
 		for(Player p: players) {
 			if(!includedClasses.contains(p.getObject().getClass()) && !includedPlayers.contains(p.getObject())) {
-				List<String> excludedClasses = tree.getExcludedClasses(p);
-				List<String> excludedPlayers = tree.getExcludedPlayers(p);
-
 				if(excludedClasses.contains(p.getObject().getClass())) {
 					continue;
 				}
@@ -139,6 +126,7 @@ aspect Evaluation {
 					continue;
 				}
 			}
+
 			for (java.lang.reflect.Method method : p.getObject().getClass().getDeclaredMethods()) {
 				if(method.getName() == name && arguments.length == method.getParameterCount())  {
 					int j = 0;
@@ -159,23 +147,27 @@ aspect Evaluation {
 	}
 
 	public Object Player.findProperty(String name) throws Exception {
-		List<Player> lastLevel = new ArrayList<Player>();
-		lastLevel.add(this);
+			List<Player> players = new ArrayList<Player>();
+		    List<String> includedClasses = this.getIncludedClasses();
+            List<String> includedPlayers = this.getIncludedPlayers();
+		    List<String> excludedClasses = this.getExcludedClasses();
+            List<String> excludedPlayers = this.getExcludedPlayers();
+    		players.addAll(scala.collection.JavaConversions.seqAsJavaList(this.getPlayers()));
 
-		do {
-			List<Player> newLevel = new ArrayList<Player>();
-			for(Player p : lastLevel) {
-				try {
-					java.lang.reflect.Field field = p.getObject().getClass().getDeclaredField(name);
-					return p.getObject();
-				} catch (Exception e) {}
-				for(Player r : p.getRoles()) {
-					newLevel.add(r);
-				}
-			}
-			lastLevel = newLevel;
-		} while(!lastLevel.isEmpty());
-
+    		for(Player p: players) {
+    			if(!includedClasses.contains(p.getObject().getClass()) && !includedPlayers.contains(p.getObject())) {
+    				if(excludedClasses.contains(p.getObject().getClass())) {
+    					continue;
+    				}
+    				if(excludedPlayers.contains(p.getObject())) {
+    					continue;
+    				}
+    			}
+    							try {
+                					java.lang.reflect.Field field = p.getObject().getClass().getDeclaredField(name);
+                					return p.getObject();
+                				} catch (Exception e) {}
+         }
 		throw new Exception("dispatchObjectForSelect: attribute not found!");
 	}
 

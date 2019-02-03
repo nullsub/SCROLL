@@ -21,7 +21,7 @@ Filtermöglichkeiten der DispatchQuery
 - nach typ filtern (bestimmte Rollen filtern/auswählen) -> include/exclude
 - include/exclude --> support instanceOf and .equals
 
-- einmal pro baum eine DispatchQuery speichern
+- einmal pro Baum eine DispatchQuery speichern
 */
 
 

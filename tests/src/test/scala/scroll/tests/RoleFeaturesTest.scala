@@ -1,9 +1,9 @@
 package scroll.tests
 
-import mocks.{CoreA, CoreB}
 import scroll.internal.support.DispatchQuery
-import DispatchQuery._
 import scroll.internal.errors.SCROLLErrors.RoleNotFound
+import scroll.tests.mocks.CoreA
+import scroll.tests.mocks.CoreB
 
 class RoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractSCROLLTest(cached, jastAdd) {
 
@@ -175,7 +175,7 @@ feature("Role playing") {
     }
   }
 }
-
+/*
 scenario("Playing a role multiple times (same instance)") {
   Given("some players and role in a compartment")
   val someCoreA = new CoreA()
@@ -197,7 +197,7 @@ scenario("Playing a role multiple times (same instance)") {
     expected shouldBe actual1
     expected shouldBe actual2
   }
-}
+}*/
 /*
   scenario("Playing a role multiple times (different instances) from one player") {
     Given("some players and 2 role instance of the same type in a compartment")
@@ -466,7 +466,7 @@ scenario("Playing a role multiple times (same instance)") {
     val someCoreA = new CoreA()
 
     new CompartmentUnderTest() {
-      val someRoleA = new RoleA()
+	    val someRoleA = new RoleA()
       val someRoleB = new RoleB()
       val someRoleC = new RoleC()
       val someRoleD = new RoleD()
@@ -516,7 +516,7 @@ scenario("Playing a role multiple times (same instance)") {
       actual shouldBe null
     }
   }
-/* // FIXME error here
+
   scenario("Dropping roles when using deep roles") {
 
     class Core() {
@@ -673,5 +673,5 @@ scenario("Playing a role multiple times (same instance)") {
       actual = (+roleWithC).c()
       actual shouldBe "c"
     }
-  }*/
+  }
 }

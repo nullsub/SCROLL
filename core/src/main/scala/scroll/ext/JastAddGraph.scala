@@ -26,7 +26,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def setDispatchQuery(playerObject: AnyRef, excludeClasses: Seq[Any], excludePlayers: Seq[Object], includeClasses: Seq[Any], includePlayers: Seq[Object]): Unit = {
-		//println("setting DispatchQuery: " + excludeClasses + ", " + excludePlayers)
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player == null) {
 			println("player not found: " + playerObject)
@@ -120,8 +119,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		this.graph.addNatural(oldPlayer)
 
 		player.removeRole(playerRole)
-		printTree()
-
 	}
 
 	def deletePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit =
