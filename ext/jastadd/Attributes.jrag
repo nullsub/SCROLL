@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 aspect Evaluation {
 
-
 	eq Player.getRole(int index).dispatchQuery() {
 		//System.out.println("classPlayer: ()" + this.getClass() + "   " + this + " index " + index);
 		if(this.getRole(index).hasDispatchQuery()) {

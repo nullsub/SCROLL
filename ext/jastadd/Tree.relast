@@ -11,8 +11,6 @@ abstract TraversalOrder ;
 PostOrder:TraversalOrder ;
 InOrder:TraversalOrder ;
 
-//rel DispatchQuery.Excluded* -> Player ;
-//rel DispatchQuery.Included* -> Player ;
 
 /*
 Filtermöglichkeiten der DispatchQuery
@@ -25,7 +23,6 @@ Filtermöglichkeiten der DispatchQuery
 */
 
 
-//suche der dispatchQuery mit vererbten Attributen: dispatchQuery()
 /*
 Beispiel Diagramme bauen (vektorgraphiken):
     Für dispatch
