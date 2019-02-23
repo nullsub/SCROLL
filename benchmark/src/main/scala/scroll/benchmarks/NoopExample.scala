@@ -26,7 +26,9 @@ class NoopExample(cached: Boolean) {
       * No-op role methods which just forward to the base
       */
     class NoopRole {
-      implicit val dd: DispatchQuery = Bypassing(_.isInstanceOf[NoopRole])
+//      implicit val dd: DispatchQuery = Bypassing(_.isInstanceOf[NoopRole])
+      implicit val dd = FilterDispatchQuery(Seq(), Seq(classOf[NoopRole]), Seq(), Seq())
+
 
       def noArgs(): AnyRef = {
         +this noArgs()

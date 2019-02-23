@@ -76,7 +76,9 @@ class BankExample {
 
     class MoneyTransfer() {
       def execute(): Unit = {
-        implicit val dd = Bypassing(_.isInstanceOf[MoneyTransfer])
+        //implicit val dd = Bypassing(_.isInstanceOf[MoneyTransfer])
+        implicit val dd = FilterDispatchQuery(Seq(), Seq(classOf[MoneyTransfer]), Seq(), Seq())
+
         val _ = +this execute()
       }
     }
@@ -86,7 +88,8 @@ class BankExample {
 
       def decrease(amount: Money): Unit = amount match {
         case a if a <= limit =>
-          implicit val dd = Bypassing(_.isInstanceOf[CheckingsAccount])
+          //implicit val dd = Bypassing(_.isInstanceOf[CheckingsAccount])
+          implicit val dd = FilterDispatchQuery(Seq(), Seq(classOf[CheckingsAccount]), Seq(), Seq())
           val _ = +this decrease amount
         case _ => throw new IllegalArgumentException("Amount > limit!")
       }
@@ -96,7 +99,9 @@ class BankExample {
       private val transactionFee: Double = 0.1
 
       def decrease(amount: Money): Unit = {
-        implicit val dd = Bypassing(_.isInstanceOf[SavingsAccount])
+        //implicit val dd = Bypassing(_.isInstanceOf[SavingsAccount])
+        implicit val dd = FilterDispatchQuery(Seq(), Seq(classOf[SavingsAccount]), Seq(), Seq())
+
         val _ = +this decrease (amount + amount * transactionFee)
       }
     }

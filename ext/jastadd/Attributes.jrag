@@ -18,7 +18,7 @@ aspect Evaluation {
 		}
 
 		if(this.getDispatchQuery() == null) {
-			Filter emptyFilter = new Filter();
+			DQFilter emptyFilter = new DQFilter();
 			emptyFilter.setClasses(new java.util.ArrayList<>());
 			emptyFilter.setPlayers(new java.util.ArrayList<>());
 			DispatchQuery dq = new DispatchQuery();

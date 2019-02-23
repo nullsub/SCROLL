@@ -4,8 +4,8 @@ abstract Player ::= Role* <Object:Object> [DispatchQuery] ;
 Natural:Player ;
 Role:Player ;
 
-DispatchQuery ::= Includes:Filter Excludes:Filter ;
-Filter ::= <Classes:List> <Players:List> ;
+DispatchQuery ::= Includes:DQFilter Excludes:DQFilter ;
+DQFilter ::= <Classes:List> <Players:List> ;
 
 abstract TraversalOrder ;
 PostOrder:TraversalOrder ;

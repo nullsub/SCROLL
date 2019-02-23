@@ -33,12 +33,12 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		}
 		val dispatchQuery = new DispatchQuery()
 
-		val excludes = new Filter()
+		val excludes = new DQFilter()
 		excludes.setClasses(scala.collection.JavaConverters.seqAsJavaList(excludeClasses))
 		excludes.setPlayers(scala.collection.JavaConverters.seqAsJavaList(excludePlayers))
 		dispatchQuery.setExcludes(excludes)
 
-		val includes = new Filter()
+		val includes = new DQFilter()
 		includes.setClasses(scala.collection.JavaConverters.seqAsJavaList(includeClasses))
 		includes.setPlayers(scala.collection.JavaConverters.seqAsJavaList(includePlayers))
 		dispatchQuery.setIncludes(includes)

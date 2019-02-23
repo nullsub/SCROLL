@@ -2,8 +2,11 @@ plugins {
     id "java"
     id "org.jastadd" version "1.13.2"
     id "com.github.maiflai.scalatest" version "0.23"
+    id "me.champeau.gradle.jmh" version "0.4.8"
+
 }
 apply plugin: 'scala'
+apply plugin: 'me.champeau.gradle.jmh'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -31,6 +34,13 @@ dependencies {
     testImplementation 'org.scalatest:scalatest_2.12:3.0.5'
     testImplementation 'junit:junit:4.12'
     testRuntime 'org.pegdown:pegdown:1.4.2'
+
+    //for benchmark
+    implementation group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.21'
+
+    //#implementation 'org.openjdk.jmh:jmh-core:1.21'
+    //implementation 'org.openjdk.jmh:jmh-generator-annprocess:1.21'
+    implementation group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.21'
 }
 
 sourceSets.main.java.srcDir 'ext/gen' // Compiles the generated code.
@@ -45,6 +55,12 @@ task runRelast {
            ]
   } 
 }
+/*
+jmh {
+  duplicateClassesStrategy = 'inherit'
+}
+*/
+
 
 task generateJava(type: org.jastadd.JastAddTask) {
     options = ["--package=de.tud.deussen.jastadd.gen", "--cache=none", "--flush=full", "--rewrite=cnta", "--List=JastAddList"]
@@ -56,6 +72,14 @@ task generateJava(type: org.jastadd.JastAddTask) {
 
 task run(type: JavaExec, dependsOn: classes) {
     main = 'de.tud.deussen.SCROLLBoot'
+    classpath = sourceSets.main.runtimeClasspath
+    doFirst {
+        classpath.each { println it }
+    }
+}
+
+task benchmark(type: JavaExec, dependsOn: classes) {
+    main = 'scroll.benchmarks.RunnerApp'
     classpath = sourceSets.main.runtimeClasspath
     doFirst {
         classpath.each { println it }
@@ -80,7 +104,8 @@ compileTestScala {
 }
 
 sourceSets.main.resources.srcDirs = ['tests/src/test/resources','core/src/main/resources']
-sourceSets.main.scala.srcDirs = ['core', 'ext', 'examples']
+//sourceSets.main.scala.srcDirs = ['core', 'ext', 'examples']
+sourceSets.main.scala.srcDirs = ['core', 'ext', 'examples', 'benchmark']
 compileScala {
     scalaCompileOptions.additionalParameters = [
             "-deprecation",
