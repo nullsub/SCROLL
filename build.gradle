@@ -43,6 +43,11 @@ dependencies {
     implementation group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.21'
 }
 
+dependencies {
+    jmh 'org.openjdk.jmh:jmh-core:0.9'
+    jmh 'org.openjdk.jmh:jmh-generator-annprocess:0.9'
+}
+
 sourceSets.main.java.srcDir 'ext/gen' // Compiles the generated code.
 
 task runRelast {
@@ -55,11 +60,10 @@ task runRelast {
            ]
   } 
 }
-/*
+
 jmh {
   duplicateClassesStrategy = 'inherit'
 }
-*/
 
 
 task generateJava(type: org.jastadd.JastAddTask) {

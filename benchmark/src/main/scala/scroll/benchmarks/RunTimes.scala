@@ -17,13 +17,16 @@ object RunTimes {
 
     var bank: BankExample = _
 
-    @Param(Array("10", "100", "1000"))
+    //@Param(Array("10", "100", "1000"))
+    @Param(Array("10", "100"))
     var transactions: Int = _
 
-    @Param(Array("10", "100", "1000"))
+    //@Param(Array("10", "100", "1000"))
+    @Param(Array("10", "100"))
     var roles: Int = _
 
-    @Param(Array("10", "100", "1000"))
+    //@Param(Array("10", "100", "1000"))
+    @Param(Array("10", "100"))
     var players: Int = _
 
     @Setup

@@ -17,7 +17,8 @@ object CachingBenchmark {
 
     var cachingExample: CachingExample = _
 
-    @Param(Array("10", "100", "1000"))
+    //@Param(Array("10", "100", "1000"))
+    @Param(Array("10", "100"))
     var roles: Int = _
 
     @Setup

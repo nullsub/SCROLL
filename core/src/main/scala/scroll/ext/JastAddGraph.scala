@@ -76,7 +76,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def putEdge(source: Object, target: Object): Boolean = {
-		println("putEdge:" + source.toString + " " + target.toString)
+		//println("putEdge:" + source.toString + " " + target.toString)
 
 		var sourcePlayer: Player = this.graph.findPlayerByObject(source)
 
@@ -105,7 +105,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def removeRole(playerObject: Object, roleObject: Object): Unit = {
-		println("removeRole: player " + playerObject.toString + ", role " + roleObject.toString)
+		//println("removeRole: player " + playerObject.toString + ", role " + roleObject.toString)
 
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		val playerRole: Player = player.findPlayerByObject(roleObject)
@@ -136,7 +136,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def removePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit = {
-		println("removePlayer: " + playerObject.toString)
+		//println("removePlayer: " + playerObject.toString)
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player == null) {
 			return
