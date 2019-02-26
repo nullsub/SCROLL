@@ -176,7 +176,10 @@ class DispatchQuery(
     val r = if (isEmpty) {
       anys.reverse
     } else {
-      from.andThen(to).andThen(through).andThen(bypassing)(anys).reverse
+      //from.andThen(to).andThen(through).andThen(bypassing)(anys).reverse
+      //compatability for jastaddDispatchqueries:
+      anys.filter(p => !(excludePlayers.contains(p) || excludeClasses.contains(p.getClass)) ||
+          ((excludePlayers.contains(p) || excludeClasses.contains(p.getClass)) && (includePlayers.contains(p) || includeClasses.contains(p.getClass)))).reverse
     }
     _sortedWith.fold(r) { s => r.sortWith(s) }
   }

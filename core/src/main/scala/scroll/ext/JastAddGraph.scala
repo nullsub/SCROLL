@@ -32,6 +32,12 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			return
 		}
 		val dispatchQuery = new DispatchQuery()
+		if(player.getDispatchQuery != null && compareListSeq(player.getDispatchQuery.getExcludes.getClasses, excludeClasses)
+			&& compareListSeq(player.getDispatchQuery.getExcludes.getPlayers, excludePlayers)
+		) {
+			//System.out.println("dispatchquery already exists. returning!")
+			return
+		}
 
 		val excludes = new DQFilter()
 		excludes.setClasses(scala.collection.JavaConverters.seqAsJavaList(excludeClasses))
@@ -46,6 +52,14 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		player.setDispatchQuery(dispatchQuery)
 	}
 
+	def compareListSeq(list: util.List[_], seq: Seq[Any]): Boolean = {
+		if(list.size() == seq.length) {
+			return true
+		}
+		false
+
+	}
+
 	def findMethod[E](playerObject: Object, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
 		val player: Player = this.graph.findPlayerByObject(playerObject)
 		if(player == null) {
@@ -53,6 +67,9 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		}
 		try {
 			val ret = player.findMethod(this.graph, name, args.asInstanceOf[Array[Object]])
+			if(ret == null) {
+				return Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))
+			}
 			Right(ret)
 		} catch {
 			case r: Throwable => {
@@ -69,6 +86,9 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		}
 		try {
 			val ret = player.findProperty(name)
+			if(ret == null) {
+				return Left(SCROLLErrors.IllegalRoleInvocationDispatch(playerObject.toString, name, null))
+			}
 			Right(ret)
 		} catch {
 			case _: Throwable => Left(SCROLLErrors.IllegalRoleInvocationDispatch(playerObject.toString, name, null))

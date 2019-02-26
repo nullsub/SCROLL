@@ -43,7 +43,7 @@ aspect Evaluation {
 	inh Player Player.predecessor();
 
 
-	public Player Tree.findPlayerByObject(Object object) {
+	syn Player Tree.findPlayerByObject(Object object) {
 		//System.out.println("Tree.findPlayerByObject()");
 
 		for(Player p : this.getNaturals()) {
@@ -55,7 +55,7 @@ aspect Evaluation {
 		return null;
 	}
 
-	public Player Player.findPlayerByObject(Object object) {
+	syn Player Player.findPlayerByObject(Object object) {
 		if(this.getObject() == object) {
 			return this;
 		}
@@ -97,7 +97,7 @@ aspect Evaluation {
 		return retType;
 	}
 
-	public scala.Tuple2<Object, java.lang.reflect.Method> Player.findMethod(Tree tree, String name, Object[] arguments) throws Exception {
+	syn scala.Tuple2<Object, java.lang.reflect.Method> Player.findMethod(Tree tree, String name, Object[] arguments) {
 		//System.out.println("dispatchObjectForApply() object: " + this.getObject().toString() + " method: " + name);
 		List<Player> players = new ArrayList<Player>();
 		DispatchQuery dq = this.dispatchQuery();
@@ -133,10 +133,11 @@ aspect Evaluation {
 				}
 			}
 		}
-		throw new Exception("dispatchObjectForApply: method not found!");
+		return null;
+		//throw new Exception("dispatchObjectForApply: method not found!");
 	}
 
-	public Object Player.findProperty(String name) throws Exception {
+	syn Object Player.findProperty(String name) {
 		List<Player> players = new ArrayList<Player>();
 		DispatchQuery dq = this.dispatchQuery();
 		List<String> includedClasses = dq.getIncludes().getClasses();
@@ -159,7 +160,8 @@ aspect Evaluation {
 				return p.getObject();
 			} catch (Exception e) {}
 		}
-		throw new Exception("dispatchObjectForSelect: attribute not found!");
+		return null;
+		//throw new Exception("dispatchObjectForSelect: attribute not found!");
 	}
 
 	public Boolean Player.removeRole(Player player) {
@@ -179,7 +181,7 @@ aspect Evaluation {
 		return false;
 	}
 
-	public scala.collection.Seq<Player> Player.getPlayers() {
+	syn scala.collection.Seq<Player> Player.getPlayers() {
 
 		List<Player> lastLevel = new ArrayList<Player>();
 		List<Player> all = new ArrayList<Player>();
@@ -200,7 +202,7 @@ aspect Evaluation {
 		return scala.collection.JavaConverters.asScalaIteratorConverter(all.iterator()).asScala().toSeq();
 	}
 
-	public scala.collection.Seq<Player> Player.successors() {
+	syn scala.collection.Seq<Player> Player.successors() {
 		List<Player> list = new ArrayList<Player>();
 
 		for(Player p : this.getRoles()){

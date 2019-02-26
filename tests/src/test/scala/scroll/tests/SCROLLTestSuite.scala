@@ -3,7 +3,7 @@ package scroll.tests
 import org.scalatest.Suites
 
 object SCROLLTestSuite {
-  val suites: Seq[AbstractSCROLLTest] = Seq(Seq(false, true)).flatMap(args => {
+  val suites: Seq[AbstractSCROLLTest] = Seq(Seq(true, true)).flatMap(args => {
     //val suites: Seq[AbstractSCROLLTest] = Seq(Seq(true, false), Seq(true, true), Seq(false, false), Seq(false, true)).flatMap(args => {
     val c = args(0)
     val j = args(1)
