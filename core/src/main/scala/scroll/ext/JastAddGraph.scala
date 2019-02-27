@@ -174,12 +174,11 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 	def containsPlayer(playerObject: AnyRef): Boolean = {
 		val player = this.graph.findPlayerByObject(playerObject)
-		if(player != null)
-			return true
-		false
+		player != null
 	}
 
 	def allPlayers(): Seq[AnyRef] = {
+		//Tree.allPlayers()
 		val ret = new util.LinkedHashSet[Object]
 		this.graph.getNaturalList.forEach(n => {
 			ret.add(n.getObject)

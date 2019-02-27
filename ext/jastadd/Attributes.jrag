@@ -211,4 +211,33 @@ aspect Evaluation {
 
 		return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
 	}
+
+/*
+		syn scala.collection.Seq<Player> Tree.allPlayers() {
+			List<Object> ret = new util.LinkedHashSet();
+					for(Player p : this.getNaturals()) {
+            			Player ret = p.findPlayerByObject(object);
+            			if(ret != null) {
+            			    ret.add(n.getObject());
+            			}
+            		}
+
+    		List<Object> lastLevel = ret;
+    		do {
+    			List<Object> newLevel = new util.LinkedHashSet();
+
+    								for(Player p : lastLevel) {
+                            			Player ret = p.findPlayerByObject(object);
+                            			if(ret != null) {
+                            			    newLevel.addAll(p.successors());
+                            			}
+                            		}
+
+    			ret.addAll(newLevel);
+    			lastLevel = newLevel;
+    		} while(!lastLevel.isEmpty())
+
+    		return scala.collection.JavaConverters.asScalaIteratorConverter(ret.iterator()).asScala.toSeq
+    	}
+*/
 }
