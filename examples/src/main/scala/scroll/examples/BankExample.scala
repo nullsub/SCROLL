@@ -132,6 +132,7 @@ object BankExample extends App {
     +stan listBalances()
     info("Balance for Brian:")
     +brian listBalances()
+    info("starting transaction")
 
     private val transaction = new Transaction(Money(10.0, "USD")) {
       RoleGroupsChecked {
@@ -141,6 +142,8 @@ object BankExample extends App {
     }
 
     transaction partOf this
+
+    info("execute")
 
     transaction play new TransactionRole execute()
 

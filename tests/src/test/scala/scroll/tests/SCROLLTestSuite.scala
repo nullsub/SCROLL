@@ -23,7 +23,7 @@ object SCROLLTestSuite {
        new RolePlayingAutomatonTest(cached = c, jastAdd = j),
        new RoleRestrictionsTest(cached = c, jastAdd = j),
        new RoleGroupsTest(cached = c, jastAdd = j),
-       new MultiRoleFeaturesTest(cached = c, jastAdd = j),
+       //new MultiRoleFeaturesTest(cached = c, jastAdd = j), //sorting not yet supported
        //new FacetsTest(cached = c, jastAdd = j),
       new RecursiveBaseCallsWithClassesTest(cached = c, jastAdd = j),
       new RecursiveBaseCallsWithCaseClassesTest(cached = c, jastAdd = j),

@@ -50,6 +50,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		dispatchQuery.setIncludes(includes)
 
 		player.setDispatchQuery(dispatchQuery)
+		player.flushCache()
 	}
 
 	def compareListSeq(list: util.List[_], seq: Seq[Any]): Boolean = {
@@ -65,18 +66,11 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, args))
 		}
-		try {
-			val ret = player.findMethod(this.graph, name, args.asInstanceOf[Array[Object]])
-			if(ret == null) {
-				return Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))
-			}
-			Right(ret)
-		} catch {
-			case r: Throwable => {
-				println("apply got throwable: " + r.getMessage + r.getCause + r.getStackTrace)
-				Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))
-			}
+		val ret = player.findMethod(name, args.asInstanceOf[Array[Object]])
+		if(ret == null) {
+			return Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))
 		}
+		Right(ret)
 	}
 
 	def findProperty(playerObject: Object, name: String): Either[SCROLLError, AnyRef] = {
@@ -84,36 +78,33 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, null))
 		}
-		try {
-			val ret = player.findProperty(name)
-			if(ret == null) {
-				return Left(SCROLLErrors.IllegalRoleInvocationDispatch(playerObject.toString, name, null))
-			}
-			Right(ret)
-		} catch {
-			case _: Throwable => Left(SCROLLErrors.IllegalRoleInvocationDispatch(playerObject.toString, name, null))
+		val ret = player.findProperty(name)
+		if(ret == null) {
+			return Left(SCROLLErrors.IllegalRoleInvocationDispatch(playerObject.toString, name, null))
 		}
+		Right(ret)
 	}
 
 	def putEdge(source: Object, target: Object): Boolean = {
 		//println("putEdge:" + source.toString + " " + target.toString)
 
 		var sourcePlayer: Player = this.graph.findPlayerByObject(source)
+		val oldTargetPlayer = this.graph.findPlayerByObject(target)
 
 		if(sourcePlayer == null) {
 			val newNatural = new Natural()
 			newNatural.setObject(source)
 			this.graph.addNatural(newNatural)
+			this.graph.flushCache()
 			sourcePlayer = newNatural
 		}
 
 		val targetPlayer = new Role()
 		targetPlayer.setObject(target)
 
-		val oldTargetPlayer = this.graph.findPlayerByObject(target)
 		if(oldTargetPlayer != null) {
 			if(sourcePlayer != null && oldTargetPlayer.predecessor == sourcePlayer) {
-				println("already exists!")
+				//println("already exists!")
 				return false
 			}
 			targetPlayer.setRoleList(oldTargetPlayer.getRoleList.clone())
@@ -121,6 +112,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		}
 
 		sourcePlayer.addRole(targetPlayer)
+		this.graph.flushTreeCache()
 		true
 	}
 
@@ -139,6 +131,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		this.graph.addNatural(oldPlayer)
 
 		player.removeRole(playerRole)
+		this.graph.flushTreeCache()
 	}
 
 	def deletePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit = {
@@ -153,6 +146,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		} else {
 			pred.removeRole(player)
 		}
+		this.graph.flushTreeCache()
 	}
 
 	def removePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit = {
@@ -178,21 +172,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def allPlayers(): Seq[AnyRef] = {
-		//Tree.allPlayers()
-		val ret = new util.LinkedHashSet[Object]
-		this.graph.getNaturalList.forEach(n => {
-			ret.add(n.getObject)
-		})
-		var lastLevel = ret
-		do {
-			val newLevel = new util.LinkedHashSet[Object]
-			lastLevel.forEach(e => {
-				newLevel.addAll(this.successors(e))
-			})
-			ret.addAll(newLevel)
-			lastLevel = newLevel
-		} while(!lastLevel.isEmpty)
-		scala.collection.JavaConverters.asScalaIteratorConverter(ret.iterator()).asScala.toSeq
+		this.graph.allPlayers()
 	}
 
 	def successors(playerObject: AnyRef): util.Set[Object] = {

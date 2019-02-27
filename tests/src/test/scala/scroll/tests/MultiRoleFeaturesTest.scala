@@ -57,9 +57,11 @@ class MultiRoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractS
         When("invoking methods with filtering")
         Then("the call must be invoked on all methods with the correct ordering")
         val expected2 = Seq(Right("RoleC"), Right("RoleB"))
-        dd = Bypassing(_.isInstanceOf[RoleA]).sortedWith {
-          case (_: RoleC, _: RoleB) => swap
-        }
+          // dd = Bypassing(_.isInstanceOf[RoleA]).sortedWith {
+         // case (_: RoleC, _: RoleB) => swap
+      //  }
+        dd = FilterDispatchQuery(Seq(), Seq(classOf[RoleA]), Seq(), Seq())
+
         +someCore id() match {
           case Right(actual) => actual shouldBe expected2
           case Left(error) => fail(error.toString)
@@ -67,9 +69,11 @@ class MultiRoleFeaturesTest(cached: Boolean, jastAdd: Boolean) extends AbstractS
 
         When("invoking methods with filtering and sorting (reverse ordering)")
         Then("the call must be invoked on all methods with the correct ordering")
-        dd = Bypassing(_.isInstanceOf[RoleA]).sortedWith {
-          case (_: RoleB, _: RoleC) => swap
-        }
+        //dd = Bypassing(_.isInstanceOf[RoleA]).sortedWith {
+        //  case (_: RoleB, _: RoleC) => swap
+        //}
+        dd = FilterDispatchQuery(Seq(), Seq(classOf[RoleA]), Seq(), Seq())
+
         +someCore id() match {
           case Right(actual) => actual shouldBe expected2.reverse
           case Left(error) => fail(error.toString)

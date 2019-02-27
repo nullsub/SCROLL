@@ -1,7 +1,6 @@
 package src.main.scala.scroll.internal.graph
 
-import de.tud.deussen.jastadd.gen.DispatchQuery
-import scroll.internal.errors.SCROLLErrors.{InvocationError, RoleNotFound, SCROLLError}
+import scroll.internal.errors.SCROLLErrors.{SCROLLError}
 
 import scala.collection.mutable
 import scala.reflect.ClassTag
