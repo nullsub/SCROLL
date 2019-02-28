@@ -30,7 +30,7 @@ aspect Evaluation {
 		return this.getDispatchQuery();
 	}
 
-	inh lazy DispatchQuery Player.dispatchQuery();
+	inh DispatchQuery Player.dispatchQuery();
 
 	eq Player.getRole().predecessor() {
 		return this;
@@ -40,9 +40,9 @@ aspect Evaluation {
 		return null;
 	}
 
-	inh lazy Player Player.predecessor();
+	inh Player Player.predecessor();
 
-	syn lazy Player Tree.findPlayerByObject(Object object) {
+	syn Player Tree.findPlayerByObject(Object object) {
 		//System.out.println("Tree.findPlayerByObject()");
 
 		for(Player p : this.getNaturals()) {
@@ -54,7 +54,7 @@ aspect Evaluation {
 		return null;
 	}
 
-	syn lazy Player Player.findPlayerByObject(Object object) {
+	syn Player Player.findPlayerByObject(Object object) {
 		if(this.getObject() == object) {
 			return this;
 		}
@@ -96,7 +96,7 @@ aspect Evaluation {
 		return retType;
 	}
 
-	syn lazy scala.Tuple2<Object, java.lang.reflect.Method> Player.findMethod(String name, Object[] arguments) {
+	syn scala.Tuple2<Object, java.lang.reflect.Method> Player.findMethod(String name, Class[] arguments) {
 		//System.out.println("dispatchObjectForApply() object: " + this.getObject().toString() + " method: " + name);
 		List<Player> players = new ArrayList<Player>();
 		DispatchQuery dq = this.dispatchQuery();
@@ -121,7 +121,7 @@ aspect Evaluation {
 					int j = 0;
 					boolean parametersCorrect = true;
 					for(Object className : method.getParameterTypes()) {
-						if(arguments[j] != null && Player.getPrimitiveType(arguments[j].getClass()) != className) {
+						if(arguments[j] != null && Player.getPrimitiveType(arguments[j]) != className) {
 							parametersCorrect = false;
 						}
 						j++;
@@ -135,7 +135,7 @@ aspect Evaluation {
 		return null;
 	}
 
-	syn lazy Object Player.findProperty(String name) {
+	syn Object Player.findProperty(String name) {
 		List<Player> players = new ArrayList<Player>();
 		DispatchQuery dq = this.dispatchQuery();
 		List<String> includedClasses = dq.getIncludes().getClasses();
@@ -172,14 +172,13 @@ aspect Evaluation {
 		}
 		if(toDelete > -1) {
 			this.getRoleList().removeChild(toDelete);
-			this.flushAttrCache();
 			return true;
 		}
 
 		return false;
 	}
 
-	syn lazy scala.collection.Seq<Player> Player.getPlayers() {
+	syn scala.collection.Seq<Player> Player.getPlayers() {
 		List<Player> lastLevel = new ArrayList<Player>();
 		List<Player> all = new ArrayList<Player>();
 		lastLevel.add(this);
@@ -199,7 +198,7 @@ aspect Evaluation {
 		return scala.collection.JavaConverters.asScalaIteratorConverter(all.iterator()).asScala().toSeq();
 	}
 
-	syn lazy scala.collection.Seq<Player> Player.successors() {
+	syn scala.collection.Seq<Player> Player.successors() {
 		List<Player> list = new ArrayList<Player>();
 
 		for(Player p : this.getRoles()){
@@ -209,7 +208,7 @@ aspect Evaluation {
 		return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
 	}
 
-	syn lazy scala.collection.Seq<Object> Tree.allPlayers() {
+	syn scala.collection.Seq<Object> Tree.allPlayers() {
         List<Player> lastLevel = new ArrayList<Player>();
         List<Player> all = new ArrayList<Player>();
         for(Player p : this.getNaturals()) {

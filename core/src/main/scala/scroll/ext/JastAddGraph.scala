@@ -31,7 +31,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			println("player not found: " + playerObject)
 			return
 		}
-		val dispatchQuery = new DispatchQuery()
 		if(player.getDispatchQuery != null && compareListSeq(player.getDispatchQuery.getExcludes.getClasses, excludeClasses)
 			&& compareListSeq(player.getDispatchQuery.getExcludes.getPlayers, excludePlayers)
 		) {
@@ -39,6 +38,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			return
 		}
 
+		val dispatchQuery = new DispatchQuery()
 		val excludes = new DQFilter()
 		excludes.setClasses(scala.collection.JavaConverters.seqAsJavaList(excludeClasses))
 		excludes.setPlayers(scala.collection.JavaConverters.seqAsJavaList(excludePlayers))
@@ -66,7 +66,18 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, args))
 		}
-		val ret = player.findMethod(name, args.asInstanceOf[Array[Object]])
+		var classArgs: Array[Class[_]] = null
+		if(args != null) {
+			classArgs = new Array(args.length)
+			args.foreach(arg => {
+				var classArg: Class[_] = null
+				if(arg != null)
+					classArg = arg.getClass
+				classArgs.update(args.indexOf(arg), classArg)
+			})
+		}
+		val ret = player.findMethod(name, classArgs)
+		//val ret = player.findMethod(name, args.asInstanceOf[Array[Object]])
 		if(ret == null) {
 			return Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))
 		}
@@ -95,7 +106,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			val newNatural = new Natural()
 			newNatural.setObject(source)
 			this.graph.addNatural(newNatural)
-			this.graph.flushCache()
+			this.graph.flushAttrCache()
 			sourcePlayer = newNatural
 		}
 
@@ -107,7 +118,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 				//println("already exists!")
 				return false
 			}
-			targetPlayer.setRoleList(oldTargetPlayer.getRoleList.clone())
+			targetPlayer.setRoleList(oldTargetPlayer.getRoleList)
 			this.deletePlayer(target)
 		}
 
@@ -127,7 +138,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 		val oldPlayer: Natural = new Natural
 		oldPlayer.setObject(playerRole.getObject)
-		oldPlayer.setRoleList(playerRole.getRoleList.clone())
+		oldPlayer.setRoleList(playerRole.getRoleList)
 		this.graph.addNatural(oldPlayer)
 
 		player.removeRole(playerRole)
@@ -139,14 +150,14 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		if(player == null) {
 			return
 		}
-
 		val pred = player.predecessor
 		if(pred == null) {
 			this.graph.removeNatural(player)
+			this.graph.flushAttrCache()
 		} else {
 			pred.removeRole(player)
+			this.graph.flushTreeCache()
 		}
-		this.graph.flushTreeCache()
 	}
 
 	def removePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit = {
@@ -159,7 +170,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		player.getRoleList.forEach(r => {
 			val oldPlayer: Natural = new Natural
 			oldPlayer.setObject(r.getObject)
-			oldPlayer.setRoleList(r.getRoleList.clone())
+			oldPlayer.setRoleList(r.getRoleList)
 			this.graph.addNatural(oldPlayer)
 		})
 
