@@ -58,7 +58,6 @@ aspect Evaluation {
 		if(this.getObject() == object) {
 			return this;
 		}
-
 		for(Player p : this.getRoles()) {
 			Player ret = p.findPlayerByObject(object);
 			if(ret != null) {

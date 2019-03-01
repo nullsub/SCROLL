@@ -38,43 +38,21 @@ dependencies {
 
     //for benchmark
     implementation group: 'org.openjdk.jmh', name: 'jmh-core', version: '1.21'
-
-    //#implementation 'org.openjdk.jmh:jmh-core:1.21'
-    //implementation 'org.openjdk.jmh:jmh-generator-annprocess:1.21'
-    //implementation group: 'org.openjdk.jmh', name: 'jmh-generator-annprocess', version: '1.21'
-}
-
-dependencies {
-    jmh 'org.openjdk.jmh:jmh-core:0.9'
-    jmh 'org.openjdk.jmh:jmh-generator-annprocess:0.9'
 }
 
 sourceSets.main.java.srcDir 'ext/gen' // Compiles the generated code.
 
-task runRelast {
-  javaexec { 
-    main="-jar";
-    args = [
-            "relast-compiler.jar",
-            "ext/jastadd/Tree.relast",
-            "--file"
-           ]
-  } 
-}
-
 jmh {
-  duplicateClassesStrategy = 'inherit'
+    duplicateClassesStrategy = 'exclude' //'inherit'
+    failOnError = true
+    iterations = 4
 }
-
 
 task generateJava(type: org.jastadd.JastAddTask) {
     //options = ["--package=de.tud.deussen.jastadd.gen", "--cache=none", "--flush=full", "--rewrite=cnta", "--List=JastAddList"]
-    //options = ["--package=de.tud.deussen.jastadd.gen", "--cache=none", "--flush=full", "--rewrite=cnta", "--List=JastAddList"]
-    options = ["--package=de.tud.deussen.jastadd.gen", "--cache=all", "--flush=full", "--rewrite=cnta", "--incremental=none", "--List=JastAddList"]
+    options = ["--package=de.tud.deussen.jastadd.gen", "--cache=none", "--flush=full", "--rewrite=none", "--incremental=none", "--List=JastAddList"]
     outputDir = file('ext/gen')
-    sources = fileTree("ext/jastadd").matching {
-        exclude "Tree.relast"
-    }
+    sources = fileTree("ext/jastadd").matching {}
 }
 
 task run(type: JavaExec, dependsOn: classes) {
@@ -103,7 +81,6 @@ compileTestScala {
 }
 
 sourceSets.main.resources.srcDirs = ['tests/src/test/resources','core/src/main/resources']
-//sourceSets.main.scala.srcDirs = ['core', 'ext', 'examples']
 sourceSets.main.scala.srcDirs = ['core', 'ext', 'examples', 'benchmark']
 compileScala {
     scalaCompileOptions.additionalParameters = [
@@ -127,4 +104,3 @@ tasks.withType(Test) {
 }
 
 compileJava.dependsOn ':generateJava'
-generateJava.dependsOn ':runRelast'

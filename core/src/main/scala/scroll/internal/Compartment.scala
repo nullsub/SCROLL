@@ -371,7 +371,7 @@ trait Compartment
 			val core = coreFor(wrapped).last
 			if(isJastAddRoleGraph(plays)) {
 				plays.setDispatchQuery(core, dispatchQuery.excludeClasses, dispatchQuery.excludePlayers, dispatchQuery.includeClasses, dispatchQuery.includePlayers)
-				plays.findMethod(core, name, args.toArray) match {
+				plays.findMethod(core, name, args) match {
 					case Right((r, fm)) => dispatch(r, fm, args: _*)
 					case Left(_) => Left(RoleNotFound(core.toString, name, args))
 				}
@@ -438,7 +438,6 @@ trait Compartment
 	}
 
 	def isJastAddRoleGraph(any: Any): Boolean = {
-		//System.out.println("any is " + any.getClass)
 		any.isInstanceOf[JastAddRoleGraph] || any.isInstanceOf[CachedJastAddRoleGraph]
 	}
 

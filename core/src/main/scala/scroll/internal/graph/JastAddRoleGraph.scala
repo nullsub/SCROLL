@@ -110,14 +110,14 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 
 	override def predecessors(player: AnyRef): Seq[AnyRef] = {
 		require(null != player)
-		return this.root.predecessors(player)
+		this.root.predecessors(player)
 	}
 
 	def setDispatchQuery(playerObject: AnyRef, excludeClasses: Seq[Any], excludePlayers: Seq[Object], includeClasses: Seq[Any], includePlayers: Seq[Object]) = {
 		this.root.setDispatchQuery(playerObject, excludeClasses, excludePlayers, includeClasses, includePlayers)
 	}
 
-	def findMethod(core: AnyRef, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
+	def findMethod(core: AnyRef, name: String, args: Seq[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
 		this.root.findMethod(core, name, args)
 	}
 

@@ -92,7 +92,7 @@ trait RoleGraph {
 
   def findProperty(core: AnyRef, name: String): Either[SCROLLError, Object]
 
-  def findMethod(core: AnyRef, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)]
+  def findMethod(core: AnyRef, name: String, args: Seq[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)]
 
   def setDispatchQuery(playerObject: AnyRef, excludeClasses: Seq[Any], excludePlayers: Seq[Object], includeClasses: Seq[Any], includePlayers: Seq[Object]): Unit
 }

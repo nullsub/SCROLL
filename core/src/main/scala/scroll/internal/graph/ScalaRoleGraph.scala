@@ -128,7 +128,7 @@ class ScalaRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
       Seq.empty
     }
   }
-	def findMethod(core: AnyRef, name: String, args: Array[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
+	def findMethod(core: AnyRef, name: String, args: Seq[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
 		throw new Exception("doing dispatch on ScalaRoleGraph not yet supported!")
 	}
 
