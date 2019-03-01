@@ -1,1 +1,1 @@
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/ && gradle $1 $2
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk/ && ./gradlew $1 $2
