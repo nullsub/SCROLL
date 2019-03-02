@@ -9,12 +9,18 @@ import scroll.internal.errors.SCROLLErrors.{IllegalRoleInvocationDispatch, RoleN
 
 class JastAddGraph[N] { // extends MutableGraph[N] {
 	var graph: Tree = new Tree()
+	val playerObjectCache = new collection.mutable.HashMap[Object, Player]()
 
 	def printTree(): Unit = {
 		println("Tree: ")
 		this.graph.getNaturalList.forEach(r => {
 			println("  natural: " + r.getObject.toString)
 			this.printNode(r, 1)
+		})
+		println("  ")
+		println("Cache")
+		this.playerObjectCache.values.foreach(p => {
+			println("  object: " + p.getObject.toString)
 		})
 	}
 
@@ -25,8 +31,15 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		})
 	}
 
+	def findPlayerByObject(obj: Object): Player = {
+		this.playerObjectCache.getOrElse(obj, null)
+	}
+	def storeInPlayerObjectCache(player: Player): Unit = {
+		this.playerObjectCache.put(player.getObject, player)
+	}
+
 	def setDispatchQuery(playerObject: AnyRef, excludeClasses: Seq[Any], excludePlayers: Seq[Object], includeClasses: Seq[Any], includePlayers: Seq[Object]): Unit = {
-		val player: Player = this.graph.findPlayerByObject(playerObject)
+		val player: Player = this.findPlayerByObject(playerObject)
 		if(player == null) {
 			println("player not found: " + playerObject)
 			return
@@ -65,7 +78,8 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def findMethod[E](playerObject: Object, name: String, args: Seq[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
-		val player: Player = this.graph.findPlayerByObject(playerObject)
+		//printTree()
+		val player: Player = this.findPlayerByObject(playerObject)
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, args))
 		}
@@ -82,7 +96,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def findProperty(playerObject: Object, name: String): Either[SCROLLError, AnyRef] = {
-		val player: Player = this.graph.findPlayerByObject(playerObject)
+		val player: Player = this.findPlayerByObject(playerObject)
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, null))
 		}
@@ -96,13 +110,14 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	def putEdge(source: Object, target: Object): Boolean = {
 		//println("putEdge:" + source.toString + " " + target.toString)
 
-		var sourcePlayer: Player = this.graph.findPlayerByObject(source)
-		val oldTargetPlayer = this.graph.findPlayerByObject(target)
+		var sourcePlayer: Player = this.findPlayerByObject(source)
+		val oldTargetPlayer = this.findPlayerByObject(target)
 
 		if(sourcePlayer == null) {
 			val newNatural = new Natural()
 			newNatural.setObject(source)
 			this.graph.addNatural(newNatural)
+			this.storeInPlayerObjectCache(newNatural)
 			sourcePlayer = newNatural
 		}
 
@@ -114,10 +129,11 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 				return false
 			}
 			targetPlayer.setRoleList(oldTargetPlayer.getRoleList)
-			this.deletePlayer(target)
+			this.deletePlayer(oldTargetPlayer)
 		}
 
 		sourcePlayer.addRole(targetPlayer)
+		this.storeInPlayerObjectCache(targetPlayer)
 		this.graph.flushAttrCache()
 		this.graph.flushTreeCache()
 		true
@@ -125,9 +141,8 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 	def removeRole(playerObject: Object, roleObject: Object): Unit = {
 		//println("removeRole: player " + playerObject.toString + ", role " + roleObject.toString)
-
-		val player: Player = this.graph.findPlayerByObject(playerObject)
-		val playerRole: Player = player.findPlayerByObject(roleObject)
+		val player: Player = this.findPlayerByObject(playerObject)
+		val playerRole: Player = player.findPlayerByObject(roleObject) // needs to be successor of player. thus playerObjectCache can not be used
 		if(player == null || playerRole == null) {
 			throw new Exception("playerPlayer == null || playerRole == null")
 		}
@@ -136,17 +151,17 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		oldPlayer.setObject(playerRole.getObject)
 		oldPlayer.setRoleList(playerRole.getRoleList)
 		this.graph.addNatural(oldPlayer)
+		this.storeInPlayerObjectCache(oldPlayer)
 
 		player.removeRole(playerRole)
+		//this.playerObjectCache.remove(playerRole.getObject)
 		this.graph.flushAttrCache()
 		this.graph.flushTreeCache()
 	}
 
-	def deletePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit = {
-		val player: Player = this.graph.findPlayerByObject(playerObject)
-		if(player == null) {
-			return
-		}
+	private def deletePlayer(player: Player): Unit = {
+		this.playerObjectCache.remove(player.getObject)
+
 		val pred = player.predecessor
 		if(pred == null) {
 			this.graph.removeNatural(player)
@@ -160,7 +175,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 	def removePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit = {
 		//println("removePlayer: " + playerObject.toString)
-		val player: Player = this.graph.findPlayerByObject(playerObject)
+		val player: Player = this.findPlayerByObject(playerObject)
 		if(player == null) {
 			return
 		}
@@ -170,13 +185,14 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			oldPlayer.setObject(r.getObject)
 			oldPlayer.setRoleList(r.getRoleList)
 			this.graph.addNatural(oldPlayer)
+			this.storeInPlayerObjectCache(oldPlayer)
 		})
 
-		this.deletePlayer(playerObject)
+		this.deletePlayer(player)
 	}
 
 	def containsPlayer(playerObject: AnyRef): Boolean = {
-		val player = this.graph.findPlayerByObject(playerObject)
+		val player = this.findPlayerByObject(playerObject)
 		player != null
 	}
 
@@ -186,7 +202,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 	def successors(playerObject: AnyRef): util.Set[Object] = {
 		val ret = new util.LinkedHashSet[Object]
-		val player: Player = this.graph.findPlayerByObject(playerObject)
+		val player: Player = this.findPlayerByObject(playerObject)
 		if(player != null) {
 			player.getRoleList.forEach(f => {
 				ret.add(f.getObject)
@@ -196,7 +212,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def predecessors(playerObject: AnyRef): Seq[AnyRef] = {
-		val player: Player = this.graph.findPlayerByObject(playerObject)
+		val player: Player = this.findPlayerByObject(playerObject)
 		player.predecessors()
 	}
 }

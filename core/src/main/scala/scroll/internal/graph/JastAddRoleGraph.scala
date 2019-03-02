@@ -23,7 +23,7 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		val target = other.asInstanceOf[JastAddRoleGraph].root
 
 		target.allPlayers().foreach(p => {
-			val pred = target.graph.findPlayerByObject(p)
+			val pred = target.findPlayerByObject(p)
 			if(pred != null) {
 				val source = pred.predecessor()
 				if(source != null) {
@@ -39,7 +39,7 @@ class JastAddRoleGraph(checkForCycles: Boolean = true) extends RoleGraph {
 		require(null != other)
 		val target = other.asInstanceOf[JastAddRoleGraph].root
 		target.allPlayers().foreach(p => {
-			val pred = target.graph.findPlayerByObject(p)
+			val pred = target.findPlayerByObject(p)
 			if(pred != null) {
 				val source = pred.predecessor()
 				removeBinding(source.getObject, p)
