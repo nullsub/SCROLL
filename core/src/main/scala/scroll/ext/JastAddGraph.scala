@@ -31,7 +31,10 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			println("player not found: " + playerObject)
 			return
 		}
-		if(player.getDispatchQuery != null && compareListSeq(player.getDispatchQuery.getExcludes.getClasses, excludeClasses)
+		if(excludeClasses.isEmpty && excludePlayers.isEmpty && includeClasses.isEmpty && includePlayers.isEmpty) {
+			return
+		}
+		if(player.hasDispatchQuery && player.getDispatchQuery != null && compareListSeq(player.getDispatchQuery.getExcludes.getClasses, excludeClasses)
 			&& compareListSeq(player.getDispatchQuery.getExcludes.getPlayers, excludePlayers)
 		) {
 			//System.out.println("dispatchquery already exists. returning!")
@@ -50,7 +53,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		dispatchQuery.setIncludes(includes)
 
 		player.setDispatchQuery(dispatchQuery)
-		player.flushCache()
+		player.flushTreeCache()
 	}
 
 	def compareListSeq(list: util.List[_], seq: Seq[Any]): Boolean = {
@@ -108,7 +111,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 		if(oldTargetPlayer != null) {
 			if(sourcePlayer != null && oldTargetPlayer.predecessor == sourcePlayer) {
-				this.graph.flushAttrCache()
 				return false
 			}
 			targetPlayer.setRoleList(oldTargetPlayer.getRoleList)
@@ -117,8 +119,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 		sourcePlayer.addRole(targetPlayer)
 		this.graph.flushAttrCache()
-		this.flushCacheForPredecessors(sourcePlayer)
-		sourcePlayer.flushTreeCache()
+		this.graph.flushTreeCache()
 		true
 	}
 
@@ -138,8 +139,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 		player.removeRole(playerRole)
 		this.graph.flushAttrCache()
-		this.flushCacheForPredecessors(player)
-		player.flushTreeCache()
+		this.graph.flushTreeCache()
 	}
 
 	def deletePlayer[P <: AnyRef : ClassTag](playerObject: P): Unit = {
@@ -154,8 +154,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		} else {
 			pred.removeRole(player)
 			this.graph.flushAttrCache()
-			pred.flushAttrCache()
-			this.flushCacheForPredecessors(pred)
+			this.graph.flushTreeCache()
 		}
 	}
 
@@ -197,34 +196,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	}
 
 	def predecessors(playerObject: AnyRef): Seq[AnyRef] = {
-		var player: Player = this.graph.findPlayerByObject(playerObject)
-
-		val ret: util.Set[Object] = new util.LinkedHashSet[Object]
-		while(player != null) {
-			if(player.getParent == null) {
-				player = null
-			} else {
-				player = player.predecessor
-			}
-			if(player != null) {
-				ret.add(player.getObject)
-			}
-		}
-		scala.collection.JavaConverters.asScalaIteratorConverter(ret.iterator()).asScala.toSeq
+		val player: Player = this.graph.findPlayerByObject(playerObject)
+		player.predecessors()
 	}
-
-	def flushCacheForPredecessors(player: Player): Unit = {
-		var p = player
-		while(p != null) {
-			if(p.getParent == null) {
-				p = null
-			} else {
-				p = p.predecessor
-			}
-			if(p != null) {
-				p.flushAttrCache()
-			}
-		}
-	}
-
 }
