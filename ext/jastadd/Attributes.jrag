@@ -53,7 +53,7 @@ aspect Evaluation {
 		}
 		return null;
 	}
-*/
+
 	public Player Player.findPlayerByObject(Object object) {
 		if(this.getObject() == object) {
 			return this;
@@ -66,6 +66,7 @@ aspect Evaluation {
 		}
 		return null;
 	}
+*/
 
 	public Boolean Tree.removeNatural(Player player) {
 		int toDelete = -1;
@@ -95,7 +96,7 @@ aspect Evaluation {
 		return retType;
 	}
 
-	public scala.Tuple2<Object, java.lang.reflect.Method> Player.findMethod(String name, Class[] arguments) {
+	syn scala.Tuple2<Object, java.lang.reflect.Method> Player.findMethod(String name, Class[] arguments) {
 		//System.out.println("dispatchObjectForApply() object: " + this.getObject().toString() + " method: " + name);
 		List<Player> players = new ArrayList<Player>();
 		DispatchQuery dq = this.dispatchQuery();
@@ -134,7 +135,7 @@ aspect Evaluation {
 		return null;
 	}
 
-	public Object Player.findProperty(String name) {
+	syn Object Player.findProperty(String name) {
 		List<Player> players = new ArrayList<Player>();
 		DispatchQuery dq = this.dispatchQuery();
 		List<String> includedClasses = dq.getIncludes().getClasses();
@@ -177,7 +178,7 @@ aspect Evaluation {
 		return false;
 	}
 
-	syn scala.collection.Seq<Player> Player.getPlayers() {
+	public scala.collection.Seq<Player> Player.getPlayers() {
 		List<Player> lastLevel = new ArrayList<Player>();
 		List<Player> all = new ArrayList<Player>();
 		lastLevel.add(this);
@@ -197,7 +198,7 @@ aspect Evaluation {
 		return scala.collection.JavaConverters.asScalaIteratorConverter(all.iterator()).asScala().toSeq();
 	}
 
-	syn scala.collection.Seq<Player> Player.successors() {
+	public scala.collection.Seq<Player> Player.successors() {
 		List<Player> list = new ArrayList<Player>();
 
 		for(Player p : this.getRoles()){
@@ -207,7 +208,7 @@ aspect Evaluation {
 		return scala.collection.JavaConverters.asScalaIteratorConverter(list.iterator()).asScala().toSeq();
 	}
 
-	syn scala.collection.Seq<Object> Tree.allPlayers() {
+	public scala.collection.Seq<Object> Tree.allPlayers() {
         List<Player> lastLevel = new ArrayList<Player>();
         List<Player> all = new ArrayList<Player>();
         for(Player p : this.getNaturals()) {
@@ -233,7 +234,7 @@ aspect Evaluation {
         return scala.collection.JavaConverters.asScalaIteratorConverter(ret.iterator()).asScala().toSeq();
     }
 
-    syn scala.collection.Seq<Object> Player.predecessors() {
+    public scala.collection.Seq<Object> Player.predecessors() {
         List<Object> ret = new ArrayList<>();
         Player player = this;
         while(player != null) {

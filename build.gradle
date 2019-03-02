@@ -63,7 +63,7 @@ task run(type: JavaExec, dependsOn: classes) {
     main = 'de.tud.deussen.SCROLLBoot'
     classpath = sourceSets.main.runtimeClasspath
     doFirst {
-        classpath.each { println it }
+        //classpath.each { println it }
     }
 }
 

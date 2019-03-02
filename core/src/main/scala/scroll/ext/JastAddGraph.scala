@@ -134,7 +134,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 
 		sourcePlayer.addRole(targetPlayer)
 		this.storeInPlayerObjectCache(targetPlayer)
-		this.graph.flushAttrCache()
 		this.graph.flushTreeCache()
 		true
 	}
@@ -142,11 +141,12 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 	def removeRole(playerObject: Object, roleObject: Object): Unit = {
 		//println("removeRole: player " + playerObject.toString + ", role " + roleObject.toString)
 		val player: Player = this.findPlayerByObject(playerObject)
-		val playerRole: Player = player.findPlayerByObject(roleObject) // needs to be successor of player. thus playerObjectCache can not be used
+		val playerRole: Player = this.findPlayerByObject(roleObject) // needs to be successor of player. thus playerObjectCache can not be used
 		if(player == null || playerRole == null) {
 			throw new Exception("playerPlayer == null || playerRole == null")
 		}
 
+		//adds unlinked role to root, such that it can still be accessed
 		val oldPlayer: Natural = new Natural
 		oldPlayer.setObject(playerRole.getObject)
 		oldPlayer.setRoleList(playerRole.getRoleList)
@@ -154,8 +154,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		this.storeInPlayerObjectCache(oldPlayer)
 
 		player.removeRole(playerRole)
-		//this.playerObjectCache.remove(playerRole.getObject)
-		this.graph.flushAttrCache()
 		this.graph.flushTreeCache()
 	}
 
@@ -168,7 +166,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			this.graph.flushAttrCache()
 		} else {
 			pred.removeRole(player)
-			this.graph.flushAttrCache()
 			this.graph.flushTreeCache()
 		}
 	}
