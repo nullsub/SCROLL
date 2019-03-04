@@ -83,11 +83,12 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, args))
 		}
-		val classArgs = args.map(
+		var classArgs = args.map(
 			arg => {
 				if(arg != null) arg.getClass
 				else null
 			}).toArray
+		if(classArgs.length == 0) classArgs = null
 		val ret = player.findMethod(name, classArgs)
 		if(ret == null) {
 			return Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))

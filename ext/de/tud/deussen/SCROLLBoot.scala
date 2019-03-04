@@ -34,70 +34,65 @@ object SCROLLBoot extends App {
 
 		case class ParamRole(p: Integer) {
 			val param: Integer = p
+
 			def getParam(): Integer = {
 				param
 			}
 		}
+
 	}
 
 	new SomeCompartment {
 
-		var dji = Copter("DJIPhantom") <+> SimpleAPI() <+> EmergencyDetector() <+> Parachute()
-
-
-/*
-		dji.fly()
-
-		val falling: Boolean = dji.isFalling()
-		if(falling) {
-			dji.openParachute()
-		}
-*/
-		final val nrLevels: Integer = 11
-		final val nrRoles: Integer = scala.math.pow(2, nrLevels + 1).toInt - 1
+		final val nrOfNaturals = 1000
+		final val nrLevels: Integer = 5
+		final val nrRolesPerNatural: Integer = scala.math.pow(2, nrLevels + 1).toInt - 1
+		final val nrRoles: Integer = nrRolesPerNatural * nrOfNaturals
 		var roles = new Array[ParamRole](nrRoles)
+		var naturals = new Array[Copter](nrRoles)
 
 		//createRoles
-		for( a <- 0 until nrRoles){
+		for(a <- 0 until nrRoles) {
 			roles(a) = ParamRole(a)
 		}
 
 		//bind roles
-		dji play roles(0)
-		var i = 1
-		for( a <- 1 until nrLevels) {
-			for( j <- 0 until scala.math.pow(2, a).toInt) {
-				val parent: Integer = a-1
-				//println("a = " + a + " j = " + j + " 2^a = " + scala.math.pow(2, a).toInt + " i = " + i)
-				roles(parent) <+> roles(i)
-				i += 1
+		for(n <- 0 until nrOfNaturals) {
+			naturals(n) = Copter("Copter = " + n)
+			naturals(n) <+> roles(n * nrRolesPerNatural)
+			var i = 1
+			for(a <- 1 until nrLevels) {
+				for(j <- 0 until scala.math.pow(2, a).toInt) {
+					val parent: Integer = a - 1
+					//println("a = " + a + " j = " + j + " 2^a = " + scala.math.pow(2, a).toInt + " i = " + i)
+					roles((n * nrRolesPerNatural) + parent) <+> roles((n * nrRolesPerNatural) + i)
+					i += 1
+				}
 			}
 		}
 
-		println("doing first dispatch")
-		//traverse roles and dispatch every role
-		i = 1
-		for( a <- 1 until nrLevels) {
-			for( j <- 0 until scala.math.pow(2, a).toInt) {
-				//val parent: Integer = a-1
-				(+roles(i)).getParam()
-				//println("a = " + a + " j = " + j + " 2^a = " + scala.math.pow(2, a).toInt + " i = " + i + " param = " + (+roles(i)).getParam())
-				i += 1
-			}
-		}
 
-		println("doing second dispatch")
-		//traverse roles and dispatch every role
-		i = 1
-		for( a <- 1 until nrLevels) {
-			roles(a-1) play Parachute()
-			for( j <- 0 until scala.math.pow(2, a).toInt) {
-				//val parent: Integer = a-1
-				(+roles(i)).getParam()
-				//println("a = " + a + " j = " + j + " 2^a = " + scala.math.pow(2, a).toInt + " i = " + i + " param = " + (+roles(i)).getParam())
-				i += 1
-			}
+		for(n <- 0 until 1000) {
+			//println("doing dispatch: " + n)
+			this.dispatchAll()
 		}
 		println("finished")
+
+
+		private def dispatchAll(): Unit = {
+			//traverse roles and dispatch every role
+			for(n <- 0 until nrOfNaturals) {
+				var i = 1
+				for(a <- 1 until nrLevels) {
+					for(j <- 0 until scala.math.pow(2, a).toInt) {
+						//val parent: Integer = a-1
+						//var test = (+roles((n * nrRolesPerNatural) + i)).param
+						var test = (+roles((n * nrRolesPerNatural) + i)).getParam()
+						//println("a = " + a + " j = " + j + " 2^a = " + scala.math.pow(2, a).toInt + " i = " + i + " param = " + (+roles(i)).getParam())
+						i += 1
+					}
+				}
+			}
+		}
 	}
 }
