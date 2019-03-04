@@ -117,7 +117,7 @@ aspect Evaluation {
 			}
 
 			for (java.lang.reflect.Method method : p.getObject().getClass().getDeclaredMethods()) {
-				if(method.getName() == name && (arguments == null && method.getParameterCount() == 0) || (arguments != null && arguments.length == method.getParameterCount()))  {
+				if(method.getName() == name && arguments != null && arguments.length == method.getParameterCount())  {
 					int j = 0;
 					boolean parametersCorrect = true;
 					for(Object className : method.getParameterTypes()) {

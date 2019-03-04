@@ -45,7 +45,7 @@ object SCROLLBoot extends App {
 	new SomeCompartment {
 
 		final val nrOfNaturals = 1000
-		final val nrLevels: Integer = 5
+		final val nrLevels: Integer = 8
 		final val nrRolesPerNatural: Integer = scala.math.pow(2, nrLevels + 1).toInt - 1
 		final val nrRoles: Integer = nrRolesPerNatural * nrOfNaturals
 		var roles = new Array[ParamRole](nrRoles)
@@ -72,27 +72,19 @@ object SCROLLBoot extends App {
 		}
 
 
-		for(n <- 0 until 1000) {
+		for(n <- 0 until 2000) {
 			//println("doing dispatch: " + n)
 			this.dispatchAll()
 		}
 		println("finished")
 
-
-		private def dispatchAll(): Unit = {
+		private def dispatchAll(): String = {
+			var output = ""
 			//traverse roles and dispatch every role
 			for(n <- 0 until nrOfNaturals) {
-				var i = 1
-				for(a <- 1 until nrLevels) {
-					for(j <- 0 until scala.math.pow(2, a).toInt) {
-						//val parent: Integer = a-1
-						//var test = (+roles((n * nrRolesPerNatural) + i)).param
-						var test = (+roles((n * nrRolesPerNatural) + i)).getParam()
-						//println("a = " + a + " j = " + j + " 2^a = " + scala.math.pow(2, a).toInt + " i = " + i + " param = " + (+roles(i)).getParam())
-						i += 1
-					}
-				}
+				output += "val: " + (+naturals(n)).getParam() + "\n"
 			}
+			output
 		}
 	}
 }

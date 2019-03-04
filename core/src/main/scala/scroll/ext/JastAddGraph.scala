@@ -10,6 +10,7 @@ import scroll.internal.errors.SCROLLErrors.{IllegalRoleInvocationDispatch, RoleN
 class JastAddGraph[N] { // extends MutableGraph[N] {
 	var graph: Tree = new Tree()
 	val playerObjectCache = new collection.mutable.HashMap[Object, Player]()
+	val dispatchClassArgumentsCache = new collection.mutable.HashMap[String, Array[Class[_]]]()
 
 	def printTree(): Unit = {
 		println("Tree: ")
@@ -83,12 +84,15 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		if(player == null) {
 			return Left(RoleNotFound(playerObject.toString, name, args))
 		}
-		var classArgs = args.map(
-			arg => {
-				if(arg != null) arg.getClass
-				else null
-			}).toArray
-		if(classArgs.length == 0) classArgs = null
+		var str = ""
+		args.foreach(arg => {
+			if(arg != null) str += ';' + arg.getClass.toString
+			else str += ';'
+		})
+		val classArgs = this.dispatchClassArgumentsCache.getOrElseUpdate(str, args.map(arg => {
+			if(arg != null) arg.getClass
+			else null
+		}).toArray)
 		val ret = player.findMethod(name, classArgs)
 		if(ret == null) {
 			return Left(IllegalRoleInvocationDispatch(playerObject.toString, name, args))
