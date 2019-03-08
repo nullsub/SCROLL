@@ -85,7 +85,7 @@ compileTestScala {
 }
 
 sourceSets.main.resources.srcDirs = ['tests/src/test/resources','core/src/main/resources']
-sourceSets.main.scala.srcDirs = ['core', 'ext', 'examples', 'benchmark']
+sourceSets.main.scala.srcDirs = ['core', 'ext', 'examples', 'benchmarkJastAdd']
 compileScala {
     scalaCompileOptions.additionalParameters = [
             "-deprecation",
