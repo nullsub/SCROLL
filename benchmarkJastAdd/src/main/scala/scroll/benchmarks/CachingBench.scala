@@ -8,7 +8,7 @@ import org.openjdk.jmh.annotations._
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @Warmup(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
-class Benchmark {
+class CachingBench {
 
 	@Benchmark
 	def testMethod(): Unit = {
