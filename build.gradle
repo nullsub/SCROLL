@@ -50,6 +50,7 @@ jmh {
     duplicateClassesStrategy = 'exclude' //'inherit'
     failOnError = true
     iterations = 4
+    resultFormat = 'CSV'
 }
 
 task generateJava(type: org.jastadd.JastAddTask) {
