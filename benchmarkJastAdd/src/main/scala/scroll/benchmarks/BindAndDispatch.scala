@@ -20,12 +20,12 @@ class CreateAndDispatch {
 
 @State(Scope.Thread)
 class BindAndDispatchParams extends BenchParams {
-
 	@Param(Array(
-		"1", "50", "100", "150", "200", "250", "300",
-		"350", "400", "500", "600",
-		"700", "1000", "1500", "2000",
+		"1", "200", "600", "1000", "1500", "2000", "4000"
 	))
 	var nrOfDispatchesPerNatural: Int = _
+
+	@Param(Array("1000"))
+	var nrOfNaturals: Int = _
 }
 

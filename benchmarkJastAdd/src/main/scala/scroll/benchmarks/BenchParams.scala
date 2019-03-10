@@ -3,12 +3,11 @@ package scroll.benchmarks
 import org.openjdk.jmh.annotations.{Param, Scope, Setup, State}
 
 @State(Scope.Thread)
-class BenchParams {
+abstract class BenchParams {
 	@Param(Array("true", "false"))
 	var useJastAdd: Boolean = _
 
-	@Param(Array("1000"))
-	var nrOfNaturals: Int = _
+	def nrOfNaturals: Int
 
 	@Setup
 	def setup(): Unit = {

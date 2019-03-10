@@ -15,9 +15,17 @@ class RoleBinding {
 	def bindRoles(params: RoleBindingParams): Unit = {
 		params.c.bindRoles()
 	}
+
+	@Benchmark
+	def removeRoles(params: RoleBindingParams): Unit = {
+		params.c.unbindRoles()
+	}
 }
 
 @State(Scope.Thread)
 class RoleBindingParams extends BenchParams {
 
+	@Param(Array("100", "1000", "2000"))
+	var nrOfNaturals: Int = _
 }
+

@@ -63,8 +63,23 @@ class TestCompartment(params: BenchParams) extends Compartment {
 		}
 	}
 
+	def unbindRoles(): Unit = {
+		for(n <- 0 until params.nrOfNaturals) {
+			naturals(n) <-> roles(n * params.nrRolesPerNatural)
+			var i = 1
+			for(a <- 1 until params.nrLevels) {
+				for(j <- 0 until scala.math.pow(2, a).toInt) {
+					val parent: Int = a - 1
+					roles((n * params.nrRolesPerNatural) + parent) <-> roles((n * params.nrRolesPerNatural) + i)
+					i += 1
+				}
+			}
+		}
+	}
+
+
 	def dispatchRoles(nrOfDispatchesPerNatural: Int): Unit = {
-		for(n <- 0 until nrOfDispatchesPerNatural) {
+		for(_ <- 0 until nrOfDispatchesPerNatural) {
 			var output = ""
 			for(n <- 0 until params.nrOfNaturals) {
 				output += "val: " + (+naturals(n)).getParam() + "\n"
