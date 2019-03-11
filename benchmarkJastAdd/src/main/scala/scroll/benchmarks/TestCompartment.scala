@@ -77,7 +77,6 @@ class TestCompartment(params: BenchParams) extends Compartment {
 		}
 	}
 
-
 	def dispatchRoles(nrOfDispatchesPerNatural: Int): Unit = {
 		for(_ <- 0 until nrOfDispatchesPerNatural) {
 			var output = ""
@@ -86,6 +85,25 @@ class TestCompartment(params: BenchParams) extends Compartment {
 			}
 			output
 		}
+	}
+
+	def dispatchAndUpdateUnrelated(): Unit = {
+		var output = ""
+		output += "val: " + (+naturals(5)).getParam() + "\n"
+		output += "val: " + (+naturals(5)).getParam() + "\n"
+		output += "val: " + (+naturals(5)).getParam() + "\n"
+		output += "val: " + (+naturals(5)).getParam() + "\n"
+
+		//removed and rebind role from natural 0
+		val parent: Int = scala.math.pow(2, params.nrLevels - 1).toInt - 2
+		roles(parent) <-> roles((params.nrLevels - 1) * (params.nrLevels - 1))
+		roles(parent) <+> roles((params.nrLevels - 1) * (params.nrLevels - 1))
+	}
+
+	def dispatchAndUpdateRelated(): Unit = {
+		var output = ""
+		this.dispatchAndUpdateUnrelated()
+		output += "val: " + (+naturals(0)).getParam() + "\n" //should trigger incremental update
 	}
 }
 

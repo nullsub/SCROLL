@@ -51,7 +51,7 @@ jmh {
     failOnError = true
     iterations = 4
     resultFormat = 'CSV'
-    profilers = ['gc']
+//    profilers = ['gc']
     includeTests = true
 }
 
