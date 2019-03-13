@@ -56,7 +56,7 @@ jmh {
 }
 
 task generateJava(type: org.jastadd.JastAddTask) {
-    if(System.env['CACHE_CONF'] == '0' || System.env['CACHE_CONF'] == '') {
+    if(System.env['CACHE_CONF'] == '0' || System.env['CACHE_CONF'] == null) {
         options = ["--package=de.tud.deussen.jastadd.gen", "--cache=all", "--flush=api", "--rewrite=cnta", "--incremental=param", "--List=JastAddList"] //cache and incremental
     } else if(System.env['CACHE_CONF'] == '1') {
         options = ["--package=de.tud.deussen.jastadd.gen", "--cache=all", "--flush=full", "--rewrite=none", "--incremental=none", "--List=JastAddList"] //cache and flush
