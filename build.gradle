@@ -56,8 +56,15 @@ jmh {
 }
 
 task generateJava(type: org.jastadd.JastAddTask) {
-    options = ["--package=de.tud.deussen.jastadd.gen", "--cache=all", "--flush=api", "--rewrite=cnta", "--incremental=param", "--List=JastAddList"]
-    //options = ["--package=de.tud.deussen.jastadd.gen", "--cache=none", "--flush=api", "--rewrite=none", "--incremental=none", "--List=JastAddList"]
+    if(System.env['CACHE_CONF'] == '0' || System.env['CACHE_CONF'] == '') {
+        options = ["--package=de.tud.deussen.jastadd.gen", "--cache=all", "--flush=api", "--rewrite=cnta", "--incremental=param", "--List=JastAddList"] //cache and incremental
+    } else if(System.env['CACHE_CONF'] == '1') {
+        options = ["--package=de.tud.deussen.jastadd.gen", "--cache=all", "--flush=full", "--rewrite=none", "--incremental=none", "--List=JastAddList"] //cache and flush
+    } else if(System.env['CACHE_CONF'] == '2') {
+        options = ["--package=de.tud.deussen.jastadd.gen", "--cache=none", "--flush=api", "--rewrite=none", "--incremental=none", "--List=JastAddList"] //no cache, no flush
+    } else {
+        throw new GradleException('CACHE_CONF not valid for jastadd build: ' + System.env['CACHE_CONF'])
+    }
     outputDir = file('ext/gen')
     sources = fileTree("ext/jastadd").matching {}
 }

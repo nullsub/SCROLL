@@ -10,7 +10,7 @@ import scroll.internal.errors.SCROLLErrors.{IllegalRoleInvocationDispatch, RoleN
 class JastAddGraph[N] { // extends MutableGraph[N] {
 	var graph: Tree = new Tree()
 	val playerObjectCache = new collection.mutable.HashMap[Object, Player]()
-	val dispatchClassArgumentsCache = new collection.mutable.HashMap[String, Array[Class[_]]]()
+	val dispatchClassArgumentsCache = new collection.mutable.HashMap[String, Array[Class[_]]]() // als uncached attribute
 
 	def printTree(): Unit = {
 		println("Tree: ")

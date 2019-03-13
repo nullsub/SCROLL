@@ -16,7 +16,6 @@ class CreateAndDispatch {
 		params.c.bindRoles()
 		params.c.dispatchRoles(params.nrOfDispatchesPerNatural)
 	}
-
 }
 
 @State(Scope.Thread)
