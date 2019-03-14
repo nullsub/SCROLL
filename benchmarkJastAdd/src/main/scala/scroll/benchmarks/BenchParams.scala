@@ -7,6 +7,9 @@ abstract class BenchParams {
 	@Param(Array("true", "false"))
 	var useJastAdd: Boolean = _
 
+	@Param(Array("true", "false"))
+	var withCaching: Boolean = _
+
 	def nrOfNaturals: Int
 
 	@Setup

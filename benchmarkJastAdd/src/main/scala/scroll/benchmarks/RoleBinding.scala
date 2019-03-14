@@ -10,18 +10,19 @@ import org.openjdk.jmh.annotations._
 @Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 class RoleBinding {
-/*
+
+	/*
 	@Benchmark
 	def bindRoles(params: RoleBindingParams): Unit = {
 		params.c.bindRoles()
 	}
 */
 	/*
+		//does not work. When removing roles, removed role is added to root causing oom. JastAddGraph:158
 	@Benchmark
 	def unbindRoles(params: RoleBindingWithBindParams): Unit = {
 		params.c.unbindRoles()
 	}
-	//does not work. When removing roles, removed role is added to root causing oom. JastAddGraph:158
 	*/
 }
 
