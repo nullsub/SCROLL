@@ -6,8 +6,8 @@ import org.openjdk.jmh.annotations._
 
 @BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 class DispatchAndUpdateParametrized {
 
@@ -34,11 +34,11 @@ class DispatchAndUpdateParametrizedParams extends BenchParams {
 	var nrOfDispatches: Int = _
 
 	@Param(Array(
-		"1", "3", "5", "10", "15", "20", "25", "30"
+		"1", "3", "5", "10", "15", "20", "25", "30", "40", "50", "60"
 	))
 	var dispatchesPerCycle: Int = _
 
-	@Param(Array("1000"))
+	@Param(Array("100"))
 	var nrOfNaturals: Int = _
 
 	@Setup
