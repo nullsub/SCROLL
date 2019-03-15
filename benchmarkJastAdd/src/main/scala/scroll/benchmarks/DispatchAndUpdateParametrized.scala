@@ -1,7 +1,6 @@
 package scroll.benchmarks
 
 import java.util.concurrent.TimeUnit
-
 import org.openjdk.jmh.annotations._
 
 @BenchmarkMode(Array(Mode.AverageTime))
@@ -11,6 +10,14 @@ import org.openjdk.jmh.annotations._
 @Fork(1)
 class DispatchAndUpdateParametrized {
 
+	@Benchmark
+	def dispatchAndUpdateUnrelatedWithDQ(params: DispatchAndUpdateParametrizedParams): Unit = {
+		for(_ <- 0 until params.nrOfDispatches) {
+			params.c.dispatchAndUpdateUnrelatedWithDQ(params.dispatchesPerCycle)
+		}
+	}
+
+/*
 	@Benchmark
 	def dispatchAndUpdateUnrelated(params: DispatchAndUpdateParametrizedParams): Unit = {
 		for(_ <- 0 until params.nrOfDispatches) {
@@ -23,7 +30,7 @@ class DispatchAndUpdateParametrized {
 		for(_ <- 0 until params.nrOfDispatches) {
 			params.c.dispatchAndUpdateRelated(params.dispatchesPerCycle)
 		}
-	}
+	}*/
 }
 
 @State(Scope.Thread)
@@ -38,7 +45,7 @@ class DispatchAndUpdateParametrizedParams extends BenchParams {
 	))
 	var dispatchesPerCycle: Int = _
 
-	@Param(Array("100"))
+	@Param(Array("500"))
 	var nrOfNaturals: Int = _
 
 	@Setup

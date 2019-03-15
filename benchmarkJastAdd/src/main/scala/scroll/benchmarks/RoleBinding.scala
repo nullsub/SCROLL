@@ -11,7 +11,7 @@ import org.openjdk.jmh.annotations._
 @Fork(1)
 class RoleBinding {
 
-	/*
+/*
 	@Benchmark
 	def bindRoles(params: RoleBindingParams): Unit = {
 		params.c.bindRoles()

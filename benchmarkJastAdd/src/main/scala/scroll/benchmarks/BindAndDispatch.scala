@@ -9,8 +9,9 @@ import org.openjdk.jmh.annotations._
 @Warmup(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
-class CreateAndDispatch {
-/*
+class BindAndDispatch {
+
+	/* //same performance for every implementation
 	@Benchmark
 	def bindAndDispatchSimple(params: BindAndDispatchParams): Unit = {
 		params.c.bindRoles()
@@ -32,7 +33,7 @@ class BindAndDispatchParams extends BenchParams {
 	))
 	var nrOfDispatchesPerNatural: Int = _
 
-	@Param(Array("1000"))
+	@Param(Array("500"))
 	var nrOfNaturals: Int = _
 }
 

@@ -2,6 +2,7 @@ package scroll.benchmarks
 
 import scroll.internal.Compartment
 import scroll.internal.graph.ScalaRoleGraphBuilder
+import scroll.internal.support.DispatchQuery
 
 class TestCompartment(params: BenchParams) extends Compartment {
 
@@ -101,6 +102,19 @@ class TestCompartment(params: BenchParams) extends Compartment {
 	def dispatchAndUpdateUnrelated(dispatchesPerCycle: Int): Unit = {
 		var output = ""
 		for(_ <- 0 until dispatchesPerCycle) {
+			output += "val: " + (+naturals(5)).getParam() + "\n"
+		}
+
+		//removed and rebind role from natural 0
+		val parent: Int = scala.math.pow(2, params.nrLevels - 1).toInt - 2
+		roles(parent) <-> roles((params.nrLevels - 1) * (params.nrLevels - 1))
+		roles(parent) <+> roles((params.nrLevels - 1) * (params.nrLevels - 1))
+	}
+
+	def dispatchAndUpdateUnrelatedWithDQ(dispatchesPerCycle: Int): Unit = {
+		var output = ""
+		for(_ <- 0 until dispatchesPerCycle) {
+			implicit val dd = DispatchQuery.FilterDispatchQuery(Seq(), Seq(classOf[ParamRole]), Seq(), Seq())
 			output += "val: " + (+naturals(5)).getParam() + "\n"
 		}
 

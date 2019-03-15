@@ -39,7 +39,7 @@ class DispatchAndUpdateParams extends BenchParams {
 	))
 	var dispatchesPerCycle: Int = _
 
-	@Param(Array("1000"))
+	@Param(Array("500"))
 	var nrOfNaturals: Int = _
 
 	@Setup
