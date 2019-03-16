@@ -41,32 +41,6 @@ aspect Evaluation {
 	}
 
 	inh Player Player.predecessor();
-/*
-	public Player Tree.findPlayerByObject(Object object) {
-		//System.out.println("Tree.findPlayerByObject()");
-
-		for(Player p : this.getNaturals()) {
-			Player ret = p.findPlayerByObject(object);
-			if(ret != null) {
-				return  ret;
-			}
-		}
-		return null;
-	}
-
-	public Player Player.findPlayerByObject(Object object) {
-		if(this.getObject() == object) {
-			return this;
-		}
-		for(Player p : this.getRoles()) {
-			Player ret = p.findPlayerByObject(object);
-			if(ret != null) {
-				return  ret;
-			}
-		}
-		return null;
-	}
-*/
 
 	public Boolean Tree.removeNatural(Player player) {
 		int toDelete = -1;

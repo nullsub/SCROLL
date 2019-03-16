@@ -48,7 +48,8 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		if(excludeClasses.isEmpty && excludePlayers.isEmpty && includeClasses.isEmpty && includePlayers.isEmpty) {
 			return
 		}
-		if(player.hasDispatchQuery && player.getDispatchQuery != null && compareListSeq(player.getDispatchQuery.getExcludes.getClasses, excludeClasses)
+		if(player.hasDispatchQuery && player.getDispatchQuery != null
+			&& compareListSeq(player.getDispatchQuery.getExcludes.getClasses, excludeClasses)
 			&& compareListSeq(player.getDispatchQuery.getExcludes.getPlayers, excludePlayers)
 		) {
 			//System.out.println("dispatchquery already exists. returning!")
@@ -75,7 +76,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			return true
 		}
 		false
-
 	}
 
 	def findMethod[E](playerObject: Object, name: String, args: Seq[Any]): Either[SCROLLError, (AnyRef, java.lang.reflect.Method)] = {
