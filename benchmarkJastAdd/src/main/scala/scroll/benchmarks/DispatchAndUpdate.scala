@@ -10,7 +10,7 @@ import org.openjdk.jmh.annotations._
 @Measurement(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 class DispatchAndUpdate {
-/*
+
 	@Benchmark
 	def dispatchAndUpdateUnrelated(params: DispatchAndUpdateParams): Unit = {
 		for(_ <- 0 until params.nrOfDispatches) {
@@ -24,13 +24,12 @@ class DispatchAndUpdate {
 			params.c.dispatchAndUpdateRelated(params.dispatchesPerCycle)
 		}
 	}
-*/
 }
 
 @State(Scope.Thread)
 class DispatchAndUpdateParams extends BenchParams {
 	@Param(Array(
-		"1000", "1500", "2000", "3000", "4000"
+		"500", "1000", "1500", "2000", "3000", "4000"
 	))
 	var nrOfDispatches: Int = _
 

@@ -11,7 +11,7 @@ import org.openjdk.jmh.annotations._
 @Fork(1)
 class BindAndDispatch {
 
-	/* //same performance for every implementation
+	 //same performance for every implementation
 	@Benchmark
 	def bindAndDispatchSimple(params: BindAndDispatchParams): Unit = {
 		params.c.bindRoles()
@@ -23,7 +23,7 @@ class BindAndDispatch {
 		params.c.bindRoles()
 		params.c.dispatchRolesLongTraversal(params.nrOfDispatchesPerNatural)
 	}
-*/
+
 }
 
 @State(Scope.Thread)
