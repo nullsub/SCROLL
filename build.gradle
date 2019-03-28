@@ -49,7 +49,7 @@ sourceSets.main.java.srcDir 'ext/gen' // Compiles the generated code.
 jmh {
     duplicateClassesStrategy = 'exclude' //'inherit'
     failOnError = true
-    iterations = 4
+//    iterations = 4
     resultFormat = 'CSV'
 //    profilers = ['gc']
     includeTests = true
