@@ -13,6 +13,9 @@ object SCROLLBoot extends App {
 				val name: String = (+this).name
 				println(name + " is flying ...")
 			}
+
+			def test(): Unit = println("in testing...")
+
 		}
 
 		case class EmergencyDetector() {
@@ -76,6 +79,11 @@ object SCROLLBoot extends App {
 			//println("doing dispatch: " + n)
 			this.dispatchAll()
 		}
+		naturals(0) <+> new SimpleAPI()
+		(+naturals(0)).fly()
+		(+naturals(0)).test()
+
+
 		println("finished")
 
 		private def dispatchAll(): String = {

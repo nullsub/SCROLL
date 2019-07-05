@@ -9,14 +9,13 @@ import org.openjdk.jmh.annotations._
 @Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(5)
 class DispatchAndUpdateParametrized {
-
+/*
 	@Benchmark
 	def dispatchAndUpdateUnrelatedWithDQ(params: DispatchAndUpdateParametrizedParams): Unit = {
 		for(_ <- 0 until params.nrOfDispatches) {
 			params.c.dispatchAndUpdateUnrelatedWithDQ(params.dispatchesPerCycle)
 		}
 	}
-
 
 	@Benchmark
 	def dispatchAndUpdateUnrelated(params: DispatchAndUpdateParametrizedParams): Unit = {
@@ -25,13 +24,13 @@ class DispatchAndUpdateParametrized {
 		}
 	}
 
-
 	@Benchmark
 	def dispatchAndUpdateRelated(params: DispatchAndUpdateParametrizedParams): Unit = {
 		for(_ <- 0 until params.nrOfDispatches) {
 			params.c.dispatchAndUpdateRelated(params.dispatchesPerCycle)
 		}
 	}
+	*/
 
 }
 

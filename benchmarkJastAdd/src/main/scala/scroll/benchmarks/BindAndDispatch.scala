@@ -10,7 +10,7 @@ import org.openjdk.jmh.annotations._
 @Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(5)
 class BindAndDispatch {
-
+/*
 	 //same performance for every implementation
 	@Benchmark
 	def bindAndDispatchSimple(params: BindAndDispatchParams): Unit = {
@@ -22,7 +22,7 @@ class BindAndDispatch {
 	def bindAndDispatchLongTraversal(params: BindAndDispatchParams): Unit = {
 		params.c.bindRoles()
 		params.c.dispatchRolesLongTraversal(params.nrOfDispatchesPerNatural)
-	}
+	}*/
 
 }
 

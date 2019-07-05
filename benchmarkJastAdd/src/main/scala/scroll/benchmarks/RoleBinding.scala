@@ -11,12 +11,12 @@ import org.openjdk.jmh.annotations._
 @Fork(5)
 class RoleBinding {
 
-/*
+
 	@Benchmark
 	def bindRoles(params: RoleBindingParams): Unit = {
 		params.c.bindRoles()
 	}
-*/
+
 	/*
 		//does not work. When removing roles, removed role is added to root causing oom. JastAddGraph:158
 	@Benchmark
