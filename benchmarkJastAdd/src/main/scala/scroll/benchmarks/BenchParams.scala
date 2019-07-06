@@ -4,10 +4,12 @@ import org.openjdk.jmh.annotations.{Param, Scope, Setup, State}
 
 @State(Scope.Thread)
 abstract class BenchParams {
-	@Param(Array("true", "false"))
+	//@Param(Array("true", "false"))
+	@Param(Array("false"))
 	var useJastAdd: Boolean = _
 
-	@Param(Array("true", "false"))
+	//@Param(Array("true", "false"))
+	@Param(Array("true"))
 	var withCaching: Boolean = _
 
 	def nrOfNaturals: Int
