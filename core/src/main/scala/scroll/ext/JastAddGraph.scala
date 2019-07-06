@@ -126,6 +126,10 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			sourcePlayer = newNatural
 		}
 
+
+		val targetPlayer = new Role()
+		targetPlayer.setObject(target)
+
 		if(oldTargetPlayer != null) {
 			if(sourcePlayer != null && oldTargetPlayer.predecessor == sourcePlayer) {
 				return false
@@ -133,9 +137,6 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			targetPlayer.setRoleList(oldTargetPlayer.getRoleList)
 			this.deletePlayer(oldTargetPlayer)
 		}
-
-		val targetPlayer = new Role()
-		targetPlayer.setObject(target)
 
 		sourcePlayer.addRole(targetPlayer)
 		this.storeInPlayerObjectCache(targetPlayer)
@@ -150,6 +151,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 		if(player == null || playerRole == null) {
 			throw new Exception("playerPlayer == null || playerRole == null")
 		}
+		this.playerObjectCache.remove(roleObject);
 
 		//adds unlinked role to root, such that it can still be accessed
 		val oldPlayer: Natural = new Natural
@@ -188,6 +190,7 @@ class JastAddGraph[N] { // extends MutableGraph[N] {
 			oldPlayer.setRoleList(r.getRoleList)
 			this.graph.addNatural(oldPlayer)
 			this.storeInPlayerObjectCache(oldPlayer)
+
 		})
 
 		this.deletePlayer(player)
